@@ -1,0 +1,440 @@
+%% History:
+%% December 2020 Veli Mäkinen removed obsolete options related to 40 cr theses
+%% May 2019 Tomi Männistö, Antti-Pekka Tuovinen proofreading; 30 vs. 40 cr theses, etc.
+%% May 2019 Tomi Männistö changed from babelbib to bibtex; Abstract page (and other pages as well) reformatting.
+%% January–May 2019 several issues fixed by Niko Mäkitalo; long fields in abstract
+%% March 2018 template file extended by Lea Kutvonen to exploit HYthesisML.cls.
+%% Feb2018 This template file for the use of HYgraduML.cls was  modified by Veli Mäkinen from HY_fysiikka_LuKtemplate.tex
+%% authored by Roope Halonen ja Tomi Vainio in 2017.
+%% Some text is also inherited from engl_malli.tex versions by Kutvonen, Erkiö, Mäkelä, Verkamo, Kurhila, and
+%% Nykänen, to accompany tktltiki.cls (by Puolakka 2002).
+
+
+%% Follow comments to support use.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% STEP 1: Choose options for MSc / BSc / seminar layout and your bibliographic style
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%  Language: 
+%%      finnish, swedish, or english
+%%  Pagination (use twoside by default)  
+%%      oneside or twoside,
+%%  Study programme / kind of report
+%%      csm  = Master's thesis in Computer Science Master's Programme;
+%%      tkt = Bachelor's thesis in Computer Science Bachelor's Programme;
+%%      seminar = seminar report
+%%  For Master's thesis choose your line or track:
+%%      (30 cr thesis, 2020 onwards, Master's Programme in Computer Science = csm)
+%%      software-track-2020 = Software study track
+%%      algorithms-track-2020 = Algorithms study track
+%%      networking-track-2020 = Networking study track
+%%
+%%      (30 cr thesis, Master's Programme in Computer Science = csm)
+%%      sw-track-2018 = Software Systems study track
+%%      alko-track-2018 = Algorithms study track
+%%      nodes-track-2018 = Networking and Services study track
+%%
+%%      (30 cr thesis, Master's Programme in Computer Science = csm)
+%%      sw-line-2017 =  Software systems subprogramme
+%%      alko-line-2017 = Algorithms, Data Analytics and Machine Learning subprogramme
+%%      bio-line-2017 = Algorithmic Bioinformatics subprogramme
+%%      nodes-line-2017 = Networking and Services subprogramme
+%%
+
+\documentclass[english,twoside,censored,csm,algorithms-track-2020]{HYthesisML}
+
+
+% In theses, open new chapters only at right page.
+% For other types of documents, may ask "openany" in document.
+\PassOptionsToClass{openright,twoside,a4paper}{report}
+%\PassOptionsToClass{openany,twoside,a4paper}{report}
+
+\usepackage{csquotes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% REFERENCES
+%% Some notes on bibliography usage and options:
+%% natbib -> you can use, e.g., \citep{} or \parencite{} for (Einstein, 1905); with APA \cite -> Einstein, 1905 without ()
+%% maxcitenames=2 -> only 2 author names in text citations, if more -> et al. is used
+%% maxbibnames=99 as no great need to suppress the biliography list in a thesis
+%% for more information see biblatex package documentation, e.g., from https://ctan.org/pkg/biblatex 
+
+%% Reference style: select one 
+%% for APA = Harvard style = authoryear -> (Einstein, 1905) use:
+\usepackage[style=authoryear,bibstyle=authoryear,backend=biber,natbib=true,maxnames=99,maxcitenames=2,giveninits=true,uniquename=init]{biblatex}
+%% for numeric = Vancouver style -> [1] use:
+%\usepackage[style=numeric,bibstyle=numeric,backend=biber,natbib=true,maxbibnames=99,giveninits=true,uniquename=init]{biblatex}
+%% for alpahbetic -> [Ein05] use:
+%\usepackage[style=alphabetic,bibstyle=alphabetic,backend=biber,natbib=true,maxbibnames=99,giveninits=true,uniquename=init]{biblatex}
+%
+
+\addbibresource{bibliography.bib}
+% in case you want the final delimiter between authors & -> (Einstein & Zweistein, 1905) 
+% \renewcommand{\finalnamedelim}{ \& }
+% List the authors in the Bibilipgraphy as Lastname F, Familyname G,
+\DeclareNameAlias{sortname}{family-given}
+% remove the punctuation between author names in Bibliography 
+%\renewcommand{\revsdnamepunct}{ }
+
+
+%% Block of definitions for fonts and packages for picture management.
+%% In some systems, the figure packages may not be happy together.
+%% Choose the ones you need.
+
+%\usepackage[utf8]{inputenc} % For UTF8 support, in some systems. Use UTF8 when saving your file.
+
+\usepackage{lmodern}         % Font package, again in some systems.
+\usepackage{textcomp}        % Package for special symbols
+\usepackage[pdftex]{color, graphicx} % For pdf output and jpg/png graphics
+\usepackage{epsfig}
+\usepackage{subfigure}
+\usepackage[pdftex, plainpages=false]{hyperref} % For hyperlinks and pdf metadata
+\usepackage{fancyhdr}        % For nicer page headers
+\usepackage{tikz}            % For making vector graphics (hard to learn but powerful)
+\usepackage{wrapfig}        % For nice text-wrapping figures (use at own discretion)
+% Tikz stuff for apas graphs
+\usetikzlibrary{positioning,arrows,shapes,automata}
+\tikzstyle{gnode} = [circle,fill=blue!20,draw]
+\tikzstyle{line} = [line width=0.5,draw]
+\tikzstyle{shaded} = [color=blue!30,line width=2mm,draw]
+\tikzstyle{shadedf} = [color=blue!25,line width=1.7mm,draw]
+\tikzstyle{tnode} = []
+\tikzstyle{dotted} = [dashed, line width=0.5, draw]
+
+\usepackage{amsmath, amssymb, amsthm, amsfonts, hyperref} % For better math
+
+\usepackage{algpseudocode} % for pseudocode: provides algorithmic environment
+\usepackage{algorithm}     % for pseudocode: enables captioning
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\makeatletter
+\let\c@equation\c@figure
+\makeatother
+
+
+\usepackage[pdftex]{graphicx}
+\usepackage{subfigure}
+\usepackage{float}
+
+
+\singlespacing               %line spacing options; normally use single
+
+\fussy
+%\sloppy                      % sloppy and fussy commands can be used to avoid overlong text lines
+% if you want to see which lines are too long or have too little stuff, comment out the following lines
+% \overfullrule=1mm
+% to see more info in the detailed log about under/overfull boxes...
+% \showboxbreadth=50 
+% \showboxdepth=50
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% STEP 2:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Set up personal information for the title page and the abstract form.
+%% Replace parameters with your information.
+\title{Implementation and benchmarking of Ukkonen 1990 -algorithm}
+
+% TM: Contributors to template editors now listed in the beginning of the file in comments
+\author{Arttu Kilpinen}
+\date{\today}
+
+
+
+% Set supervisors and examiners, use the titles according to the thesis language
+% Prof. 
+% Dr. or in Finnish toht. or tri or FT, TkT, Ph.D. or in Swedish... 
+\supervisors{Assoc Prof.~Simon Puglisi}
+\examiners{Prof.~Dunno yet}
+
+
+\keywords{Implementation, Shortest Common Superstring}
+\additionalinformation{\translate{\track}}
+
+%% For seminar reports:
+%%\additionalinformation{Name of the seminar}
+
+%% Replace classification terms with the ones that match your work. ACM
+%% ACM Digital library provides a taxonomy and a tool for classification
+%% in computer science. Use 1-3 paths, and use right arrows between the
+%% about three levels in the path; each path requires a new line.
+
+\classification{\protect{\ \\
+\  Theory of Computation $\rightarrow$ Design and Analysis of Algorithms  $\rightarrow$ Data Structures Design and Analysis $\rightarrow$ Data Compression  \\
+\  Theory of Computation $\rightarrow$ Design and Analysis of Algorithms  $\rightarrow$ Data Structures Design and Analysis $\rightarrow$ Pattern Matching \\
+\  Theory of Computation $\rightarrow$ Design and Analysis of Algorithms  $\rightarrow$ Data Structures Design and Analysis $\rightarrow$ Sorting and Searching
+}}
+
+%% if you want to quote someone special. You can comment this line out and there will be nothing on the document.
+%\quoting{Bachelor's degrees make pretty good placemats if you get them laminated.}{Jeph Jacques}
+
+
+%% OPTIONAL STEP: Set up properties and metadata for the pdf file that pdfLaTeX makes.
+%% Your name, work title, and keywords are recommended.
+\hypersetup{
+    unicode=true,           % to show non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={},            % title
+    pdfauthor={},           % author
+    pdfsubject={},          % subject of the document
+    pdfcreator={},          % creator of the document
+    pdfproducer={pdfLaTeX}, % producer of the document
+    pdfkeywords={something} {something else}, % list of keywords for
+    pdfnewwindow=true,      % links in new window
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=black,        % color of internal links
+    citecolor=black,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
+%%-----------------------------------------------------------------------------------
+
+\begin{document}
+
+% Generate title page.
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% STEP 3:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Write your abstract to be positioned here.
+%% You can make several abstract pages (if you want it in different languages),
+%% but you should also then redefine some of the above parameters in the proper
+%% language as well, in between the abstract definitions.
+
+\begin{abstract}
+
+  Abstract here. Last thing to write
+
+\end{abstract}
+
+% Place ToC
+\newpage
+\mytableofcontents
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% STEP 4: Write the thesis.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Your actual text starts here. You shouldn't mess with the code above the line except
+%% to change the parameters. Removing the abstract and ToC commands will mess up stuff.
+%%
+%% You may wish to include material to avoid browsing the definitions
+%% above. Command \include{file} includes the file of name file.tex.
+%% As a side effect, subsequent inclusions may force a page break.
+
+% BSc instructions
+%\include{bsc_finnish_contents}
+%\include{bsc_english_contents}
+% MSc instructions
+%\include{msc_finnish_contents}
+%\include{msc_english_contents}
+
+
+Puglisin kommentteja:
+- Experiments section saattaa paisua aika paljon. Voisi mahdollisesti jakaa useaan kappaleeseen. Esim implementation kohtaa voisi laittaa myös ukkonen kappaleeseen.
+
+Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
+
+%%
+\chapter{Introduction}~\label{chp-intro}
+  vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
+
+  \section{Motivation}
+
+  introssa motivaatiossa rlz mainittu mutta myöhemmin teknisesti
+  
+  alanko or someone mentionet thet it would be interesting to see an implementation
+
+  \section{Related Work}
+
+  related workista oma kappale jos muita vertailuja kuin alanko ja norri. muuten ehkä introon.
+  
+  \section{Structure of the Thesis}
+
+%%
+\chapter {Shortest Common Superstring}
+
+  Tätä voi ehkä jakaa sectioneihin?
+
+  \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}
+
+  Definition of SCS here.
+  
+  \end{definition}
+
+  preliminaries including syntax
+
+  what is an approximation algorithm
+
+%%
+\chapter{Ukkonen's Algorithm}
+ \listofalgorithms
+  \section{AC-Machine}
+  hjallis
+
+  \section{Pseudocode}
+
+  %% This declares a command \Comment
+  %% The argument will be surrounded by /* ... */
+  %% \SetKwComment{Comment}{/* }{ */}
+  
+  Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
+  \begin{algorithm} % for captioning
+    
+    \caption{Aho and Corasic Algorithm 2, Construction of the goto function} \label{ac-goto}
+    \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{y_1,y_2...,y_k\}$.\\
+    \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$\\
+    \hspace*{\algorithmicindent} \textbf{Method:} We assume \textit{output($s$)} is empty when state $s$ is first created, and $g(s,a) = fail$ if $a$ is undefined or if $g(s,a)$ has not yet been defined. The procedure \textit{enter($y$)} inserts into the goto graph a path that spells out $y$.
+    
+      \begin{algorithmic}[1]
+        \Function{calculateGotoFunction}{$K = \{y_1,y_2...,y_k\}$}
+        \State $newstate\gets 0$
+        \For{$i \gets 1$ until $k$}
+        \State $enter(y_i)$
+        \EndFor
+        \For{all $a$ s.t. $g(0,a) = fail$ }
+        \State $g(0,a)\gets 0$
+        \EndFor
+        %% \If{element is literal}
+        %% \Else \Comment{The element is a phrase}
+        %% \EndIf
+        %% \Return decoded
+        \EndFunction
+
+        \Function{enter}{$y = (a_1,a_2,...,a_m)$}
+        \State $state\gets 0$
+        \State $j\gets 1$
+        \While{$g(state, a_j) != fail$}
+        \State $state\gets g(state,a_j)$
+        \State $j\gets j+1$
+        \EndWhile
+        \For{$p\gets j$ until $m$}
+        \State $newstate\gets newstate+1$
+        \State $g(state,a_p)\gets newstate$
+        \State $state\gets newstate$
+        \EndFor
+        \EndFunction
+      \end{algorithmic}
+  \end{algorithm}
+
+  Ja sitten failuren laskeminen
+
+  \begin{algorithm}
+
+    \caption{Aho and Corasix Algorithm 3, Construction of the failure function} \label{ac-fail}
+    \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm\\ % \ref{ac-goto}\\
+    \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
+
+    \begin{algorithmic}[1]
+      \Function{calculateFailureFunction}{$g : \mathbb{N} \rightarrow \mathbb{N}$}
+        \State $queue\gets \textit{empty}$
+        \For {each $a$ s.t. $g(a,0) = s \neq 0$}
+          \State $queue\gets queue \cup \{s\}$
+          \State $f(s)\gets 0$
+        \EndFor
+        \While{$queue \neq empty$}\\
+          \hspace*{\algorithmicindent}let $r$ be the next state in $queue$
+          \State $queue\gets queue \backslash \{r\}$
+          \For{each $a$ s.t. $g(r,a) = s \neq fail$}
+            \State $queue\gets queue \cup \{s\}$
+            \State $state\gets g(r)$
+            \While{$g(state,a) = fail$}
+              \State $f(s)\gets g(state,a)$
+            \EndWhile
+          \EndFor
+        \EndWhile
+          
+      \EndFunction
+
+    \end{algorithmic}
+  \end{algorithm}
+  
+
+  \section{correctness}
+  
+
+  approx factor (ei välttämättä epsilon mutta jotkut boundit on olemassa ainakin kompressiolle)
+
+%%
+\chapter{Relative Lempel-Ziv}
+
+  Lempel-Ziv dictionary construction.
+
+  subsections?
+
+%%
+\chapter{experiments}
+
+  \section{Implementation}
+
+  \section{Benchmark Data}
+  HW + instances
+
+  \section{Results}
+
+  \section{Discussion}
+
+%
+\chapter{Conclusions}
+  
+
+  \begin{enumerate}
+  \item \citep{aho75} describes the Aho-Corasic machine for the first time. It gives the pseudocode to creation and search.
+  \item alanko dissertation, no bibtex yet. Discusses some things related to this topic.
+  \item \citep{alanko17} describes approx scs algorithm for compact space.
+  \item statistics.pdf desccribes the dataset pizzachili.
+  \item \citep{ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
+  \item \citep{tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
+  \end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage                          %fixes the position of bibliography in bookmarks
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}  % This lines adds the bibliography to the ToC
+\printbibliography
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+
+%
+% TARVIINKO APPENDICES??
+%
+%
+
+\begin{appendices}
+
+%\input{instructions_english}
+%% \input{instructions_finnish}
+
+%% \appendix{Sample Appendix\label{appendix:model}}
+%% usually starts on its own page, with the name and number of the appendix at the top. 
+%% The appendices here are just models of the table of contents and the presentation. Each appendix
+%% Each appendix is paginated separately.
+
+%% In addition to complementing the main document, each appendix is also its own, independent entity.
+%% This means that an appendix cannot be just an image or a piece of programming, but the appendix must explain its contents and meaning.
+
+\end{appendices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

@@ -1,0 +1,190 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.6 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{nyt/global}
+    \entry{aho75}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=ba64edb8f05b0f5b8d9368984c3c3f74}{%
+           family={Aho},
+           family_i={A\bibinitperiod},
+           given={Alfred\bibnamedelima V.},
+           given_i={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{uniquename=0,hash=b737e361030dc3d956288741ea92c73d}{%
+           family={Corasick},
+           family_i={C\bibinitperiod},
+           given={Margaret\bibnamedelima J.},
+           given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{f284e2046b4420df463a1847d4a3df4b}
+      \strng{fullhash}{f284e2046b4420df463a1847d4a3df4b}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelyear}{1975}
+      \field{labelmonth}{06}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This paper describes a simple, efficient algorithm to locate all occurrences of any of a finite number of keywords in a string of text. The algorithm consists of constructing a finite state pattern matching machine from the keywords and then using the pattern matching machine to process the text string in a single pass. Construction of the pattern matching machine takes time proportional to the sum of the lengths of the keywords. The number of state transitions made by the pattern matching machine in processing the text string is independent of the number of keywords. The algorithm has been used to improve the speed of a library bibliographic search program by a factor of 5 to 10.}
+      \field{issn}{0001-0782}
+      \field{journaltitle}{Commun. ACM}
+      \field{month}{06}
+      \field{number}{6}
+      \field{title}{Efficient String Matching: An Aid to Bibliographic Search}
+      \field{volume}{18}
+      \field{year}{1975}
+      \field{pages}{333\bibrangedash 340}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1145/360825.360855
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/360825.360855
+      \endverb
+      \keyw{string pattern matching,keywords and phrases,information retrieval,bibliographic search,text-editing,finite state machines,computational complexity}
+    \endentry
+    \entry{alanko17}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=1e08335b6c580919bd6a41e27f091c74}{%
+           family={Alanko},
+           family_i={A\bibinitperiod},
+           given={Jarno},
+           given_i={J\bibinitperiod}}}%
+        {{uniquename=0,hash=39f074846b8246169500dfb46e2c460c}{%
+           family={Norri},
+           family_i={N\bibinitperiod},
+           given={Tuukka},
+           given_i={T\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=a09d9d9b383aa7886a8e5a21a00748c7}{%
+           family={Fici},
+           family_i={F\bibinitperiod},
+           given={Gabriele},
+           given_i={G\bibinitperiod}}}%
+        {{hash=e917934b3dea96cbf1a89acf8ecc87cf}{%
+           family={Sciortino},
+           family_i={S\bibinitperiod},
+           given={Marinella},
+           given_i={M\bibinitperiod}}}%
+        {{hash=03010c4ae0d5c505cdf6b61549f75bcf}{%
+           family={Venturini},
+           family_i={V\bibinitperiod},
+           given={Rossano},
+           given_i={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{0d364ecb8e0e1098d4254f67ac7b03fc}
+      \strng{fullhash}{0d364ecb8e0e1098d4254f67ac7b03fc}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelyear}{2017}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{String Processing and Information Retrieval - 24th International Symposium, {SPIRE} 2017, Palermo, Italy, September 26-29, 2017, Proceedings}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Greedy Shortest Common Superstring Approximation in Compact Space}
+      \field{volume}{10508}
+      \field{year}{2017}
+      \field{pages}{1\bibrangedash 13}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1007/978-3-319-67428-5\_1
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-319-67428-5%5C_1
+      \endverb
+    \endentry
+    \entry{tarhio88}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=723be287166432f6efc1dfaad43a017c}{%
+           family={Tarhio},
+           family_i={T\bibinitperiod},
+           given={Jorma},
+           given_i={J\bibinitperiod}}}%
+        {{uniquename=0,hash=2bf5ebde67f064ea22feb321e39e2501}{%
+           family={Ukkonen},
+           family_i={U\bibinitperiod},
+           given={Esko},
+           given_i={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{be1b742d53da06c8209caa96df17d15b}
+      \strng{fullhash}{be1b742d53da06c8209caa96df17d15b}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labelyear}{1988}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theor. Comput. Sci.}
+      \field{title}{A Greedy Approximation Algorithm for Constructing Shortest Common Superstrings}
+      \field{volume}{57}
+      \field{year}{1988}
+      \field{pages}{131\bibrangedash 145}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1016/0304-3975(88)90167-3
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/0304-3975(88)90167-3
+      \endverb
+    \endentry
+    \entry{ukkonen90}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=2bf5ebde67f064ea22feb321e39e2501}{%
+           family={Ukkonen},
+           family_i={U\bibinitperiod},
+           given={Esko},
+           given_i={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{2bf5ebde67f064ea22feb321e39e2501}
+      \strng{fullhash}{2bf5ebde67f064ea22feb321e39e2501}
+      \field{sortinit}{U}
+      \field{sortinithash}{8145509bd2718876fc77d31fd2cde117}
+      \field{labelyear}{1990}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Algorithmica}
+      \field{number}{3}
+      \field{title}{A Linear-Time Algorithm for Finding Approximate Shortest Common Superstrings}
+      \field{volume}{5}
+      \field{year}{1990}
+      \field{pages}{313\bibrangedash 323}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1007/BF01840391
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/BF01840391
+      \endverb
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
