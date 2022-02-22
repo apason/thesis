@@ -264,7 +264,12 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
 %%
 \chapter {Shortest Common Superstring}
 
-  Tätä voi ehkä jakaa sectioneihin?
+Tätä voi ehkä jakaa sectioneihin?
+
+def. string.
+def. substring.
+def. superstring
+def. common superstring
 
   \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}
 
@@ -287,42 +292,51 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
   %% This declares a command \Comment
   %% The argument will be surrounded by /* ... */
   %% \SetKwComment{Comment}{/* }{ */}
+
+  %% HUOM!!! Kirjoitetaan pseude alkuun sellaisena kuin se on alkuperäisissä papereissa.
+  %% Omat indeksöinnit voivat poiketa ja tämä korjataan sitten kun pseudo kirjotietaan
+  %% Vastaamaan omaa koodia!
   
   Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-  \begin{algorithm} % for captioning
+  \begin{algorithm}
     
     \caption{Aho and Corasic Algorithm 2, Construction of the goto function} \label{ac-goto}
+    % TODO: Kirjoita omin sanoin input, output, method.
     \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{y_1,y_2...,y_k\}$.\\
     \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$\\
-    \hspace*{\algorithmicindent} \textbf{Method:} We assume \textit{output($s$)} is empty when state $s$ is first created, and $g(s,a) = fail$ if $a$ is undefined or if $g(s,a)$ has not yet been defined. The procedure \textit{enter($y$)} inserts into the goto graph a path that spells out $y$.
+    \hspace*{\algorithmicindent} \textbf{Method:} We assume $g(s,a) = fail$ if $a$ is undefined or if $g(s,a)$ has not yet been defined. The procedure \textit{enter($y$)} inserts into the goto graph a path that spells out $y$
     
       \begin{algorithmic}[1]
         \Function{calculateGotoFunction}{$K = \{y_1,y_2...,y_k\}$}
-        \State $newstate\gets 0$
-        \For{$i \gets 1$ until $k$}
-        \State $enter(y_i)$
-        \EndFor
-        \For{all $a$ s.t. $g(0,a) = fail$ }
-        \State $g(0,a)\gets 0$
-        \EndFor
-        %% \If{element is literal}
-        %% \Else \Comment{The element is a phrase}
-        %% \EndIf
-        %% \Return decoded
+          % Oma indeksöinti: state 0 on undefined, state 1 = root.
+          \State $newstate\gets 0$
+          \For{$i \gets 1$ until $k$}
+            \State $enter(y_i)$
+          \EndFor
+          % Oma indeksöinti: state 0 on undefined, state 1 = root.            
+          \For{all $a$ s.t. $g(0,a) = fail$ }
+            % Oma indeksöinti: state 0 on undefined, state 1 = root.
+            \State $g(0,a)\gets 0$
+          \EndFor
+          %% \If{element is literal}
+          %% \Else \Comment{The element is a phrase}
+          %% \EndIf
+          %% \Return decoded
         \EndFunction
 
+        % Oma indeksöinti alkaa nollasta! a_0 ... a_m -1
         \Function{enter}{$y = (a_1,a_2,...,a_m)$}
-        \State $state\gets 0$
-        \State $j\gets 1$
-        \While{$g(state, a_j) != fail$}
-        \State $state\gets g(state,a_j)$
-        \State $j\gets j+1$
-        \EndWhile
-        \For{$p\gets j$ until $m$}
-        \State $newstate\gets newstate+1$
-        \State $g(state,a_p)\gets newstate$
-        \State $state\gets newstate$
-        \EndFor
+          \State $state\gets 0$
+          \State $j\gets 1$
+          \While{$g(state, a_j) != fail$}
+            \State $state\gets g(state,a_j)$
+            \State $j\gets j+1$
+          \EndWhile
+          \For{$p\gets j$ until $m$}
+            \State $newstate\gets newstate+1$
+            \State $g(state,a_p)\gets newstate$
+            \State $state\gets newstate$
+          \EndFor
         \EndFunction
       \end{algorithmic}
   \end{algorithm}
@@ -331,6 +345,7 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
 
   \begin{algorithm}
 
+    %% TODO: omin sanoin input, output.
     \caption{Aho and Corasix Algorithm 3, Construction of the failure function} \label{ac-fail}
     \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm\\ % \ref{ac-goto}\\
     \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
@@ -338,6 +353,7 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
     \begin{algorithmic}[1]
       \Function{calculateFailureFunction}{$g : \mathbb{N} \rightarrow \mathbb{N}$}
         \State $queue\gets \textit{empty}$
+        %% Indeksöinti!
         \For {each $a$ s.t. $g(a,0) = s \neq 0$}
           \State $queue\gets queue \cup \{s\}$
           \State $f(s)\gets 0$
@@ -347,10 +363,11 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
           \State $queue\gets queue \backslash \{r\}$
           \For{each $a$ s.t. $g(r,a) = s \neq fail$}
             \State $queue\gets queue \cup \{s\}$
-            \State $state\gets g(r)$
+            \State $state\gets f(r)$
             \While{$g(state,a) = fail$}
-              \State $f(s)\gets g(state,a)$
+              \State $state\gets f(state)$
             \EndWhile
+            \State $f(s)\gets g(state,a)$              
           \EndFor
         \EndWhile
           
@@ -358,7 +375,95 @@ Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
 
     \end{algorithmic}
   \end{algorithm}
+
+
+  \begin{algorithm}
+
+    %% OMIN SANOIN
+    \caption{Ukkonen90 algorithm 1, preprocessing} \label{ukk-pre}
+    \hspace*{\algorithmicindent} \textbf{Input:} Set $R=\{x_1,...,x_m\}$ of strings, and the goto function $g$ and the failure function $f$ for $R$.\\
+    \hspace*{\algorithmicindent} \textbf{Output:} Depth $d(s)$, list $L(s)$ and link $b(s)$ for each state $s$ of the AC machine; Pointer $B$ to the first state in the $b$-link chain; state $F(i)$ representing string $x_i$ for each $x_i$ with the exception that if $x_i$ is a substring of another string in $R$ then $F(i) = 0$.\\
+    \hspace*{\algorithmicindent} \textbf{Notation:} operator $\cdot$ denotes list catenation. An inverse of $F$ is represented by $E$: if $F(i) = s$ then $E(s) = i$; initially $E(s) = 0$ for every state s.\\
+    
+    \begin{algorithmic}[1]
+      \Function{calculateAuxiliaryFunctions}{$g : \mathbb{N} \rightarrow \mathbb{N}$, $f : \mathbb{N} \rightarrow \mathbb{N}$}
+        \For {$i = 1,...,m$}
+          \hspace*{\algorithmicindent} let $x_i = a_1,...,a_k$
+          \State $s\gets 0$
+          \For {$j = 1,...,k$}
+            \State $s\gets g(s,a_j)$
+            \State $L(s)\gets L(s) \cdot \{j\}$
+            \If {$j = k$}
+              \State $F(i)\gets s$
+              \State $E(s)\gets i$
+              \If {$s$ is not a leaf of the AC machine}
+                \State $F(i)\gets 0)$
+              \EndIf
+            \EndIf
+          \EndFor
+        \EndFor
+        \State $queue\gets 0$
+        \State $d(0)\gets 0$
+        \State $B\gets 0$
+        \While{$queue\neq empty$}
+          \hspace*{\algorithmicindent} let $r$ be the next state in queue
+          \State $queue\gets queue \backslash \{r\}$
+          \For {each $s$ s.t. $g(r,a) = s$ for some $a$}
+            \State $queue\gets queue\cdot s$
+            \State $d(s)\gets d(r)+1$
+            \State $b(s)\gets B$
+            \State $F(E(f(s)))\gets 0$
+          \EndFor
+        \EndWhile
+      \EndFunction
+        
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}
+    %% TODO: omin sanoin input, output.
+    \caption{Ukkonen90 Algorithm 2 Construction of H} \label{ukk-h}
+    \hspace*{\algorithmicindent} \textbf{Input:} Augmented AC machine for $R$ as constructed by ref\\ %ref?
+    \hspace*{\algorithmicindent} \textbf{Output:} A Hamiltonian path $H$ in the overlap graph of reduced $R$. A common superstring for $R$ can then be constructed by forming $p(H)$.\\
+
+    \begin{algorithmic}[1]
+      \Function{createPath}{Outputs of the previous functions, Set of keywords $R = \{k_1,...,k_m\}}
+        \For {$j = 1,...,m$}
+          \If {$F(j)\neq 0$}
+            \State $P(f(F(j)))\gets P(f(F(j)))\cdot {j}$
+            \State $FIRST(j)\gets j$
+            \State $LAST(j)\gets j$
+          \Else
+            \State $forbidden(j)\gets true$
+          \EndIf
+        \EndFor  
+        \State $s\gets b(B)$
+        \While {$s\neq 0$}
+          \If {$P(s)$ is not empty}
+            \For {each $j$ in $L(s)$ s.t. $forbidden(j) = false$}
+              \State $i\gets$ the first element of $P(s)$
+              \If {$FIRST(i) = j)$}
+                \If {$P(s)$ has only one element}
+                  \hspace*{\algorithmicindent} \textbf{goto} \textit{next}
+                \Else
+                  \State $i\gets$ the second element of $P(s)$
+                \EndIf
+              \EndIf  
+            \State $H\gets H\cdot \{(x_i,x_j)\}$
+            \State $forbidden(j)\gets true$
+            \State $FIRST(LAST(j))\gets FIRST(i)$
+            \State $LAST(FIRST(i))\gets LAST(j)$
+            \hspace*{\algorithmicindent} \textit{next:}
+            \EndFor
+          \State $P(f(s))\gets P(f(s))\cdot P(s)$
+          \EndIf
+          \State $s\gets b(s)$
+        \EndWhile
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
   
+
 
   \section{correctness}
   
