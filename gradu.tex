@@ -94,7 +94,7 @@
 \usepackage{wrapfig}        % For nice text-wrapping figures (use at own discretion)
 % Tikz stuff for apas graphs
 \usetikzlibrary{positioning,arrows,shapes,automata}
-\tikzstyle{gnode} = [circle,fill=blue!20,draw]
+\tikzstyle{gnode} = [circle,minimum size=1cm,fill=blue!20,draw]
 \tikzstyle{line} = [line width=0.5,draw]
 \tikzstyle{shaded} = [color=blue!30,line width=2mm,draw]
 \tikzstyle{shadedf} = [color=blue!25,line width=1.7mm,draw]
@@ -331,12 +331,108 @@ an \textsc{NP}-hard problem.
   
 \end{definition}
 
+
+
 %%
 \chapter{Ukkonen's Algorithm}
- \listofalgorithms
-  \section{AC-Machine}
-  hjallis
 
+In this chapter we describe the Ukkonen's linear time approximation algorithm for
+\textsc{Shortest Common Superstring} problem in detail. First we discuss about the
+Aho-Corasic (AC for short) machine as it is used in the algorithm for finding the overlaps
+between the set of input keywords. This chapter contains four pseudo code blocks which
+essentially forms the algorithm as whole. The algorithms represented here are slightly changed
+and contains few corrections from the form they were originally presented. Each such
+correction is mentioned and ...
+
+\listofalgorithms
+
+
+\section{AC-Machine}
+
+%  - mitä tää paska oli alunperin: Laajennettu kmp
+%  - äärellinen automaatti poikkeuksin (failure)
+%  - pattern matching machine
+
+  
+  
+%Aho-Corasic machine is a kind of finite state automata 
+%Originally the AC-machine was developed for finding \citep{aho75}
+
+  Aho-Corasic machine is a finite state machine like data structure that was developed to be used
+  in a pattern matching program to find occurrences of the given keywords in a text string. \citep{aho75}
+
+  The input of such pattern matching program contains a finite set of strings called keywords and an
+  arbitrary string called a text string. The output of the program is a list of locations of every
+  occurrence of every keyword in a text. The AC-machine data structure and the associated pattern
+  matching program was described in \citep{aho75}.
+
+  - similarity with kmp ?
+
+  As the pattern matching part of \citep{aho75} is not used in \citep{ukkonen90} nor it is relevant in
+  this thesis, we only discuss the AC-machine as a data structure and omit the pattern matching
+  functionality of the original author.
+
+  Formally AC-machine is defined\footnote{\citep{aho75} also defines an output function.
+  This is needed only when the AC-machine is used in a pattern matching program.} by the goto function
+  $g : \mathbb{N} \times \Sigma \rightarrow \mathbb{N}, g(s_s,c) = s_d$ and the failure function
+  $f : \mathbb{N} \rightarrow \mathbb{N}, f(s_s) = s_d$
+
+  The goto function describes the state transition from start state $s_s$ to the destination state
+  $s_d$ with the current input symbol $c$ of the state automaton. If there is no such goto transition
+  the failure function $f$ is queried and the failure transition from the start state $s_s$ to
+  the destination state $s_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
+  keywords encoded by the AC-machine.
+
+  Let there be a set of keywords $K=\{"baa", "baba" , "abab" , "aab"\}$
+
+  \begin{figure}
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, above right = 1cm and 2.277cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    
+    \node[gnode, right = 2cm of 3] (5) {$5$};
+    \node[gnode, right = 2cm of 5] (6) {$6$};
+
+    \node[gnode, right =  2cm of 1] (7) {$7$};
+    \node[gnode, right =  2cm of 7] (8) {$8$};
+    \node[gnode, right =  2cm of 8] (9) {$9$};
+    \node[gnode, right =  2cm of 9] (10) {$10$};
+    
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
+    \node[gnode, right = 2cm of 11] (12) {$12$};
+    
+    \path[line] (1) -- (2);
+    \path[line] (2) -- (3);
+    \path[line] (3) -- (4);
+
+    \path[line] (3) -- (5);
+    \path[line] (5) -- (6);
+
+    \path[line] (1) -- (7);
+    \path[line] (7) -- (8);
+    \path[line] (8) -- (9);
+    \path[line] (9) -- (10);
+
+    \path[line] (7) -- (11);
+    \path[line] (11) -- (12);
+    
+
+  \end{tikzpicture}
+  \caption{An example of a goto function} \label{fig-goto}
+\end{figure}
+
+
+  
+
+  
+
+%   $R=\{S1,...,Sm\}$ 
   \section{Pseudocode}
 
   %% This declares a command \Comment
