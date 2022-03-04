@@ -98,8 +98,8 @@
 \tikzstyle{line} = [line width=0.5,draw]
 \tikzstyle{shaded} = [color=blue!30,line width=2mm,draw]
 \tikzstyle{shadedf} = [color=blue!25,line width=1.7mm,draw]
-\tikzstyle{tnode} = []
-\tikzstyle{dotted} = [dashed, line width=0.5, draw]
+\tikzstyle{tnode} = [minimum size=0.67cm]
+\tikzstyle{dotted} = [dashed, line width=0.4, draw]
 
 \usepackage{amsmath, amssymb, amsthm, amsfonts, hyperref} % For better math
 
@@ -293,7 +293,7 @@ Regardless of the alphabet a string is simply a finite sequence of symbols. The 
   
 \end{definition}
 
-If a string $S$ contains another string $S'$ we say that the string $S'$ is a substring of a string $S$ and string $S$ is a superstring of $S'$-.
+If a string $S$ contains another string $S'$ we say that the string $S'$ is a substring of a string $S$ and string $S$ is a superstring of $S'$.
 By containing a string we mean that there is a sequence of symbols in $S$ that spells out $S'$
 
 \begin{definition}[\textsc{Substring and Superstring}]~\label{def-sub-super}
@@ -353,11 +353,8 @@ correction is mentioned and ...
 %  - äärellinen automaatti poikkeuksin (failure)
 %  - pattern matching machine
 
+% Ei yhden rivin kappaleita!  
   
-  
-%Aho-Corasic machine is a kind of finite state automata 
-%Originally the AC-machine was developed for finding \citep{aho75}
-
   Aho-Corasic machine is a finite state machine like data structure that was developed to be used
   in a pattern matching program to find occurrences of the given keywords in a text string. \citep{aho75}
 
@@ -368,9 +365,11 @@ correction is mentioned and ...
 
   - similarity with kmp ?
 
+  % Tulee fiilis etten tiedä mistä puhun. Kerro vähän enemmän tähän kappaleeseen  
   As the pattern matching part of \citep{aho75} is not used in \citep{ukkonen90} nor it is relevant in
   this thesis, we only discuss the AC-machine as a data structure and omit the pattern matching
   functionality of the original author.
+
 
   Formally AC-machine is defined\footnote{\citep{aho75} also defines an output function.
   This is needed only when the AC-machine is used in a pattern matching program.} by the goto function
@@ -383,7 +382,13 @@ correction is mentioned and ...
   the destination state $s_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
   keywords encoded by the AC-machine.
 
-  Let there be a set of keywords $K=\{"baa", "baba" , "abab" , "aab"\}$
+  The algorithms \ref{ac-goto} and \ref{ac-fail} are used as a complete definitons of the goto and
+  failure functions.
+
+  Let there be a set of keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$
+
+  Can produce "aababaa" (scs with compression 14-7=7) or "baababab" with compression 14-8 = 6.
+
 
   \begin{figure}
   \centering
@@ -407,18 +412,20 @@ correction is mentioned and ...
     \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
     \node[gnode, right = 2cm of 11] (12) {$12$};
 
-    \node[tnode, above left = 2cm and 4.554cm of 1] (v1) {};
-    \node[tnode, below left = 2cm and 4.554cm of 1] (v2) {};
+    \node[tnode, above left = 2.725cm and 2.277cm of 1] (v1) {};
+    \node[tnode, below left = 1cm and 2.277 of 1] (v2) {};
     
     \path[->]
-    (1) edge node[above] {b} (2)
+    (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
+    
+    (1) edge[bend left=15] node[above] {b} (2)
     (2) edge node[above] {a} (3)
     (3) edge node[above] {a} (4)
 
     (3) edge node[above] {b} (5)
     (5) edge node[above] {a} (6)
 
-    (1) edge node[above] {a} (7)
+    (1) edge[bend right=15] node[above] {a} (7)
     (7) edge node[above] {b} (8)
     (8) edge node[above] {a} (9)
     (9) edge node[above] {b} (10)
@@ -426,7 +433,11 @@ correction is mentioned and ...
     (7) edge[bend right=15] node[above] {a} (11)
     (11) edge node[above] {b} (12);
 
-    \path [->,dashed]
+    \path [->,dotted]
+
+    (2) edge[bend left=15] (1)
+    (7) edge [bend right=15] (1)
+    
     (3) edge (7)
     (8) edge (2)
     (11) edge[bend right=15] (7)
@@ -439,27 +450,14 @@ correction is mentioned and ...
     (6) edge (9)
     (10) edge (5);
 
-    \path[line] (4) -- (v1) -- (v2) -- (11);
-    
-
-    %% \path[line] (1) -- (2);
-    %% \path[line] (2) -- (3);
-    %% \path[line] (3) -- (4);
-
-    %% \path[line] (3) -- (5);
-    %% \path[line] (5) -- (6);
-
-    %% \path[line] (1) -- (7);
-    %% \path[line] (7) -- (8);
-    %% \path[line] (8) -- (9);
-    %% \path[line] (9) -- (10);
-
-    %% \path[line] (7) -- (11);
-    %% \path[line] (11) -- (12);
+    \path[->,dotted,rounded corners, shorten <= 0.5cm, shorten >= 0.5cm] plot coordinates {(4) (v1) (v2) (11)};
+    % repaint these nodes
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
     
 
   \end{tikzpicture}
-  \caption{An example of a goto function} \label{fig-goto}
+  \caption{An example of an AC-machine. TODO: 4->11 arrow head is missing.} \label{fig-goto}
 \end{figure}
 
 
