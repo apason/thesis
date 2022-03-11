@@ -99,6 +99,7 @@
 \tikzstyle{shaded} = [color=blue!30,line width=2mm,draw]
 \tikzstyle{shadedf} = [color=blue!25,line width=1.7mm,draw]
 \tikzstyle{tnode} = [minimum size=0.67cm]
+\tikzstyle{enode} = [minimum size=0.01cm]
 \tikzstyle{dotted} = [dashed, line width=0.4, draw]
 
 \usepackage{amsmath, amssymb, amsthm, amsfonts, hyperref} % For better math
@@ -245,17 +246,29 @@ Puglisin kommentteja:
 
 Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
 
-%%
+%% ei kappalejakoa introon. sectionit pois.
 \chapter{Introduction}~\label{chp-intro}
   vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
 
   \section{Motivation}
+
+  - scs yleisesti datan pakkaamiseen
+  - molekyylibiologia sekvensointi vaikeaa pitkälle pätkälle
+    - molekyylin pilkkominen random paloiksi, sekvensointi ja superstringin ottaminen.
+      saadaan approksimaatio alkuperäisestä pitkästä sekvenssistä
+    - toimii käutännössä hyvin \citep{Peltola83}
+  
 
   introssa motivaatiossa rlz mainittu mutta myöhemmin teknisesti
   
   alanko or someone mentionet thet it would be interesting to see an implementation
 
   \section{Related Work}
+
+  O(nm) based algorithm based on KnuthMorrisPratt \citep{Knuth77} \citep{Tarhio88}
+  perustuu kaikkien overlap parien laskemiseen kmp:llä.
+
+  hae jostain tietokannasta approx scs algoja !
 
   related workista oma kappale jos muita vertailuja kuin alanko ja norri. muuten ehkä introon.
   
@@ -331,6 +344,16 @@ an \textsc{NP}-hard problem.
   
 \end{definition}
 
+% Tarhio88
+Since the decision version of this problem is NP-complete... \citep{Garey79}
+
+-Lemma: Jos x on y:n substring s.t. y kuuluu R niin scs(R) == scs(Rux)
+todistus ???
+
+definition: reduced set of strings = joukko stringejä joissa mikään string ei ole toisen substring.
+
+definition: overlap note this is not symmetric!
+maximal overlap.
 
 
 %%
@@ -345,6 +368,147 @@ and contains few corrections from the form they were originally presented. Each 
 correction is mentioned and ...
 
 \listofalgorithms
+
+\section{The Greedy Heuristic}
+
+Let there be a set of strings $R=\{S1,...,Sm\}$. A naive method for constructing a common superstring is
+to concatenate all the strings in the set. For the set $R$ the resulting superstring is $S1S2\cdots Sm$.
+Since our goal is to achieve an approximation of the shortest common superstring the following heuristic
+is used.
+
+\begin{enumerate}
+\item Examine the set and remove the two strings $S_i$ and $S_j$ that have the longest overlap among all pairs of strings $(S_i, S_j)$ s.t. $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
+\item Merge the strings together such that they are maximally overlapped to form a shortest common superstring of the set $\{S_i, S_j\}$.
+  \item Add the new string back to the set $R$ and repeat until there is only one string left.
+\end{enumerate}
+
+It turns out that the \textsc{Shortest Common Superstring} problem is analogyous with a special case of
+the \textsc{Longest Hamiltonian Path} problem, that is, when the set of strings is converted into
+a weighted complete digraph as follows. Lets construct a graph $G_R=(V_R,E_R)$ from the set of strings $R$.
+Let there be a vertex $v_i\in V_R$ for each string $S_i\in R$. Moreover, we define the start node and
+the end node $\{V_{start},V_{end}\}\in V_R$. Each vertex have a directed weighted edge to each other
+such that the weight $(V_{start}, V_i) = 0$ and the weight $(V_i, V_{end}) = 0$ for all $i=1,...,m$.
+The weight of every other edge $(V_i, V_j)$ is the length of the maximum overlap between $S_i$ and $S_j$.
+TODO: korjaa. vain $V_i$ osa graafia on complete.
+
+%-intro hamiltonian pathiin!
+
+%-special case of shortest hampath in weighted directed graph.
+
+%- graafin nodet keywordeja SEKÄ alku ja loppunode
+
+%- graafin kaarten painot maksimaalisia overlappeja
+
+
+
+Since the overlap graph is a complete graph, there certainly exists a hamiltonian path(s). Taken by any
+of the hamiltonian paths $H$ from the graph $G_R$, we can construct a common superstring of $R$ by
+removing the overlaps and catenating the strings representing the nodes in the same order they appear
+on the path.
+...
+Lets take the strings in the same order as their corresponding nodes appear in the path $H$. Put the
+strings above each other such that they are maximally overlapped. The projection $p(H)$ results as a
+superstring of $R$.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  
+  \node[enode] (H1) at (0,0) {};
+  \node[enode] (H2) at (14,0) {};
+  \path [|-|] (H1) edge node[below] {p(H)} (H2);
+
+  \node[enode, above = 0.5cm of H1] (S1a) {};
+  \node[enode, above right = 0.5cm and 3.3cm of H1] (S1b) {};
+  \path[|-|] (S1a) edge (S1b);
+  \node[enode, right = 0cm of S1b] (S1txt) {$S_1$};
+
+  \node[enode, above right = 0.5cm and 1.2cm of S1a] (S2a) {};
+  \node[enode, right = 2.6cm of S2a] (S2b) {};
+  \path[|-|] (S2a) edge (S2b);
+  \node[enode, right = 0cm of S2b] (S2txt) {$S_2$};
+  
+  \node[enode, above right = 0.5cm and 2cm of S2a] (S3a) {};
+  \node[enode, right = 2.6cm of S3a] (S3b) {};
+  \path[|-|] (S3a) edge (S3b);
+  \node[enode, right = 0cm of S3b] (S3txt) {$S_3$};
+
+  \node[tnode, rotate = 40, above = 0.2cm of S3b] (dots1) {...};
+
+  \node[enode, above right = 1cm and 2.2cm of S3a] (Sia) {};
+  \node[enode, right = 2.6cm of Sia] (Sib) {};
+  \path[|-|] (Sia) edge (Sib);
+  \node[enode, right = 0cm of Sib] (Sitxt) {$S_i$};
+
+  \node[enode, above right = 0.5cm and 1.2cm of Sia] (Si1a) {};
+  \node[enode, right = 2.6cm of Si1a] (Si1b) {};
+  \path[|-|] (Si1a) edge (Si1b);
+  \node[enode, right = 0cm of Si1b] (Sitxt) {$S_{i+1}$};
+
+  \node[enode, above = 0.1cm of Sia] (zc) {};
+  \node[enode, below = 0.1cm of Si1a] (za) {};
+  \node[enode, above = 0.1cm of Sib] (zb) {};
+
+  \path[|-|, shorten >= -0.3cm] (zc) edge node[right = -0.1cm,fill=white,align=center] {$u_i$} (za);
+  \path[|-|] (za) edge node[fill=white,align=center] {$v_i$} (zb);
+
+  \node[tnode, rotate = 35, above = 0.2cm of Si1b] (dots2) {...};
+
+  \node[enode, above right = 1cm and 2.2cm of Si1a] (Sma) {};
+  \node[enode, right = 3.455cm of Sma] (Smb) {};
+  \path[|-|] (Sma) edge (Smb);
+  \node[enode, right = 0cm of Smb] (Sitxt) {$S_m$};  
+  
+\end{tikzpicture}
+\caption{The projection $p(H)$ of the set of strings $\{s_1,...,s_m\}}
+\end{figure}
+
+
+  analogia: hampathi tällaisessa overlap graphissa: path = nodejen järjestys.
+  -> laita stringit  (nodet) päällekkäin maksimaalisen overlapin perusteella ja "mergeä ne".
+  "projektio" tästä tuloksena on common superstring. koska kaaren painot kuvaavat overlappia eli kompressiota
+  niin oikea scs on tämän verkon lyhin hampathi. ahne heuristiikka kuitenkin antaa usein jonkin
+  muun ratkaisun.
+
+  -projektion pituus = superstringin pituus = kaikkien keywordien pituus - overlappien pituus, jossa
+  overlappien pituus on kompressio. näinollen pisin CS tarkoittaa pienintä kompressiota ja päinvastoin.
+
+  TÄHÄN KUVA!
+
+  koska projektion p(H) sekä common superstringin konstruointi on analogisesti ekvivalenttia niin lyhin
+  projektio tarkoittaa lyhintä common superstringiä.
+
+  Lemma2.2: kuvan mukaan suurin overlap xi ja xi+1 välillä on ui.
+  todistus
+
+
+  theorem 2.3 CONCEPTUALLY the same thing.
+  conclusion for the analogy: SCS for R is an string p(H) where H is a longest hampiltonina path from the start node to the end node in the overlap graph for R.
+
+  DEF greedy heuristic for hampath analogy. tarhio sivu 134.
+
+  ongelma ahneessa heuristiikassa on että voi tehdä hyvän valinnan joka pakottaa myöhemmin huonoihin valintoihin.
+
+  CONCEPTUALLY the ukkonen algo does just that so the proofs apply.
+
+
+
+  
+ennen tätä maininta approksimaatioalgosta. koska np niin käytetään approksimaatiota ja tätä heuristiikkaa
+
+
+-määrittele kompressio
+
+-scsn kompressio on vähintään puolet optimaalisesta \citep{Tarhio88}
+
+
+  %% tarhio99
+We show that $(n-k)\geq \frac{1}{2}(n-k_{min})$ where  $k_{min}$ is the length of a shortest common superstring. Hence the compression achieved by the algorithm is at least half of the maximum compression. It also seems that the lengths always satisfy $k\leq 2k_{min}$ but proving this remains open.
+Tämä boundi todistettu käyttäen hampathia paperissa \citep{Tarhio88}.
+Todistus pitkä ja monimutkainen, ei käydä nyt läpi. 
+
+  approx factor (ei välttämättä epsilon mutta jotkut boundit on olemassa ainakin kompressiolle)
+
 
 
 \section{AC-Machine}
@@ -376,16 +540,23 @@ correction is mentioned and ...
   $g : \mathbb{N} \times \Sigma \rightarrow \mathbb{N}, g(s_s,c) = s_d$ and the failure function
   $f : \mathbb{N} \rightarrow \mathbb{N}, f(s_s) = s_d$
 
+  % ei ukkosen algoritmissa ole mitään current input symbolia.. pitää muotoilla eritavalla.
   The goto function describes the state transition from start state $s_s$ to the destination state
   $s_d$ with the current input symbol $c$ of the state automaton. If there is no such goto transition
   the failure function $f$ is queried and the failure transition from the start state $s_s$ to
   the destination state $s_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
   keywords encoded by the AC-machine.
 
+  To construct the AC-machine for the set of keywords the \textsc{FSA} like goto function is first
+  created. The goto function is then used to construct the failure function which completes the
+  construction of the AC-machine. The goto function can be thought of as a trie. 
+  I.e it is a rooted tree 
+  root node and the nodes that spells out some strings. 
+
   The algorithms \ref{ac-goto} and \ref{ac-fail} are used as a complete definitons of the goto and
   failure functions.
 
-  Let there be a set of keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$
+  Let there be a set of keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$. 
 
   Can produce "aababaa" (scs with compression 14-7=7) or "baababab" with compression 14-8 = 6.
 
@@ -645,9 +816,7 @@ correction is mentioned and ...
 
 
   \section{correctness}
-  
 
-  approx factor (ei välttämättä epsilon mutta jotkut boundit on olemassa ainakin kompressiolle)
 
 %%
 \chapter{Relative Lempel-Ziv}
