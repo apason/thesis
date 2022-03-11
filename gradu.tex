@@ -83,6 +83,7 @@
 
 %\usepackage[utf8]{inputenc} % For UTF8 support, in some systems. Use UTF8 when saving your file.
 
+\usepackage{enumerate}
 \usepackage{lmodern}         % Font package, again in some systems.
 \usepackage{textcomp}        % Package for special symbols
 \usepackage[pdftex]{color, graphicx} % For pdf output and jpg/png graphics
@@ -114,6 +115,7 @@
 \makeatletter
 \let\c@equation\c@figure
 \makeatother
+\newtheorem{lemma}[theorem]{Lemma}
 
 
 \usepackage[pdftex]{graphicx}
@@ -371,13 +373,24 @@ correction is mentioned and ...
 
 \section{The Greedy Heuristic}
 
-Note to Simon: I think this whole section is poorly written and it is hard to follow. Any
-ideas how to improve the reaability and emphasise the important things?
+%% Introtaan overlap graph
+%% demotaan että tästä selvästi saadaan superstringi
+%% nyt pitää vielä näyttää että tällä tavalla (overlap graphista saatu) lyhyin superstringi on se the scs!
+%%   tämän todistamiseksi tarvitaan
+%%   - näytetään että decomposition on sama
+%%   - parittaiset decompositionit on maksimaalisia
+  
+Note to Simon: The purpose of this chapter is to introduce the greedy heuristic using strings. Then
+we show that the analogy between the SCS and longest Hampath problem and define the heuristics using hampath. The point of proving the problems are equivalent is that Tarhio and Ukkonen used it to prove the
+correctness and the bound (approx scs >= 1/2 scs). 
+I think this whole section is poorly written and it is hard to follow. Maybe there is something missing
+and it is not even correct. Any ideas how to improve the reaability and emphasise the important things?
 
-Let there be a set of strings $R=\{s_1,...,s_m\}$. A naive method for constructing a common superstring is
-to concatenate all the strings in the set. For the set $R$ the resulting superstring is $s_1s_2\cdots s_m$.
-Since our goal is to achieve an approximation of the shortest common superstring the following heuristic
-is used.
+Let there be a set of strings $R=\{s_1,...,s_m\}$. A naive method for constructing a common superstring
+is to concatenate all the strings in the set. For the set $R$ the resulting superstring
+is $s_1s_2\cdots s_m$.
+The following greedy heuristic can be used to the construction of the approximation of the shortest
+common superstring.
 
 \begin{enumerate}
 \item Examine the set and remove the two strings $s_i$ and $s_j$ that have the longest overlap among all pairs of strings $(s_i, s_j)$ s.t. $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
@@ -387,29 +400,29 @@ is used.
 
 It turns out that the \textsc{Shortest Common Superstring} problem is analogyous with a special case of
 the \textsc{Longest Hamiltonian Path} problem, that is, when the set of strings is converted into
-a weighted complete digraph as follows. Lets construct a graph $G_R=(V_R,E_R)$ from the set of strings $R$.
+a weighted complete digraph as follows. The graph $G_R=(V_R,E_R)$ is constructed from the set of strings $R$.
 Let there be a vertex $v_i\in V_R$ for each string $s_i\in R$. Moreover, we define the start node and
-the end node $\{V_{start},V_{end}\}\in V_R$. Each vertex have a directed weighted edge to each other
-such that the weight $(V_{start}, V_i) = 0$ and the weight $(V_i, V_{end}) = 0$ for all $i=1,...,m$.
-The weight of every other edge $(V_i, V_j)$ is the length of the maximum overlap between $s_i$ and $s_j$.
-
-TODO: Only the subgraph $\{V_i\}$ is complete. There is no egdes between the start node and the end node.
-Correct the text above.
+the end node $\{v_{start},v_{end}\}\in V_R$. Each vertex $v_i$ have a directed weighted edge to each
+vertex
+$v_j$ such that $i\neq j$. The start node has an edge to each $v_i$ and each $v_i$ has an edge to the
+end node. The weight $(v_{start}, v_i) = 0$ and the weight $(v_i, v_{end}) = 0$ for all $i=1,...,m$.
+The weight of every other edge $(v_i, v_j)$ is the length of the maximum overlap between $s_i$ and $s_j$.
 
 %-intro hamiltonian pathiin!
 %-special case of shortest hampath in weighted directed graph.
 %- graafin nodet keywordeja SEKÄ alku ja loppunode
 %- graafin kaarten painot maksimaalisia overlappeja
 
-Since the overlap graph is a complete graph, there certainly exists a hamiltonian path(s). Taken by any
-of the hamiltonian paths $H$ from the graph $G_R$, we can construct a common superstring of $R$ by
-removing the overlaps and catenating the strings representing the nodes in the same order they appear
-on the path.
-...
+Since the subgraph consisting of vertices $\{v_i\}, i=1...m$ is a complete graph, there certainly exists a
+Hamiltonian path(s). Taken by any
+of the Hamiltonian paths $H$ from the graph $G_R$, we can construct a common superstring of $R$ by
+overlapping the strings representing the nodes in the same order they appear on the path in the
+following way.
+
 Lets take the strings in the same order as their corresponding nodes appear in the path $H$. Put the
 strings above each other such that they are maximally overlapped. The projection $p(H)$ which describes
-the strings that are maximally overlapped (i.e. the overlaps are not duplicated) results as a
-superstring of $R$. Depending on the hamiltonian path $H$ the overlaps in the projetion $p(H)$ have
+the strings that are maximally overlapped (i.e. the overlaps are not duplicated) clearly results as a
+superstring of $R$. Depending on the Hamiltonian path $H$ the overlaps in the projetion $p(H)$ have
 different lengths hence the projection changes depending on the path $H$. 
 
 \begin{figure}
@@ -420,46 +433,46 @@ different lengths hence the projection changes depending on the path $H$.
   \node[enode] (H2) at (14,0) {};
   \path [|-|] (H1) edge node[below] {p(H)} (H2);
 
-  \node[enode, above = 0.5cm of H1] (S1a) {};
-  \node[enode, above right = 0.5cm and 3.3cm of H1] (S1b) {};
-  \path[|-|] (S1a) edge (S1b);
-  \node[enode, right = 0cm of S1b] (S1txt) {$S_1$};
+  \node[enode, above = 0.5cm of H1] (T1a) {};
+  \node[enode, above right = 0.5cm and 3.3cm of H1] (T1b) {};
+  \path[|-|] (T1a) edge (T1b);
+  \node[enode, right = 0cm of T1b] (T1txt) {$t_1$};
 
-  \node[enode, above right = 0.5cm and 1.2cm of S1a] (S2a) {};
-  \node[enode, right = 2.6cm of S2a] (S2b) {};
-  \path[|-|] (S2a) edge (S2b);
-  \node[enode, right = 0cm of S2b] (S2txt) {$S_2$};
+  \node[enode, above right = 0.5cm and 1.2cm of T1a] (T2a) {};
+  \node[enode, right = 2.6cm of T2a] (T2b) {};
+  \path[|-|] (T2a) edge (T2b);
+  \node[enode, right = 0cm of T2b] (T2txt) {$t_2$};
   
-  \node[enode, above right = 0.5cm and 2cm of S2a] (S3a) {};
-  \node[enode, right = 2.6cm of S3a] (S3b) {};
-  \path[|-|] (S3a) edge (S3b);
-  \node[enode, right = 0cm of S3b] (S3txt) {$S_3$};
+  \node[enode, above right = 0.5cm and 2cm of T2a] (T3a) {};
+  \node[enode, right = 2.6cm of T3a] (T3b) {};
+  \path[|-|] (T3a) edge (T3b);
+  \node[enode, right = 0cm of T3b] (T3txt) {$t_3$};
 
-  \node[tnode, rotate = 40, above = 0.2cm of S3b] (dots1) {...};
+  \node[tnode, rotate = 40, above = 0.2cm of T3b] (dots1) {...};
 
-  \node[enode, above right = 1cm and 2.2cm of S3a] (Sia) {};
-  \node[enode, right = 2.6cm of Sia] (Sib) {};
-  \path[|-|] (Sia) edge (Sib);
-  \node[enode, right = 0cm of Sib] (Sitxt) {$S_i$};
+  \node[enode, above right = 1cm and 2.2cm of T3a] (Tia) {};
+  \node[enode, right = 2.6cm of Tia] (Tib) {};
+  \path[|-|] (Tia) edge (Tib);
+  \node[enode, right = 0cm of Tib] (Titxt) {$t_i$};
 
-  \node[enode, above right = 0.5cm and 1.2cm of Sia] (Si1a) {};
-  \node[enode, right = 2.6cm of Si1a] (Si1b) {};
-  \path[|-|] (Si1a) edge (Si1b);
-  \node[enode, right = 0cm of Si1b] (Sitxt) {$S_{i+1}$};
+  \node[enode, above right = 0.5cm and 1.2cm of Tia] (Ti1a) {};
+  \node[enode, right = 2.6cm of Ti1a] (Ti1b) {};
+  \path[|-|] (Ti1a) edge (Ti1b);
+  \node[enode, right = 0cm of Ti1b] (Titxt) {$t_{i+1}$};
 
-  \node[enode, above = 0.1cm of Sia] (zc) {};
-  \node[enode, below = 0.1cm of Si1a] (za) {};
-  \node[enode, above = 0.1cm of Sib] (zb) {};
+  \node[enode, above = 0.1cm of Tia] (zc) {};
+  \node[enode, below = 0.1cm of Ti1a] (za) {};
+  \node[enode, above = 0.1cm of Tib] (zb) {};
 
   \path[|-|, shorten >= -0.3cm] (zc) edge node[right = -0.1cm,fill=white,align=center] {$u_i$} (za);
   \path[|-|] (za) edge node[fill=white,align=center] {$v_i$} (zb);
 
-  \node[tnode, rotate = 35, above = 0.2cm of Si1b] (dots2) {...};
+  \node[tnode, rotate = 35, above = 0.2cm of Ti1b] (dots2) {...};
 
-  \node[enode, above right = 1cm and 2.2cm of Si1a] (Sma) {};
-  \node[enode, right = 3.455cm of Sma] (Smb) {};
-  \path[|-|] (Sma) edge (Smb);
-  \node[enode, right = 0cm of Smb] (Sitxt) {$S_m$};  
+  \node[enode, above right = 1cm and 2.2cm of Ti1a] (Tma) {};
+  \node[enode, right = 3.455cm of Tma] (Tmb) {};
+  \path[|-|] (Tma) edge (Tmb);
+  \node[enode, right = 0cm of Tmb] (Titxt) {$t_m$};  
   
 \end{tikzpicture}
 \caption{The projection $p(H)$ of the set of strings $\{s_1,...,s_m\}$} \label{fig-projection}
@@ -471,56 +484,65 @@ different lengths hence the projection changes depending on the path $H$.
 
 The figure \ref{fig-projection} shows an example of the projection constructed from a
 Hamiltonian path $H$ in an overlap graph. The corresponding set of keywords contains of
-$m$ strings. We can represent the string $s_i$ as a (prefix,suffix) pair
-$(u_i,v_i)$ where $v_i$ is the suffix of $s_i$ that is also a prefix of $s_{i+1}$ such that the
-overlap between $s_i$ and $s_{i+1}$ is maximal. $u_i$ is the prefix of $s_i$ whose length is $|s_i|-|v_i|$
-i.e. $u_i$ is the part of $s_i$ that can not be overlapped with $s_{i+1}$. Using this partition we can
-write the projection $p(H)$ as $u_1u_2\cdots u_{m-1}s_m$.
-
-TODO: above definition does not work for $s_m$ since $v_m$ is defined via string $s_{m+1}$
-which does not exist??? Modify the definition.
+strings $s_1$ to $s_m$. The strings $t_1$ to $t_m$ are the same strings in the order they appear on $H$.
+We can represent the string $t_i, i=1...m-1$ as a (prefix,suffix) pair
+$(u_i,v_i)$ where $v_i$ is the suffix of $t_i$ that is also a prefix of $t_{i+1}$ such that the
+overlap between $t_i$ and $t_{i+1}$ is maximal. $u_i$ is the prefix of $t_i$ whose length is $|t_i|-|v_i|$
+i.e. $u_i$ is the part of $t_i$ that can not be overlapped with $t_{i+1}$. Using this partitioning we can
+write the projection $p(H)$ as $u_1u_2\cdots u_{m-1}t_m$.
 
 Since the maximal overlaps $v_i,i\in1,...,m-1$ appears in the projection only once, the length of the
-projection is $(|s_1|+...+|s_m|) - (|v_1|+...+|v_{m-1}|)$. The length of the maximal overlaps are equivalent
+projection is $(|s_1|+...+|s_m|) - (|v_1|+...+|v_{m-1}|)$. The length of the maximal overlaps
+are equivalent
 with the weights of the overlap graph $G_R$ hence $v_1+...+v_{m-1} = |H|$. As the size of $|H|$ grows, the size
-of the projection gets shorter. That means the shortest common superstring or $R$ corresponds with the longest
-Hamiltonian path in $G_R$. With this analogy the size of $H$ is the compression of the common superstring
+of the projection gets shorter.
+
+%That means the shortest common superstring of $R$ corresponds with the longest Hamiltonian path in $G_R$.
+% ^ This must be proven!
+
+With this analogy the size of $H$ is the compression of the common superstring
 and the length of $p(H)$ is the length of the common superstring.
 
-  %% analogia: hampathi tällaisessa overlap graphissa: path = nodejen järjestys.
-  %% -> laita stringit  (nodet) päällekkäin maksimaalisen overlapin perusteella ja "mergeä ne".
-  %% "projektio" tästä tuloksena on common superstring. koska kaaren painot kuvaavat overlappia eli kompressiota
+We now know that the Hamiltonian path in the overlap graph can be used to form a common super string
+of the set of keywords. Next we conclude that also the shortest common superstring of $R$ has a
+corresponding Hamiltonian path. To prove this we introduce the following lemmas.
+
+
+\begin{lemma}[]~\label{lem-composition}
+The compositions of $p(H)$ and the shortest common superstring $z$ are equivalent.
+\end{lemma}
+\begin{proof}
+  The lemma can bee proven by construction. Let there be a set of strings $R=\{r_1,r_2,...,r_m\}$ and
+  the shortest common superstring $z$ for $R$. The indices of the strings $r_i$ to $r_m$ are in the same
+  order they appear in $z$. Let $y_i$ be the longest suffix of $r_i$ such that it is also a prefix
+  of $r_{i+1}$. I.e there is an overlap $y_i$ between $r_i$ and $R_{i+1}$. Additionally, let us
+  define $x_i$ to be the prefix of $r_i$ that does not overlap with $y_i$. By this construction we
+  see that the composition of any SCS for any set of strings is equivalent with the composition
+  of the superstring acquired via the projection from the Hamiltonian path.
+
+  Hence, there exists a
+  Hamiltonian path and the corresponding projection for any SCS.
+\end{proof}
+
+By lemma \ref{lem-composition} there exists a decomposition of the SCS $z$ that corresponds a
+Hamiltonian path in an overlap graph. This proves the following theorem.
+
+
   %% niin oikea scs on tämän verkon lyhin hampathi. ahne heuristiikka kuitenkin antaa usein jonkin
   %% muun ratkaisun.
-
-  %% -projektion pituus = superstringin pituus = kaikkien keywordien pituus - overlappien pituus, jossa
-  %% overlappien pituus on kompressio. näinollen pisin CS tarkoittaa pienintä kompressiota ja päinvastoin.
-
-  %% TÄHÄN KUVA!
-
   %% koska projektion p(H) sekä common superstringin konstruointi on analogisesti ekvivalenttia niin lyhin
   %% projektio tarkoittaa lyhintä common superstringiä.
 
-\begin{lemma}[]~\label{lem-maximal-overlap}
-
-  The maximal overlap between each $s_i$ and $s_{i+1}$ is $v_i$
-
-  \textit{Proof:} Lets assume the opposite. Let $w$ be a suffix of $s_i$ which is longer than $v_i$.
-  Now $s_i$ can be written as $w$
-
-  
-\end{definition}
 
 \begin{theorem} [] ~\label{lem-similarity-between-SCS-Hamp}
 
-  The projection $p(H)$ equals with the shortest common superstring of $R$, when $H$
-  is the longest Hamiltonian path in the overlap graph for $R$.
+  The projection $p(H)$ for the longest Hamiltonian path in the overlap graph is equivalent with
+  the shortest common superstring for $R$.
 
 \end{theorem}
 
-The following defines a conceptually equivalent greedy heuristic for the construction of the shortest common
-superstring approximation by construction of the approximation of the longest Hamiltonian path in
-an overlap graph.
+The following defines a conceptually equivalent greedy heuristic for the SCS problem in the terms of
+a Hamiltonian path in the overlap graph.
 
 To  construct a Hamiltonian path select an edge $e$ from the set $E_R$ such that
 \begin{enumerate}
@@ -530,7 +552,7 @@ To  construct a Hamiltonian path select an edge $e$ from the set $E_R$ such that
 \end{enumerate}
 The constraint 3 indicates the following things
 \begin{enumerate}[i]
-\item The selection does form a cycle.
+\item The selection does not form a cycle.
 \item The earlier selected edges can not have the same start node with $e$.
 \item The earlier selected edges can not have the same end node with $e$.
 \end{enumerate}
@@ -539,24 +561,27 @@ The constraint 3 indicates the following things
 
 %  CONCEPTUALLY the ukkonen algo does just that so the proofs apply.
 
-
-
-
-  
 %ennen tätä maininta approksimaatioalgosta. koska np niin käytetään approksimaatiota ja tätä heuristiikkaa
-
 
 %-määrittele kompressio
 
 %-scsn kompressio on vähintään puolet optimaalisesta \citep{Tarhio88}
 
+\begin{theorem}[]~\label{theorem-heuristic-bound}
+  Let $H'$ be the approximate longest Hamiltonian path in the overlap graph created using
+  the greedy heuristic and let $H$ be the the actual longest Hamiltonian path. Now,
+  
+  $(|H'|)\leq \frac{1}{2}(|H|)$
+  
+\end{theorem}
+\begin{proof}
+  \citep{Tarhio88} proved the theorem.
+\end{proof}
 
-  %% tarhio99
-We show that $(n-k)\geq \frac{1}{2}(n-k_{min})$ where  $k_{min}$ is the length of a shortest common superstring. Hence the compression achieved by the algorithm is at least half of the maximum compression. It also seems that the lengths always satisfy $k\leq 2k_{min}$ but proving this remains open.
-Tämä boundi todistettu käyttäen hampathia paperissa \citep{Tarhio88}.
-Todistus pitkä ja monimutkainen, ei käydä nyt läpi. 
+In other words the compression achieved by the greedy heuristic is at least half of the optimal
+compression. 
 
-  approx factor (ei välttämättä epsilon mutta jotkut boundit on olemassa ainakin kompressiolle)
+%  approx factor (ei välttämättä epsilon mutta jotkut boundit on olemassa ainakin kompressiolle)
 
 
 
@@ -677,7 +702,7 @@ Todistus pitkä ja monimutkainen, ei käydä nyt läpi.
     
 
   \end{tikzpicture}
-  \caption{An example of an AC-machine. TODO: 4->11 arrow head is missing.} \label{fig-ac}
+  \caption{An example of an AC-machine. TODO: bigger arrow heads.} \label{fig-ac}
 \end{figure}
 
 
