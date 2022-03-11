@@ -371,35 +371,35 @@ correction is mentioned and ...
 
 \section{The Greedy Heuristic}
 
-Let there be a set of strings $R=\{S1,...,Sm\}$. A naive method for constructing a common superstring is
-to concatenate all the strings in the set. For the set $R$ the resulting superstring is $S1S2\cdots Sm$.
+Note to Simon: I think this whole section is poorly written and it is hard to follow. Any
+ideas how to improve the reaability and emphasise the important things?
+
+Let there be a set of strings $R=\{s_1,...,s_m\}$. A naive method for constructing a common superstring is
+to concatenate all the strings in the set. For the set $R$ the resulting superstring is $s_1s_2\cdots s_m$.
 Since our goal is to achieve an approximation of the shortest common superstring the following heuristic
 is used.
 
 \begin{enumerate}
-\item Examine the set and remove the two strings $S_i$ and $S_j$ that have the longest overlap among all pairs of strings $(S_i, S_j)$ s.t. $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
-\item Merge the strings together such that they are maximally overlapped to form a shortest common superstring of the set $\{S_i, S_j\}$.
+\item Examine the set and remove the two strings $s_i$ and $s_j$ that have the longest overlap among all pairs of strings $(s_i, s_j)$ s.t. $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
+\item Merge the strings together such that they are maximally overlapped to form a shortest common superstring of the set $\{s_i, s_j\}$.
   \item Add the new string back to the set $R$ and repeat until there is only one string left.
 \end{enumerate}
 
 It turns out that the \textsc{Shortest Common Superstring} problem is analogyous with a special case of
 the \textsc{Longest Hamiltonian Path} problem, that is, when the set of strings is converted into
 a weighted complete digraph as follows. Lets construct a graph $G_R=(V_R,E_R)$ from the set of strings $R$.
-Let there be a vertex $v_i\in V_R$ for each string $S_i\in R$. Moreover, we define the start node and
+Let there be a vertex $v_i\in V_R$ for each string $s_i\in R$. Moreover, we define the start node and
 the end node $\{V_{start},V_{end}\}\in V_R$. Each vertex have a directed weighted edge to each other
 such that the weight $(V_{start}, V_i) = 0$ and the weight $(V_i, V_{end}) = 0$ for all $i=1,...,m$.
-The weight of every other edge $(V_i, V_j)$ is the length of the maximum overlap between $S_i$ and $S_j$.
-TODO: korjaa. vain $V_i$ osa graafia on complete.
+The weight of every other edge $(V_i, V_j)$ is the length of the maximum overlap between $s_i$ and $s_j$.
+
+TODO: Only the subgraph $\{V_i\}$ is complete. There is no egdes between the start node and the end node.
+Correct the text above.
 
 %-intro hamiltonian pathiin!
-
 %-special case of shortest hampath in weighted directed graph.
-
 %- graafin nodet keywordeja SEKÄ alku ja loppunode
-
 %- graafin kaarten painot maksimaalisia overlappeja
-
-
 
 Since the overlap graph is a complete graph, there certainly exists a hamiltonian path(s). Taken by any
 of the hamiltonian paths $H$ from the graph $G_R$, we can construct a common superstring of $R$ by
@@ -407,8 +407,10 @@ removing the overlaps and catenating the strings representing the nodes in the s
 on the path.
 ...
 Lets take the strings in the same order as their corresponding nodes appear in the path $H$. Put the
-strings above each other such that they are maximally overlapped. The projection $p(H)$ results as a
-superstring of $R$.
+strings above each other such that they are maximally overlapped. The projection $p(H)$ which describes
+the strings that are maximally overlapped (i.e. the overlaps are not duplicated) results as a
+superstring of $R$. Depending on the hamiltonian path $H$ the overlaps in the projetion $p(H)$ have
+different lengths hence the projection changes depending on the path $H$. 
 
 \begin{figure}
 \centering
@@ -460,46 +462,93 @@ superstring of $R$.
   \node[enode, right = 0cm of Smb] (Sitxt) {$S_m$};  
   
 \end{tikzpicture}
-\caption{The projection $p(H)$ of the set of strings $\{s_1,...,s_m\}}
+\caption{The projection $p(H)$ of the set of strings $\{s_1,...,s_m\}$} \label{fig-projection}
 \end{figure}
 
+% INTORO, VÄITE, PERUSTELU, KONKLUSIO
 
-  analogia: hampathi tällaisessa overlap graphissa: path = nodejen järjestys.
-  -> laita stringit  (nodet) päällekkäin maksimaalisen overlapin perusteella ja "mergeä ne".
-  "projektio" tästä tuloksena on common superstring. koska kaaren painot kuvaavat overlappia eli kompressiota
-  niin oikea scs on tämän verkon lyhin hampathi. ahne heuristiikka kuitenkin antaa usein jonkin
-  muun ratkaisun.
+% PAPERISSA TÄÄ KOKO PASKA ON REDUCED. eli käydään ensin reduced läpi ja tehdään tämä sille.. ?
 
-  -projektion pituus = superstringin pituus = kaikkien keywordien pituus - overlappien pituus, jossa
-  overlappien pituus on kompressio. näinollen pisin CS tarkoittaa pienintä kompressiota ja päinvastoin.
+The figure \ref{fig-projection} shows an example of the projection constructed from a
+Hamiltonian path $H$ in an overlap graph. The corresponding set of keywords contains of
+$m$ strings. We can represent the string $s_i$ as a (prefix,suffix) pair
+$(u_i,v_i)$ where $v_i$ is the suffix of $s_i$ that is also a prefix of $s_{i+1}$ such that the
+overlap between $s_i$ and $s_{i+1}$ is maximal. $u_i$ is the prefix of $s_i$ whose length is $|s_i|-|v_i|$
+i.e. $u_i$ is the part of $s_i$ that can not be overlapped with $s_{i+1}$. Using this partition we can
+write the projection $p(H)$ as $u_1u_2\cdots u_{m-1}s_m$.
 
-  TÄHÄN KUVA!
+TODO: above definition does not work for $s_m$ since $v_m$ is defined via string $s_{m+1}$
+which does not exist??? Modify the definition.
 
-  koska projektion p(H) sekä common superstringin konstruointi on analogisesti ekvivalenttia niin lyhin
-  projektio tarkoittaa lyhintä common superstringiä.
+Since the maximal overlaps $v_i,i\in1,...,m-1$ appears in the projection only once, the length of the
+projection is $(|s_1|+...+|s_m|) - (|v_1|+...+|v_{m-1}|)$. The length of the maximal overlaps are equivalent
+with the weights of the overlap graph $G_R$ hence $v_1+...+v_{m-1} = |H|$. As the size of $|H|$ grows, the size
+of the projection gets shorter. That means the shortest common superstring or $R$ corresponds with the longest
+Hamiltonian path in $G_R$. With this analogy the size of $H$ is the compression of the common superstring
+and the length of $p(H)$ is the length of the common superstring.
 
-  Lemma2.2: kuvan mukaan suurin overlap xi ja xi+1 välillä on ui.
-  todistus
+  %% analogia: hampathi tällaisessa overlap graphissa: path = nodejen järjestys.
+  %% -> laita stringit  (nodet) päällekkäin maksimaalisen overlapin perusteella ja "mergeä ne".
+  %% "projektio" tästä tuloksena on common superstring. koska kaaren painot kuvaavat overlappia eli kompressiota
+  %% niin oikea scs on tämän verkon lyhin hampathi. ahne heuristiikka kuitenkin antaa usein jonkin
+  %% muun ratkaisun.
 
+  %% -projektion pituus = superstringin pituus = kaikkien keywordien pituus - overlappien pituus, jossa
+  %% overlappien pituus on kompressio. näinollen pisin CS tarkoittaa pienintä kompressiota ja päinvastoin.
 
-  theorem 2.3 CONCEPTUALLY the same thing.
-  conclusion for the analogy: SCS for R is an string p(H) where H is a longest hampiltonina path from the start node to the end node in the overlap graph for R.
+  %% TÄHÄN KUVA!
 
-  DEF greedy heuristic for hampath analogy. tarhio sivu 134.
+  %% koska projektion p(H) sekä common superstringin konstruointi on analogisesti ekvivalenttia niin lyhin
+  %% projektio tarkoittaa lyhintä common superstringiä.
 
-  ongelma ahneessa heuristiikassa on että voi tehdä hyvän valinnan joka pakottaa myöhemmin huonoihin valintoihin.
+\begin{lemma}[]~\label{lem-maximal-overlap}
 
-  CONCEPTUALLY the ukkonen algo does just that so the proofs apply.
+  The maximal overlap between each $s_i$ and $s_{i+1}$ is $v_i$
+
+  \textit{Proof:} Lets assume the opposite. Let $w$ be a suffix of $s_i$ which is longer than $v_i$.
+  Now $s_i$ can be written as $w$
+
+  
+\end{definition}
+
+\begin{theorem} [] ~\label{lem-similarity-between-SCS-Hamp}
+
+  The projection $p(H)$ equals with the shortest common superstring of $R$, when $H$
+  is the longest Hamiltonian path in the overlap graph for $R$.
+
+\end{theorem}
+
+The following defines a conceptually equivalent greedy heuristic for the construction of the shortest common
+superstring approximation by construction of the approximation of the longest Hamiltonian path in
+an overlap graph.
+
+To  construct a Hamiltonian path select an edge $e$ from the set $E_R$ such that
+\begin{enumerate}
+\item $e$ has the largest weight. If there are multiple such edges, the decision can be made arbitrarily.
+\item $e$ is not selected before
+\item With already selected edges $e$ can be used to form a Hamiltonian cycle.
+\end{enumerate}
+The constraint 3 indicates the following things
+\begin{enumerate}[i]
+\item The selection does form a cycle.
+\item The earlier selected edges can not have the same start node with $e$.
+\item The earlier selected edges can not have the same end node with $e$.
+\end{enumerate}
+
+%  ongelma ahneessa heuristiikassa on että voi tehdä hyvän valinnan joka pakottaa myöhemmin huonoihin valintoihin.
+
+%  CONCEPTUALLY the ukkonen algo does just that so the proofs apply.
+
 
 
 
   
-ennen tätä maininta approksimaatioalgosta. koska np niin käytetään approksimaatiota ja tätä heuristiikkaa
+%ennen tätä maininta approksimaatioalgosta. koska np niin käytetään approksimaatiota ja tätä heuristiikkaa
 
 
--määrittele kompressio
+%-määrittele kompressio
 
--scsn kompressio on vähintään puolet optimaalisesta \citep{Tarhio88}
+%-scsn kompressio on vähintään puolet optimaalisesta \citep{Tarhio88}
 
 
   %% tarhio99
@@ -628,7 +677,7 @@ Todistus pitkä ja monimutkainen, ei käydä nyt läpi.
     
 
   \end{tikzpicture}
-  \caption{An example of an AC-machine. TODO: 4->11 arrow head is missing.} \label{fig-goto}
+  \caption{An example of an AC-machine. TODO: 4->11 arrow head is missing.} \label{fig-ac}
 \end{figure}
 
 
