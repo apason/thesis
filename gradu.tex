@@ -594,28 +594,27 @@ compression.
 % Ei yhden rivin kappaleita!  
   
   Aho-Corasic machine is a finite state machine like data structure that was developed to be used
-  in a pattern matching program to find occurrences of the given keywords in a text string. \citep{aho75}
-
+  in a pattern matching program to find occurrences of the given keywords in a text string. \citep{Aho75}
   The input of such pattern matching program contains a finite set of strings called keywords and an
   arbitrary string called a text string. The output of the program is a list of locations of every
   occurrence of every keyword in a text. The AC-machine data structure and the associated pattern
-  matching program was described in \citep{aho75}.
+  matching program was described in \citep{Aho75}.
 
-  - similarity with kmp ?
+  todo: similarity with kmp ?
 
   % Tulee fiilis etten tiedä mistä puhun. Kerro vähän enemmän tähän kappaleeseen  
-  As the pattern matching part of \citep{aho75} is not used in \citep{ukkonen90} nor it is relevant in
+  As the string matching part of \citep{Aho75} is not used in \citep{Ukkonen90} nor it is relevant in
   this thesis, we only discuss the AC-machine as a data structure and omit the pattern matching
   functionality of the original author.
 
-
-  Formally AC-machine is defined\footnote{\citep{aho75} also defines an output function.
+  Formally AC-machine is defined\footnote{\citep{Aho75} also defines an output function.
   This is needed only when the AC-machine is used in a pattern matching program.} by the goto function
   $g : \mathbb{N} \times \Sigma \rightarrow \mathbb{N}, g(s_s,c) = s_d$ and the failure function
   $f : \mathbb{N} \rightarrow \mathbb{N}, f(s_s) = s_d$
 
-  % ei ukkosen algoritmissa ole mitään current input symbolia.. pitää muotoilla eritavalla.
-  The goto function describes the state transition from start state $s_s$ to the destination state
+
+  When the AC-machine is used in a text search program,
+  the goto function describes the state transition from start state $s_s$ to the destination state
   $s_d$ with the current input symbol $c$ of the state automaton. If there is no such goto transition
   the failure function $f$ is queried and the failure transition from the start state $s_s$ to
   the destination state $s_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
@@ -623,19 +622,26 @@ compression.
 
   To construct the AC-machine for the set of keywords the \textsc{FSA} like goto function is first
   created. The goto function is then used to construct the failure function which completes the
-  construction of the AC-machine. The goto function can be thought of as a trie. 
-  I.e it is a rooted tree 
-  root node and the nodes that spells out some strings. 
-
+  construction of the AC-machine. The goto function is similar with a child function of a trie.
+  I.e it describes a rooted tree that stores a set of keywords such that edges are labeled with the
+  symbols of the alphabet and the edge label is different between each sibling nodes. We say that a node
+  spells out a string that is formed by concatenating the edge labels from root to the node.
+  The failure function describes chain of state transitions in a case when the goto function is not defined
+  for the current input symbol. The failure function is queried as long as the goto function is not defined.
+  In the AC-machine the goto function is defined for every symbol in the alphabet. Therefore the
+  failure function does not need to be defined for the root node. Other nodes, whether the
+  goto function is fully defined or not always have a defined failure function.
   The algorithms \ref{ac-goto} and \ref{ac-fail} are used as a complete definitons of the goto and
-  failure functions.
+  failure functions. 
 
-  Let there be a set of keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$. 
+  The figure \ref{fig-ac} describes an example of the AC-machine constructed from the set of
+  keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$. The solid lines describes the goto function
+  and the dashed lines describes the failure function. For example $g(8, a) = $b and $f(4)=11$.
 
   Can produce "aababaa" (scs with compression 14-7=7) or "baababab" with compression 14-8 = 6.
 
 
-  \begin{figure}
+  \begin{figure}[h]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -705,9 +711,345 @@ compression.
   \caption{An example of an AC-machine. TODO: bigger arrow heads.} \label{fig-ac}
 \end{figure}
 
+  \begin{algorithm}
+    
+    \caption{Construction of the goto function} \label{ac-goto}
+    % TODO: Kirjoita omin sanoin input, output, method.
+    \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{s_1,s_2...,s_k\}$.\\
+    \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$\\
+    \hspace*{\algorithmicindent} \textbf{Method:} The index of the root node is 1. The procedure \textit{insert($s$)} inserts into the goto graph a path that spells out $s$ or does nothing if there already exists such path.
+    
+      \begin{algorithmic}[1]
 
-  
+        \Function{calculateGotoFunction}{$K = \{s_1,s_2...,s_k\}$}
+          \State $newstate\gets 1$
+          \For{$i \gets 1$ until $k$}
+            \State $INSERT(s_i)$
+          \EndFor
+          \For{all $a$ s.t. $g(1,a)$ is not defined }
+            \State $g(1,a)\gets 1$
+          \EndFor
+        \EndFunction
 
+      \item[]
+
+        \Function{insert}{$s = (a_0,a_1,...,a_{m-1})$}
+          \State $state\gets 1$
+          \State $j\gets 0$
+          \While{$g(state, a_j)$ is defined}
+            \State $state\gets g(state,a_j)$
+            \State $j\gets j+1$
+          \EndWhile
+          \For{$p\gets j$ until $m-1$}
+            \State $newstate\gets newstate+1$
+            \State $g(state,a_p)\gets newstate$
+            \State $state\gets newstate$
+          \EndFor
+        \EndFunction
+      \end{algorithmic}
+      
+  \end{algorithm}
+
+  Algorithm 1 creates a goto function. It begins by creating the root node in line 2. The
+  meaning of this is to allocate memory for the goto function so the data $g(1, \sigma)$ can be
+  saved. The algorithm continues by looping over the set of keywords and inserting them to the
+  goto function in lines 3 to 5. At the end of the main function in lines 7 to 8
+  the goto function is defined for all $g(1,\sigma)$ that are undefined creating a loop within
+  the root node. This ensures that the failure function of the root node is never used.
+
+  The procedure \textsc{INSERT} inserts a single keyword to the goto function. The idea in the lines
+  13 to 16 is to skip the prefix of $s$ that already exists in the trie. The variable $j$ initialized
+  in the line 12 keeps track of this prefix. After the first symbol not already represented in the
+  trie is found the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
+  at lines 17-20.
+
+  Lets simulate this algorithm with a set of keywords $K=\{$"baa", "baba" , "abab" , "aab"$\}$.
+  algorithm starts from line 2 where the root node is created. The figure \ref{fig-ac-step1}
+  presents this state. Since there are four keywords the the first for loop is executed four times.
+  In the first round the \textit{insert} function is called for the first keyword "baa".
+  In the \textit{insert} function the first while loop is not executed since there is no yet
+  outgoing edges from the root node. The for loop is executed for every symbol and the three
+  nodes (2,3,4) are added to the goto function with edge labels 'b', 'a', and 'a'.
+  Figure \ref{fig-ac-step2} presents this state of the construction.
+
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+  \end{tikzpicture}
+  \caption{A root node. TODO: bigger arrow heads.} \label{fig-ac-step1}
+  \end{figure}
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, right = 2cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, right = 2cm of 3] (4) {$4$};
+    
+    \path[->]
+    (1) edge node[above] {b} (2)
+    (2) edge node[above] {a} (3)
+    (3) edge node[above] {a} (4);
+
+  \end{tikzpicture}
+  \caption{first key added. TODO: bigger arrow heads.} \label{fig-ac-step2}
+\end{figure}
+
+  With the second round of the for loop we add the keyword "baba". In this case the \textit{insert}
+  function executes the while loop two times since the common prefix of "baa" and "baba" has a length
+  2. At this point the goto graph is branched and the remaining symbols 'b' and 'a' are inserted. The
+  figure \ref{fig-ac-step3} corresponds with this state.
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, right = 2cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    
+    \node[gnode, right = 2cm of 3] (5) {$5$};
+    \node[gnode, right = 2cm of 5] (6) {$6$};
+
+    \path[->]
+    (1) edge node[above] {b} (2)
+    (2) edge node[above] {a} (3)
+    (3) edge node[above] {a} (4)
+
+    (3) edge node[above] {b} (5)
+    (5) edge node[above] {a} (6);
+
+  \end{tikzpicture}
+  \caption{second key added. TODO: bigger arrow heads.} \label{fig-ac-step3}
+\end{figure}
+
+  In the same way, the rest of the keywords are added. For keyword "baba" the the insertion
+  happens in the same way as with the first keyword, that is the while loop in the \textit{insert}
+  function is not executed since there is no goto transition from the root with a symbol 'a'.
+  For the last keyword the branching of the goto graph happens again
+  similarly with the second keyword. At this point the goto function is represents a trie of the
+  input keywords. After the first for loop in the main function is ecexuted 
+  the second loop in lines 6 to 8 creates an edge from root to root for every symbol in the
+  alphabet such that $g(1,\sigma)$ is not defined. This completes the algorithm \ref{ac-goto}.
+  The resulting goto graph is described in the figure \ref{fig-ac-goto}
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, above right = 1cm and 2.277cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    
+    \node[gnode, right = 2cm of 3] (5) {$5$};
+    \node[gnode, right = 2cm of 5] (6) {$6$};
+
+    \node[gnode, right =  2cm of 1] (7) {$7$};
+    \node[gnode, right =  2cm of 7] (8) {$8$};
+    \node[gnode, right =  2cm of 8] (9) {$9$};
+    \node[gnode, right =  2cm of 9] (10) {$10$};
+    
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
+    \node[gnode, right = 2cm of 11] (12) {$12$};
+
+    \path[->]
+    (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
+    
+    (1) edge node[above] {b} (2)
+    (2) edge node[above] {a} (3)
+    (3) edge node[above] {a} (4)
+
+    (3) edge node[above] {b} (5)
+    (5) edge node[above] {a} (6)
+
+    (1) edge node[above] {a} (7)
+    (7) edge node[above] {b} (8)
+    (8) edge node[above] {a} (9)
+    (9) edge node[above] {b} (10)
+
+    (7) edge node[above] {a} (11)
+    (11) edge node[above] {b} (12);
+
+  \end{tikzpicture}
+  \caption{The complete goto graph. TODO: bigger arrow heads.} \label{fig-ac-goto}
+\end{figure}
+
+  Next we describe the construction of the failure function in more detail. The failure function
+  for a state is calculated using the failure function of the parent of that state thus the computation
+  starts from the root to the nodes of depth 1 to the nodes of depth 2 and so on. By depth of a node
+  we mean the distance (number of edges) from the root to that node. That clearly equals with the
+  index of a symbol in the string that the node spells out. E.g. the depth of the node that spells
+  out "baa" is 3.
+
+  Since the failure function is not defined for the root node (depth 0), the calculation is started from
+  depth 1. We define $f(s)=1$ for all states $s$ with depth = 1. Assuming the failure function is
+  calculated for all nodes of depth d-1, then the failure function of a node s is calculated with the
+  following method.
+  \begin{enumerate}
+  \item Let $p$ be the parent of the node $s$ such that $g(p,\sigma) = s$.
+  \item Set $state = f(p)$.
+  \item Set $state = f(state)$ until $g(state,\sigma)$ is defined. Since $g(1,\sigma)$ is defined
+    for all symbols that state is always defined.
+  \item Set $f(s) = state$
+  \end{enumerate}
+
+  Let us continue with the example from the goto function construction. By the definiton $f(1)$ is not
+  defined. For the states of depth 1 ($s\in\{2,7\}$) the failure function is defined $f(s)=1$. The
+  figure \ref{fig-ac-step5} represents this state.
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, above right = 1cm and 2.277cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    
+    \node[gnode, right = 2cm of 3] (5) {$5$};
+    \node[gnode, right = 2cm of 5] (6) {$6$};
+
+    \node[gnode, right =  2cm of 1] (7) {$7$};
+    \node[gnode, right =  2cm of 7] (8) {$8$};
+    \node[gnode, right =  2cm of 8] (9) {$9$};
+    \node[gnode, right =  2cm of 9] (10) {$10$};
+    
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
+    \node[gnode, right = 2cm of 11] (12) {$12$};
+
+    \path[->]
+    (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
+    
+    (1) edge[bend left=15] node[above] {b} (2)
+    (2) edge node[above] {a} (3)
+    (3) edge node[above] {a} (4)
+
+    (3) edge node[above] {b} (5)
+    (5) edge node[above] {a} (6)
+
+    (1) edge[bend right=15] node[above] {a} (7)
+    (7) edge node[above] {b} (8)
+    (8) edge node[above] {a} (9)
+    (9) edge node[above] {b} (10)
+
+    (7) edge node[above] {a} (11)
+    (11) edge node[above] {b} (12);
+
+    \path [->,dotted]
+
+    (2) edge[bend left=15] (1)
+    (7) edge [bend right=15] (1);
+    
+  \end{tikzpicture}
+  \caption{The failure function construction when $f(s)$ is defined for all states $s$ with depth <= 1. TODO: bigger arrow heads.} \label{fig-ac-step5}
+\end{figure}
+
+  Next we calculate the failure function for the states 3, 8 and 11 that is the states with depth 2.
+  For state 3 we take the parent state 2 and follow the the failure function to the root node. Since
+  $g(1,$a$) = 7$ we define $f(3)=7$. For the states 8 and 11 the precedure is similar. $f(8)$ gets
+  the value 2 and $f(11)=7$. The procedure is iterated until the failure function is defined for every
+  node. The figure \ref{fig-ac} describes the final result. Because the AC-machine only contains these
+  two functions, the figure \ref{fig-ac} also presents the fully constructed AC-machine.
+
+    \begin{figure}
+  \centering
+  \begin{tikzpicture}
+%   [scale=.8]
+
+    \node[gnode] (1) at (0,0) {$1$};
+    
+    \node[gnode, above right = 1cm and 2.277cm of 1] (2) {$2$};
+    \node[gnode, right = 2cm of 2] (3) {$3$};
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    
+    \node[gnode, right = 2cm of 3] (5) {$5$};
+    \node[gnode, right = 2cm of 5] (6) {$6$};
+
+    \node[gnode, right =  2cm of 1] (7) {$7$};
+    \node[gnode, right =  2cm of 7] (8) {$8$};
+    \node[gnode, right =  2cm of 8] (9) {$9$};
+    \node[gnode, right =  2cm of 9] (10) {$10$};
+    
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
+    \node[gnode, right = 2cm of 11] (12) {$12$};
+
+    \node[tnode, above left = 2.725cm and 2.277cm of 1] (v1) {};
+    \node[tnode, below left = 1cm and 2.277 of 1] (v2) {};
+    
+    \path[->]
+    (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
+    
+    (1) edge[bend left=15] node[above] {b} (2)
+    (2) edge node[above] {a} (3)
+    (3) edge node[above] {a} (4)
+
+    (3) edge node[above] {b} (5)
+    (5) edge node[above] {a} (6)
+
+    (1) edge[bend right=15] node[above] {a} (7)
+    (7) edge node[above] {b} (8)
+    (8) edge node[above] {a} (9)
+    (9) edge node[above] {b} (10)
+
+    (7) edge[bend right=15] node[above] {a} (11)
+    (11) edge node[above] {b} (12);
+
+    \path [->,dotted]
+
+    (2) edge[bend left=15] (1)
+    (7) edge [bend right=15] (1)
+    
+    (3) edge (7)
+    (8) edge (2)
+    (11) edge[bend right=15] (7)
+    
+    %%(4) edge (v1) edge (v2) edge (11)
+    (5) edge (8)
+    (9) edge (3)
+    (12) edge (8)
+    
+    (6) edge (9)
+    (10) edge (5);
+
+    \path[->,dotted,rounded corners, shorten <= 0.5cm, shorten >= 0.5cm] plot coordinates {(4) (v1) (v2) (11)};
+    % repaint these nodes
+    \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
+    \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
+    
+
+  \end{tikzpicture}
+  \caption{Fully constructed AC-machine for the keywords $R$. TODO: bigger arrow heads.} \label{fig-ac}
+\end{figure}
+
+
+    In the previous example the value for the failure function was always found in a single iteration
+    of the step 3 of the above definition. 
+
+    
+    
+    sitten esitetään pseudokoodi ja käydään se läpi.
+    sitten lemma
+    lopuksi vasta time complexity.
+  note that this works for reduced or nonreduced set.
+
+  todo: time complexity
   
 
 %   $R=\{S1,...,Sm\}$ 
@@ -722,48 +1064,6 @@ compression.
   %% Vastaamaan omaa koodia!
   
   Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-  \begin{algorithm}
-    
-    \caption{Aho and Corasic Algorithm 2, Construction of the goto function} \label{ac-goto}
-    % TODO: Kirjoita omin sanoin input, output, method.
-    \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{y_1,y_2...,y_k\}$.\\
-    \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$\\
-    \hspace*{\algorithmicindent} \textbf{Method:} We assume $g(s,a) = fail$ if $a$ is undefined or if $g(s,a)$ has not yet been defined. The procedure \textit{enter($y$)} inserts into the goto graph a path that spells out $y$
-    
-      \begin{algorithmic}[1]
-        \Function{calculateGotoFunction}{$K = \{y_1,y_2...,y_k\}$}
-          % Oma indeksöinti: state 0 on undefined, state 1 = root.
-          \State $newstate\gets 0$
-          \For{$i \gets 1$ until $k$}
-            \State $enter(y_i)$
-          \EndFor
-          % Oma indeksöinti: state 0 on undefined, state 1 = root.            
-          \For{all $a$ s.t. $g(0,a) = fail$ }
-            % Oma indeksöinti: state 0 on undefined, state 1 = root.
-            \State $g(0,a)\gets 0$
-          \EndFor
-          %% \If{element is literal}
-          %% \Else \Comment{The element is a phrase}
-          %% \EndIf
-          %% \Return decoded
-        \EndFunction
-
-        % Oma indeksöinti alkaa nollasta! a_0 ... a_m -1
-        \Function{enter}{$y = (a_1,a_2,...,a_m)$}
-          \State $state\gets 0$
-          \State $j\gets 1$
-          \While{$g(state, a_j) != fail$}
-            \State $state\gets g(state,a_j)$
-            \State $j\gets j+1$
-          \EndWhile
-          \For{$p\gets j$ until $m$}
-            \State $newstate\gets newstate+1$
-            \State $g(state,a_p)\gets newstate$
-            \State $state\gets newstate$
-          \EndFor
-        \EndFunction
-      \end{algorithmic}
-  \end{algorithm}
 
   Ja sitten failuren laskeminen
 
@@ -916,12 +1216,12 @@ compression.
   
 
   \begin{enumerate}
-  \item \citep{aho75} describes the Aho-Corasic machine for the first time. It gives the pseudocode to creation and search.
+  \item \citep{Aho75} describes the Aho-Corasic machine for the first time. It gives the pseudocode to creation and search.
   \item alanko dissertation, no bibtex yet. Discusses some things related to this topic.
-  \item \citep{alanko17} describes approx scs algorithm for compact space.
+  \item \citep{Alanko17} describes approx scs algorithm for compact space.
   \item statistics.pdf desccribes the dataset pizzachili.
-  \item \citep{ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
-  \item \citep{tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
+  \item \citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
+  \item \citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
   \end{enumerate}
 
 
