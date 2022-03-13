@@ -1156,7 +1156,7 @@ The former discussion resultsleads us with the following theorem
 The goto function for the AC-machine can be constructed in linear time.
 \end{theorem}
 
-Lets examine the construction of the failure function \ref{ac-failure}. In the discussion of theorem
+Lets examine the construction of the failure function \ref{ac-fail}. In the discussion of theorem
 \ref{thm-linear-goto} we reasoned that finding all children of the state can be done in
 linear time. In the failure calculation we have the same kind of instruction in the for loop
 in line 10. Since this loop is executed for every state of the machine this kind of approach leads
@@ -1164,7 +1164,8 @@ us to $O(n|\Sigma|)$ time complexity for finding every child of every state. Ins
 the goto function for each symbol in the alphabet we can use an auxiliary data structure to
 explicitely save the children of each state. One possibility is to use a linked list ($O(1)$ time
 insertions) and save the information of the children while creating the goto function. This adds
-$O(1)$ factor for the time complexity of the goto function creation and allows us to get the
+$O(1)$ time instruction to the for loop in the \textit{insert} function. The body of this for loop
+is executed $O(n) times so the total time complexity is not changed. This allows us to get the
 children of a state in linear time with respect to the number of the children (and not the number of
 symbols in the alphabet). Since every state
 has at most one parent the the body of the for loop is executed $O(n)$ times total neverthless it
@@ -1185,35 +1186,15 @@ The failure function for the AC-machine can be constructed in linear time.
   note that this works for reduced or nonreduced set.
 
 \section{The approximation algorithm}
-asd
 
-
-shitcounter values:
-
-
- 239670
- 469594
- 915636
-1718877
-3096172
-5145577
-7506023
-
-
-
+The acrual algorithm that uses the ac machine here
 
   
-%   $R=\{S1,...,Sm\}$ 
-  \section{Pseudocode}
-
   %% HUOM!!! Kirjoitetaan pseude alkuun sellaisena kuin se on alkuperäisissä papereissa.
   %% Omat indeksöinnit voivat poiketa ja tämä korjataan sitten kun pseudo kirjotietaan
   %% Vastaamaan omaa koodia!
   
-  Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-
-  Ja sitten failuren laskeminen
-
+%Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
 
   \begin{algorithm}[h]
 
