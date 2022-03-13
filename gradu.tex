@@ -380,11 +380,11 @@ correction is mentioned and ...
 %%   - näytetään että decomposition on sama
 %%   - parittaiset decompositionit on maksimaalisia
   
-Note to Simon: The purpose of this chapter is to introduce the greedy heuristic using strings. Then
-we show that the analogy between the SCS and longest Hampath problem and define the heuristics using hampath. The point of proving the problems are equivalent is that Tarhio and Ukkonen used it to prove the
-correctness and the bound (approx scs >= 1/2 scs). 
-I think this whole section is poorly written and it is hard to follow. Maybe there is something missing
-and it is not even correct. Any ideas how to improve the reaability and emphasise the important things?
+%% Note to Simon: The purpose of this chapter is to introduce the greedy heuristic using strings. Then
+%% we show that the analogy between the SCS and longest Hampath problem and define the heuristics using hampath. The point of proving the problems are equivalent is that Tarhio and Ukkonen used it to prove the
+%% correctness and the bound (approx scs >= 1/2 scs). 
+%% I think this whole section is poorly written and it is hard to follow. Maybe there is something missing
+%% and it is not even correct. Any ideas how to improve the reaability and emphasise the important things?
 
 Let there be a set of strings $R=\{s_1,...,s_m\}$. A naive method for constructing a common superstring
 is to concatenate all the strings in the set. For the set $R$ the resulting superstring
@@ -711,7 +711,7 @@ compression.
   \caption{An example of an AC-machine. TODO: bigger arrow heads.} \label{fig-ac}
 \end{figure}
 
-  \begin{algorithm}
+  \begin{algorithm}[h!]
     
     \caption{Construction of the goto function} \label{ac-goto}
     % TODO: Kirjoita omin sanoin input, output, method.
@@ -900,6 +900,8 @@ compression.
   depth 1. We define $f(s)=1$ for all states $s$ with depth = 1. Assuming the failure function is
   calculated for all nodes of depth d-1, then the failure function of a node s is calculated with the
   following method.
+  
+  \begin{figure}[h]
   \begin{enumerate}
   \item Let $p$ be the parent of the node $s$ such that $g(p,\sigma) = s$.
   \item Set $state = f(p)$.
@@ -907,6 +909,8 @@ compression.
     for all symbols that state is always defined.
   \item Set $f(s) = state$
   \end{enumerate}
+   \caption{Listing of the failure calculation} \label{failure-calculation}    
+  \end{figure}
 
   Let us continue with the example from the goto function construction. By the definiton $f(1)$ is not
   defined. For the states of depth 1 ($s\in\{2,7\}$) the failure function is defined $f(s)=1$. The
@@ -1040,55 +1044,30 @@ compression.
 
 
     In the previous example the value for the failure function was always found in a single iteration
-    of the step 3 of the above definition. 
+    of the step 3 of the above definition. Next we go through the pseudocode for the failure function
+    calculation in algorithm \ref{ac-fail}.
 
-    
-    
-    sitten esitetään pseudokoodi ja käydään se läpi.
-    sitten lemma
-    lopuksi vasta time complexity.
-  note that this works for reduced or nonreduced set.
 
-  todo: time complexity
-  
+  \begin{algorithm}[h!]
 
-%   $R=\{S1,...,Sm\}$ 
-  \section{Pseudocode}
-
-  %% This declares a command \Comment
-  %% The argument will be surrounded by /* ... */
-  %% \SetKwComment{Comment}{/* }{ */}
-
-  %% HUOM!!! Kirjoitetaan pseude alkuun sellaisena kuin se on alkuperäisissä papereissa.
-  %% Omat indeksöinnit voivat poiketa ja tämä korjataan sitten kun pseudo kirjotietaan
-  %% Vastaamaan omaa koodia!
-  
-  Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-
-  Ja sitten failuren laskeminen
-
-  \begin{algorithm}
-
-    %% TODO: omin sanoin input, output.
-    \caption{Aho and Corasix Algorithm 3, Construction of the failure function} \label{ac-fail}
-    \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm\\ % \ref{ac-goto}\\
+    \caption{Construction of the failure function} \label{ac-fail}
+    \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm \ref{ac-goto}\\
     \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
 
     \begin{algorithmic}[1]
       \Function{calculateFailureFunction}{$g : \mathbb{N} \rightarrow \mathbb{N}$}
         \State $queue\gets \textit{empty}$
-        %% Indeksöinti!
-        \For {each $a$ s.t. $g(a,0) = s \neq 0$}
+        \For {each $a$ s.t. $g(1,a) = s \neq 0$}
           \State $queue\gets queue \cup \{s\}$
-          \State $f(s)\gets 0$
+          \State $f(s)\gets 1$
         \EndFor
         \While{$queue \neq empty$}\\
           \hspace*{\algorithmicindent}let $r$ be the next state in $queue$
           \State $queue\gets queue \backslash \{r\}$
-          \For{each $a$ s.t. $g(r,a) = s \neq fail$}
+          \For{each $a$ s.t. $g(r,a) = s$ is defined}
             \State $queue\gets queue \cup \{s\}$
             \State $state\gets f(r)$
-            \While{$g(state,a) = fail$}
+            \While{$g(state,a)$ is undefined}
               \State $state\gets f(state)$
             \EndWhile
             \State $f(s)\gets g(state,a)$              
@@ -1101,7 +1080,142 @@ compression.
   \end{algorithm}
 
 
-  \begin{algorithm}
+  Since the failure values must be calculated from lowest depth nodes to the highest depth nodes
+  we go through the goto path using a breadth-first search. This is provided by the FIFO that is
+  appended in every non-leaf node. I.e. the children of the currently processed node are put into the
+  queue and the next node to be processed is popped. The queue is initialized to be empty in the first
+  line of the algorithm. The for loop in lines 3 to 6 adds all the children of the root to the queue.
+  Because the root node is special as it contains links to itself the additional constraint
+  in line 3 is added to prevent the infinite recursion. In the same for loop we define the
+  $f(s)=1$ for all nodes with depth 1. The while loop from line 7 to 18 implements the instructions
+  in the listing \ref{failure-calculation} Since the AC-machine does not save parent information
+  this is done a bit differently, although the result is exactly the same. In line 8 and 9 we pop a
+  node from the queue. At this point the failure function for that node is already defined. Then we
+  process each child of the node separately in lines 10 to 17 by 1) adding the child to the queue
+  in line 11  2) travelling the failure function of the parent as long as we get a node that have goto
+  transition with the same symbol that appears between the parent and the currently processed child
+  in lines 12 to 15 and  3) set the failure function for the child in line 16. The execution of the
+  function halts when the BFS of the  AC-machine is ready and the queue is finally empty.
+
+
+  For now, as the AC-machine is fully defined we focus on the important property it can be used as
+  the lemma \ref{lem-overlap} suggests.
+
+
+\begin{lemma}[]~\label{lem-overlap}
+  Let there be a state $p$ and state $q, p\neq q$ in an AC-machine that are represented by strings
+  $s$ and $t$ respectively. The failure value $f(p) = q$ if and only if $t$ is the longest proper suffix
+  of $s$ that is also a prefix of some keyword.
+\end{lemma}
+\begin{proof}
+  %% This can be proven by induction. The induction hypothesis trivially holds for the base case when
+  %% depth of $p$ is 1. That is when $q$ is the root node represented by the empty string and $|s|=1$.
+  %% For the induction step we assume that the hypothesis holds for all states with depth $\leq$ d
+  %% $> 1$.
+  Trust me bro.
+\end{proof}  
+
+The lemma \ref{lem-overlap} is used later on in the description of the SCS algotithm. Next we look
+over the time complexities of the algorithms \ref{ac-fail} and \ref{ac-goto}. Lets first investigate
+the time complexity of the insert and read operations of the functions $g$ and $f$. The failure
+function maps each state (except the root) to some other state. It is most effective and practical
+to implement this as an array which stores the value $f(s)=d$ such that the array index $s$ has
+a value $d$. Therefore the both inserting and reading to/from the failure function is performed
+in constant time. The goto function maps a pair of values to a single value.
+In the same way, if we use a two dimensional table which stores
+a $|\Sigma|$ sized array for each state in the AC-machine, the read and write operations of $g$ would
+perform in a constant time. This of course results in a very high memory usage since the table would be
+sparsely used especially with large alphabets and long keywords. The goto function can also
+be implemented in many other ways. One solution to the low memory efficient is to save a balanced
+binary tree for each state in the AC-machine. With binary trees the insert and read operations are
+performed in logarithmic time.
+
+The main function of the algorithm \ref{af-goto} consists of two for loops.
+The first loop calls a procedure once for each keyword of the input. The function calls are
+executed in a constant time so the time complexity of the first for loop is linear with respect
+to the number of input keywords. The second for loop starting in line 6 is used to search all
+children of the root node. Since the root node has only $\Sigma$ goto links the loop is executed at most
+$\Sigma$ times. Here $\Sigma$ refers to the size of the alphabet. In the worst case every symbol in
+every input keywords is different. In that case $|\Sigma| = n$, where $n$ is te sum of the input symbols.
+Therefore the second for loop is executed at most $n$ times resulting the time complexity of the main
+function to be linear with respect to the size of the input.
+
+Lets next examine the insert function. The first two lines 11 and 12 can clearly be executed in constant
+time. The first while loop is used to find the symbol of the string that is not yet represented
+in the goto graph. Let $s=vu$ such that $v$ is the part of $s$ that is already represented in the
+goto graph. The index variable $j$ is used so it contains the value of the first symbol of $u$ after
+the while loop is executed. The for loop continues from $j$ so the lines 18 to 20 are executed
+only for $u$. In the other words the \textit{insert} function behaves in a way that every symbol of
+the input keyword is processed either in one of the two loops but not both. Since the time complexities
+of the loop bodies depend on the implementation of $g$, the the total time complexity of the function
+is $O(n)*O(1) = O(n)$ or $O(n)*O(log(n)) = O(n\cdot log(n))$ when the goto function is implemented
+in linear or logarithmic time respectively.
+
+The former discussion resultsleads us with the following theorem
+\begin{theorem}[]~\label{thm-linear-goto}
+The goto function for the AC-machine can be constructed in linear time.
+\end{theorem}
+
+Lets examine the construction of the failure function \ref{ac-failure}. In the discussion of theorem
+\ref{thm-linear-goto} we reasoned that finding all children of the state can be done in
+linear time. In the failure calculation we have the same kind of instruction in the for loop
+in line 10. Since this loop is executed for every state of the machine this kind of approach leads
+us to $O(n|\Sigma|)$ time complexity for finding every child of every state. Instead of scanning
+the goto function for each symbol in the alphabet we can use an auxiliary data structure to
+explicitely save the children of each state. One possibility is to use a linked list ($O(1)$ time
+insertions) and save the information of the children while creating the goto function. This adds
+$O(1)$ factor for the time complexity of the goto function creation and allows us to get the
+children of a state in linear time with respect to the number of the children (and not the number of
+symbols in the alphabet). Since every state
+has at most one parent the the body of the for loop is executed $O(n)$ times total neverthless it
+is nested with another while loop (line 7). Thus the wile loop in line 7 as well as the for loop in
+line 10  executed once for every state that is $O(n)$ times. The lines 11 and 12 are clearly constant
+time operations and the time complexity of line 16 depends on the goto function implementation and
+can also be a constant time operation. Lastly, lets examine the inner while loop on line 13.
+The idea is to travel the failure path until a state is found such that the goto function
+for that state is defined with the same symbol as the goto transition is defined for state we are
+defining the failure function for. According to the definition of the failure function the state
+$y=f(x)$ has a depth at most one less than the depth of the state $x$. This means that the while
+loop is always executed at most d times where d is the depth of the state \textit{state}. 
+
+\begin{theorem}[]~\label{thm-linear-failure}
+The failure function for the AC-machine can be constructed in linear time.
+\end{theorem}
+
+  note that this works for reduced or nonreduced set.
+
+\section{The approximation algorithm}
+asd
+
+
+shitcounter values:
+
+
+ 239670
+ 469594
+ 915636
+1718877
+3096172
+5145577
+7506023
+
+
+
+
+  
+%   $R=\{S1,...,Sm\}$ 
+  \section{Pseudocode}
+
+  %% HUOM!!! Kirjoitetaan pseude alkuun sellaisena kuin se on alkuperäisissä papereissa.
+  %% Omat indeksöinnit voivat poiketa ja tämä korjataan sitten kun pseudo kirjotietaan
+  %% Vastaamaan omaa koodia!
+  
+  Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
+
+  Ja sitten failuren laskeminen
+
+
+  \begin{algorithm}[h]
 
     %% OMIN SANOIN
     \caption{Ukkonen90 algorithm 1, preprocessing} \label{ukk-pre}
@@ -1144,7 +1258,7 @@ compression.
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}
+  \begin{algorithm}[h]
     %% TODO: omin sanoin input, output.
     \caption{Ukkonen90 Algorithm 2 Construction of H} \label{ukk-h}
     \hspace*{\algorithmicindent} \textbf{Input:} Augmented AC machine for $R$ as constructed by ref\\ %ref?
