@@ -988,7 +988,7 @@ compression.
     
 
   \end{tikzpicture}
-  \caption{Fully constructed AC-machine for the keywords $R$. TODO: bigger arrow heads.} \label{fig-ac}
+  \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$. TODO: bigger arrow heads.} \label{fig-ac}
 \end{figure}
 
 
@@ -1194,24 +1194,132 @@ The following lemma concludes this property.
 
 %% L:n ja d:n avulla määritellään seuraava lemma
 
-\begin{lemma}[] ~\label{overlap-length}
+\begin{lemma}[] ~\label{lem-overlap-length}
   Let there be an AC-machine for a keyword set $R=\{t_1,...,t_m\}$ and a state $p$ represented
   by string $s$.
   There is an overlap of length $d(q)$ between $s$ and a keyword $t_i\in R$ if and only if
   for some $k \geq 0$ state $q=f^k(p)$ is such that $i\in L(q)$.
 \end{lemma}
 \begin{proof}
-trust me bro.
+  Let us have an induction hypothesis that the lemma is true for all states whose depth is
+  smaller than some depth $d'\geq 1$. For the base case of the induction we use the start state
+  with depth 0. The hypothesis holds
+  with $k=0$ since $L(start)$ contains every keyword index $1$ to $m$ and there also exists an empty
+  overlap (length $d(start)=0$) between the empty string that the start state is represented by and all
+  the keywords in $R$.
+
+  In the induction step we assume there is a state $p, d(p) = d'$ represented by string $s$.
+  Assume also that there is an overlap $u$ of length $d(q)$ between $s$ and some keyword $t_i$. The
+  overlap $u$ represents a state $q$.
+  There are three possibilities:
+  \begin{enumerate}
+  \item The overlap $u$ is the string $s$ itself. In this case clerarly $i\in L(p)$. Since
+    $p=f^0(p)$, that is $p=q$ and $d(q) = d(p) = |s|$, the lemma is true. 
+  \item The overlap $u$ is the longest proper suffix of $s$ that is also a prefix of $t_i$.
+    By lemma \ref{lem-overlap} this is true if and only if $f(p) = q$. In this case
+    $i\in L(q)$ and the lemma is true with $k=1$.
+  \item In this case the overlap between $s$ and $t_i$ is shorter than the longest proper
+    suffix of $s$ that is a prefix of some keyword $t_j, i\neq j$. Let $u'$ be the maximal
+    overlap between $s$ and $t_j$ that is $u'$ is the longest proper suffix of $s$ that is also
+    a prefix of some keyword. Let also $q'$ be represented by the string $u'$. By lemma
+    \ref{lem-overlap} $f(p) = q'$. Because $u$ and $u'$ are both suffices of $s$ and $|u'|<|u|$ we
+    know that there is also an overlap $u$ between $u'$ and $t_i$. Since $d(q') < d(p) = d'$ we can
+    apply the induction hypothesis to the state $q'$. Therefore, there is an overlap of length
+    $d(q)$ between $q'$ and a keyword $t_i$ (which we know is true) if and only if for some
+    $k \geq 0$ state $q=f^k(q')$ is such that $i\in L(q)$. Since we know by assumption $q'=f(p)$ and
+    by induction $q=f^k(q')$ it follows that $q=f^{k+1}(p)$. We also know that $i\in L(q)$ and
+    $|u|=d(q)$
+
+  \end{enumerate}
+  
 \end{proof}
 
+The theorem \ref{thm-maximal-overlaps} directly follows from the lemmas \ref{lem-overlap} and \ref{lem-overlap-length}
 
-sitten kun tarkastellaan samaa tilannetta niin että edellisen lemman s onkin jokin keywordi
+\begin{theorem}[] ~\label{thm-maximal-overlaps}
 
-tästä päästään teoreemaan jota ei tarvitse todistaa
-
-\begin{theorem} ~\label{thm-maximal-overlap}
+  Let $p$ be a state represented by string $s_i$ and let $s_i,s_j\in R$. The maximum overlap between
+  $s_i$ and $s_j$ is represented by the state $q$ such that $q$ is the first sate in the failure
+  path of $p$ $f^k(p)$ and $j\in L(q)$. The length of this maximum overlap is $d(p)$.
 
 \end{theorem}
+  
+By theorem \ref{thm-maximal-overlaps} the AC-machine implicitely encodes the information of the
+longest pairwise overlaps between any two keywords. By lemma \ref{lem-composition} the maximal
+overlaps encoded in the AC-machine are equivalent with the weights of the corresponding overlap
+graph, thus we use this property to implement the greedy heuristic for the
+\textsc{Longest Hamiltonian Path} problem in the overlap graph. The overlaps encoded by the
+failure function have the length equivalent with the depth of the state that have an incoming
+failure path hence the longest possible overlap can be found by searching the state
+that has some incoming failure path(s) such that the depth of that state is maximized. This suggest
+the following implementation. We process every state by follow the failure path and saving the
+information of which state the failure transition is coming from. 
+the states with greater depth are processed first. This can be done with a reversed breadth
+first ordering. Since $d(p) > d(f(p))$ for every $p$, the reversed BFS ordering of the states
+ensures that when the state $q$ is being processed, all the states $p$ s.t. $q=f^k(p)$ are already
+processed and we have the information of each such state. Since we have the information of every such
+state we also have the information of all the overlaps between $L(p)$ and each state $q$ s.t.
+$p$ is in failure path of $q$. We can now select a corresponding edge in the overlap graph as long
+as it does not violate the constraints of the heuristic, that is, considering earlier selections
+the corresponding edge does not form a cycle nor its start state does already have an outcoming
+edge nor its end node does already have an incoming edge. By processing all the states in this
+fashion we end up with the set of edges that forms a hamiltonian cycle in the
+overlap graph. 
+
+Let us apply this method to the AC-machine described in figure \ref{fig-ac}. The processing is started
+with depth 4 from state 6 or state 10. While processing those states we save the information of
+the incoming failure path for state 9 and 5 respectively. Depending on the order of which we process
+the states with depth 3 we end up selecting one of the two possible overlaps. Either the state 5
+is processed first and the overlap between $s_3$ and $s_2$ is selected or the state 9 is processed
+first and the overlap between $s_2$ and $s_3$ is selected. The information of the incoming failure
+paths for states 3, 8 and 11 is also saved while processing the states of depth 3. Let us assume
+that the state 9 was processed first and the second of the presented overlaps were selected.
+While processing the state 3 we have an information of the incoming failure path from state 6 (via the
+state 9). This indicates there exists an overlap between the state 6 and every state
+in $L(3)=\{6,4\}$ The self overlap between $s_2$ and $s_2$ is of course forbidden since it would
+create a cycle. However the other overlap between $s_2$ and $s_1$ cannot be selected either because
+the edge from $s_2$ is selected earlier. The state 8 also has information of two incoming failure
+paths. How there already exists an edge with $s_3$ as an end node thus, no edges are selected.
+When processing the state 11 the only possible overlap is compatible with the rules and the edge
+from $s_1$ to $s_4$ is selected. For the states of depth 1 it does not matter which one is processed
+first. In any case while processing the state 7 we find only one failure path coming from a leaf state
+corresponding with keyword $s_2$. Since $s_2$ already has an outgoing edge the processing continues
+without any selection. While processing the state 2 we find two possible selections. We can select
+either $(s_3,s_1)$ or $(s_4,s_2)$. Depending on this last selection the common superstring for
+the projection of the selected Hamiltonian path is either "baababab" or "bababaab", which
+both have the same length 8 an the same compression 14-8=6.
+
+Since, when finding two equally long maximal overlaps the heuristic allows arbitrary selections,
+the outcome of the algorithm may differ between implementations. For example, in the first time
+we made a selection between two allowed edges, if we selected otherwise the heuristics would
+have produced either "aababaa", "baababa" or "ababaab". These all are the actual shorest common
+superstrings with length 7 and compression 7.
+
+
+
+%Todo: Why define these here. We could use at least $F(index)$ all over the text.
+
+Let us define a bunch of auxiliary functions. We use these functions to give an overview of the
+idea how the AC-machine should be used to implement the heuristic. The AC-machine is augmented with
+these functions in algorithms \ref{ukk-pre}.
+
+\begin{enumerate}
+  \item $F : \mathbb{N} \rightarrow \mathbb{N}, F(i)=p$ Maps the index of the keyword to the corresponding (leaf) state. I.e a state $p=F(i)$ is represented by the keyword $s_i$.
+  \item $E : \mathbb{N} \rightarrow \mathbb{N}, E(p)=i$ Inverse function of $F$. If the state $p$ is a leaf represented by $s_i$ then $E(p)=i$. For every non-leaf states $p'$ we define $E(p') 0$.
+  \item $d : \mathbb{N} \rightarrow \mathbb{N}$ Depth function for each state $p$ as defined before.
+  \item $L : \mathbb{N} \rightarrow 2^{\mathbb{N}}$ Set of supporters as defined before.
+  \item $b : \mathbb{N} \rightarrow \mathbb{N}, b(p)=q$ Reverse breadth first search ordering of the states.
+\end{enumerate}
+
+
+
+that we use to desctibe and implement the greedy
+heuristic with AC-machine. 
+
+Let us define an auxiliary function
+$p$ that is implemented in algorithm \ref{ukk-pre}. Let $p(state)$ be a set of keyword indices
+such that for each $i\in p(q)$ $q$ is in the failure path of $p_i$ where $p_i$ is a state
+represented by the keyword $s_i$. I.e $q = f^k(p_i) : k>0 \iff i\in p(q)$.
 
 
 tästä päästäänkin varsinaisen algoritmin kuvaukseen. aloita keywordeista ja etsi pisimpiä
