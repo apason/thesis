@@ -1295,26 +1295,122 @@ we made a selection between two allowed edges, if we selected otherwise the heur
 have produced either "aababaa", "baababa" or "ababaab". These all are the actual shorest common
 superstrings with length 7 and compression 7.
 
-
-
 %Todo: Why define these here. We could use at least $F(index)$ all over the text.
-
-Let us define a bunch of auxiliary functions. We use these functions to give an overview of the
-idea how the AC-machine should be used to implement the heuristic. The AC-machine is augmented with
-these functions in algorithms \ref{ukk-pre}.
+The actual algorithm is implemented in two parts. The algorithm \ref{ukk-pre} defines the first part
+which is used to calculate a set of auxiliary data structures that are needed in order to implement
+the actual heuristic. The algorithm takes as an input the AC-machine consturted with
+algorithms \ref{ac-goto} and \ref{ac-fail} as well as the set of keywords $R$ which is also
+the same set that the goto and failure functions were constructed for. 
+The following listing consists of the data structures that are calculated
+in algorithm \ref{ukk-pre} and used in algorithm \ref{ukk-h}. The following listin uses $\mathbb{Q}$ as
+a set of states in the AC-machine. The set of keyword indices are denoted as $\mathbb{I}$. 
 
 \begin{enumerate}
-  \item $F : \mathbb{N} \rightarrow \mathbb{N}, F(i)=p$ Maps the index of the keyword to the corresponding (leaf) state. I.e a state $p=F(i)$ is represented by the keyword $s_i$.
-  \item $E : \mathbb{N} \rightarrow \mathbb{N}, E(p)=i$ Inverse function of $F$. If the state $p$ is a leaf represented by $s_i$ then $E(p)=i$. For every non-leaf states $p'$ we define $E(p') 0$.
-  \item $d : \mathbb{N} \rightarrow \mathbb{N}$ Depth function for each state $p$ as defined before.
-  \item $L : \mathbb{N} \rightarrow 2^{\mathbb{N}}$ Set of supporters as defined before.
-  \item $b : \mathbb{N} \rightarrow \mathbb{N}, b(p)=q$ Reverse breadth first search ordering of the states.
+  \item $F : \mathbb{I} \rightarrow \mathbb{Q}, F(i)=q$ Maps the index of the keyword to the corresponding state. I.e a state $q=F(i)$ is represented by the keyword $s_i$.
+  \item $E : \mathbb{Q} \rightarrow \mathbb{I}, E(q)=i$ Inverse function of $F$. If the state $q$ is a leaf represented by $s_i$ then $E(q)=i$. For every non-leaf states $q'$ we define $E(q')=0$.
+  \item $d : \mathbb{Q} \rightarrow \mathbb{Q}$ Depth function for each state as defined before.
+  \item $L : \mathbb{Q} \rightarrow 2^{\mathbb{Q}}$ Set of supporters as defined before.
+  \item $b : \mathbb{Q} \rightarrow \mathbb{Q}, b(q)=r$ Reverse breadth first search ordering of the states.
+  \item $B$ The last state in the BFS ordering of the machine. I.e. $b(B)$ is the second last state in BFS ordering, $b(b(B))$ is the third last and so on.
 \end{enumerate}
 
+Since by lemma \ref{lem-reduced} the shortest common superstring for a reduced set of keywords
+is same with the set where it was reduced from, the algorithm \ref{ukk-pre} also performs
+the elimination of those keywords that are substrings of other keywords in the set. There are two
+situations when the structure of the AC-machine indicates the occurrence of such a keyword. First,
+if there is a goto transition from a a state that is represented by a keyword that keyword
+must be a substring of some other keyword. I.e. If $g(F(i),\sigma)$ is defined for any pair
+$(i,\sigma)$ then the keyword $s_i$ must be a substring (prefix)  of some other keyword and can be
+removed. The second indication of such a keyword is when a leaf state has an incoming failure
+transition from some other state. By lemma \ref{lem-overlap}, if $F(i) = f(q)$ then the keyword
+$s_i$ must be a proper suffix of some other state. This means that $s_i$ is either a suffix
+(if the state $q$ is itself a leaf) or a substring that is not a prefix nor suffix of some other
+keyword. The removal of a substring is done using the function $F$. If some keyword
+$s_i$ is a substring of another keyword, we set $F(i)=1$ to indicate that the state represented
+by $s_i$ is not processed like it was a keyword.
+
+  \begin{algorithm}[h]
+
+    \caption{Preprocessing algorithm for the greedy heuristic} \label{ukk-pre}
+    \hspace*{\algorithmicindent} \textbf{Input:} AC-machine constructed with algorithms \ref{ac-goto} and \ref{ac-fail} and the associated set of keywords $R=\{s_1,...,s_m\}$ \\
+    \hspace*{\algorithmicindent} \textbf{Output:} $F, E, d, L, b$ and $B$ as defined earlier.\\
+    \hspace*{\algorithmicindent} \textbf{Notes:} initially $E(s) = 0$ for every state s.
+    
+    \begin{algorithmic}[1]
+      \Function{calculateAuxiliaryFunctions}{$g : \mathbb{Q} \rightarrow \mathbb{Q}$, $f : \mathbb{Q} \rightarrow \mathbb{Q}, R=\{s_1,...,s_m\}$}
+        \For {$i = 1,...,m$} \\
+          \hspace*{1.1cm plus \algorithmicindent} let $x_i = a_0,...,a_{k-1}$
+          \State $s\gets 1$
+          \For {$j = 0,...,k-1$}
+            \State $s\gets g(s,a_j)$
+            \State $L(s)\gets L(s) \cdot \{j\}$
+            \If {$j = k-1$}
+              \State $F(i)\gets s$
+              \State $E(s)\gets i$
+              \If {$s$ is not a leaf of the AC machine}
+                \State $F(i)\gets 1)$
+              \EndIf
+            \EndIf
+          \EndFor
+        \EndFor
+        \State $queue\gets 1$
+        \State $d(1)\gets 0$
+        \State $B\gets 1$
+        \While{$queue\neq empty$}\\
+          \hspace*{1.1cm plus \algorithmicindent} let $r$ be the next state in queue
+          \State $queue\gets queue \backslash \{r\}$
+          \For {each $s$ that is a child of $r$}
+            \State $queue\gets queue\cdot s$
+            \State $d(s)\gets d(r)+1$
+            \State $b(s)\gets B$
+            \State $F(E(f(s)))\gets 1$
+          \EndFor
+        \EndWhile
+      \EndFunction
+        
+    \end{algorithmic}
+  \end{algorithm}
 
 
-that we use to desctibe and implement the greedy
-heuristic with AC-machine. 
+% algoritmin läpikäynti rivi kerrallaan.
+The algorithm \ref{ukk-pre} proceeds in two independent steps that could be processed in either order.
+In the first part we loop through every keyword (line 2) and every symbol in the keywords (line 5).
+Before we enter the for loop in line 5 we set the state $s$ to the start state. In the loop
+we traverse the AC-machine from the start state to the state represented by the current keyword $x_i$.
+On the way we add the index $i$ to every state we pass through (line 7). Looping every keyword in this
+way constructs the function $L$ as defined. At the end of every keyword (if line 8 evaluates to
+\textit{true}) we set the values for functions $F$ and $E$ as defined. (lines 9 and 10).
+Further we set $F(i) = 1$ for those keyword indices that correspond to a keyword that is a prefix
+of some other keyword. (lines 11, 12).
+
+The second part of this algorithm calculates the reversed breadth first ordering $b$ for the
+AC-machine and set the depths for every state. In addition, substring keywords others than
+prefixes are removed. This part is basically a BFS travel through the machine. We create a queue
+and initialize it with the start state $1$ in line 17 and set the depth of the start state to
+zero (line 18). The variable $B$ initialized in line 19 contains the value of the latest state
+that is already processed, thus at the end of the algorithm the variable $B$ contains the last state
+in the BFS ordering (which is the first state in the reversed BFS ordering). The actual BFS starts
+in lines 20 to 22 when we start to process the states in the queue. When all states are processed
+the while loop ends and the function terminates. In the for loop starting at line 23 we add the
+children of the current state to the queue as the BFS requires. In line 25 we set the depth
+of the current state to be one greater than its parent state. We also update the $B$ variable
+as discussed before. Finally the line 27 sets $F(i) = 1$ for each keyword index $i$ such that
+the state represented by $s_i$ has an incoming failure transition from any other state.
+
+The lines 12 together with line 27 ensures that for all keywords $i$ such that $s_i$ is a substring
+of some other keyword, the value of $F(i)=1$. I.e. The set of keywords $\{s_j : F(j) \neq 1\}$ is
+reduced.
+
+%% time analysis.
+
+%% intro to next algo
+
+%% next algo pseudo
+
+%% next algo time analysis
+
+%% conclusion theorem.
+
 
 Let us define an auxiliary function
 $p$ that is implemented in algorithm \ref{ukk-pre}. Let $p(state)$ be a set of keyword indices
@@ -1342,49 +1438,6 @@ TODO: The actual algorithm that uses the ac machine here ...
   %% Vastaamaan omaa koodia!
   
 %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-
-  \begin{algorithm}[h]
-
-    %% OMIN SANOIN
-    \caption{Ukkonen90 algorithm 1, preprocessing} \label{ukk-pre}
-    \hspace*{\algorithmicindent} \textbf{Input:} Set $R=\{x_1,...,x_m\}$ of strings, and the goto function $g$ and the failure function $f$ for $R$.\\
-    \hspace*{\algorithmicindent} \textbf{Output:} Depth $d(s)$, list $L(s)$ and link $b(s)$ for each state $s$ of the AC machine; Pointer $B$ to the first state in the $b$-link chain; state $F(i)$ representing string $x_i$ for each $x_i$ with the exception that if $x_i$ is a substring of another string in $R$ then $F(i) = 0$.\\
-    \hspace*{\algorithmicindent} \textbf{Notation:} operator $\cdot$ denotes list catenation. An inverse of $F$ is represented by $E$: if $F(i) = s$ then $E(s) = i$; initially $E(s) = 0$ for every state s.\\
-    
-    \begin{algorithmic}[1]
-      \Function{calculateAuxiliaryFunctions}{$g : \mathbb{N} \rightarrow \mathbb{N}$, $f : \mathbb{N} \rightarrow \mathbb{N}$}
-        \For {$i = 1,...,m$}
-          \hspace*{\algorithmicindent} let $x_i = a_1,...,a_k$
-          \State $s\gets 0$
-          \For {$j = 1,...,k$}
-            \State $s\gets g(s,a_j)$
-            \State $L(s)\gets L(s) \cdot \{j\}$
-            \If {$j = k$}
-              \State $F(i)\gets s$
-              \State $E(s)\gets i$
-              \If {$s$ is not a leaf of the AC machine}
-                \State $F(i)\gets 0)$
-              \EndIf
-            \EndIf
-          \EndFor
-        \EndFor
-        \State $queue\gets 0$
-        \State $d(0)\gets 0$
-        \State $B\gets 0$
-        \While{$queue\neq empty$}
-          \hspace*{\algorithmicindent} let $r$ be the next state in queue
-          \State $queue\gets queue \backslash \{r\}$
-          \For {each $s$ s.t. $g(r,a) = s$ for some $a$}
-            \State $queue\gets queue\cdot s$
-            \State $d(s)\gets d(r)+1$
-            \State $b(s)\gets B$
-            \State $F(E(f(s)))\gets 0$
-          \EndFor
-        \EndWhile
-      \EndFunction
-        
-    \end{algorithmic}
-  \end{algorithm}
 
   \begin{algorithm}[h]
     %% TODO: omin sanoin input, output.
