@@ -108,6 +108,7 @@
 \usepackage{algpseudocode} % for pseudocode: provides algorithmic environment
 \usepackage{algorithm}     % for pseudocode: enables captioning
 
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{definition}
@@ -1329,7 +1330,7 @@ keyword. The removal of a substring is done using the function $F$. If some keyw
 $s_i$ is a substring of another keyword, we set $F(i)=1$ to indicate that the state represented
 by $s_i$ is not processed like it was a keyword.
 
-  \begin{algorithm}[h]
+  \begin{algorithm}[h!]
 
     \caption{Preprocessing algorithm for the greedy heuristic} \label{ukk-pre}
     \hspace*{\algorithmicindent} \textbf{Input:} AC-machine constructed with algorithms \ref{ac-goto} and \ref{ac-fail} and the associated set of keywords $R=\{s_1,...,s_m\}$ \\
@@ -1343,7 +1344,8 @@ by $s_i$ is not processed like it was a keyword.
           \State $s\gets 1$
           \For {$j = 0,...,k-1$}
             \State $s\gets g(s,a_j)$
-            \State $L(s)\gets L(s) \cdot \{j\}$
+            %% ERRATA: i = j.
+            \State $L(s)\gets L(s) \cdot \{i\}$
             \If {$j = k-1$}
               \State $F(i)\gets s$
               \State $E(s)\gets i$
@@ -1359,7 +1361,8 @@ by $s_i$ is not processed like it was a keyword.
         \While{$queue\neq empty$}\\
           \hspace*{1.1cm plus \algorithmicindent} let $r$ be the next state in queue
           \State $queue\gets queue \backslash \{r\}$
-          \For {each $s$ that is a child of $r$}
+          %% ERRATA: Cyclic graph!          
+          \For {each $s$ that is a child of $r$ and $s\neq r$}
             \State $queue\gets queue\cdot s$
             \State $d(s)\gets d(r)+1$
             \State $b(s)\gets B$
@@ -1401,54 +1404,82 @@ The lines 12 together with line 27 ensures that for all keywords $i$ such that $
 of some other keyword, the value of $F(i)=1$. I.e. The set of keywords $\{s_j : F(j) \neq 1\}$ is
 reduced.
 
-%% time analysis.
+Let us next discuss the time complexity of algorithm \ref{ukk-pre}. As with the construction of
+the AC-machine the time complexity of querying the goto function depends on its underlying
+implementation. At first we ignore the queries for the goto function and focus on the rest.
+In the first part of the algorithm we iterate over all keywords at the outer for loop. In the
+inner for loop we iterate over each symbol in the keyword so the total number of iterations
+in the inner loop equals the total number of symbols in all the keywords combined. In line 7
+we add an element to a set of items $L(s)$. Since this set needs not to be ordered it can be
+implemented for example as a linked list so the time complexity for adding an item is $O(1)$.
+Also the statements in lines 8 to 12 can clearly be performed in constant time. This means that
+the time complexity of the outer for loop is $O(n\cdot g')$ where $n$ is the total number of
+symbols in the input and $g'$ is the time complexity of querying the goto function.
 
-%% intro to next algo
+The lines 17 to 19 can clearly be executed in constant time. The while loop starting at line 20
+does the breadth first search for the AC-machine. Since the number of states in the machine is
+$O(n)$ the execution time for the BFS is also $O(n)$. Here we assume that the queue is also
+implemented using a structure that enables insertions and deletions in a constant time (E.g.
+a linked list). The lines 25 to 27 that are not related to the BFS search itself can also clearly
+be executed at constant time. This results the total time complexity of algorithm \ref{ukk-pre} to be
+$O(n\cdot g')$. For example if the goto function is implemented using a direct indexing the
+reading and writing of $g$ is performed at constant time, thus the time complexity is $O(n)$.
+On the other hand, if $g$ is implemented using for example balanced binary trees then the acces
+time of $g$ is $O(log (n))$ and the total time complexity of the algorithm is $O(n\cdot log(n))$.
+The former discussion leads us to the following theorem.
 
-%% next algo pseudo
+\begin{theorem}[]~\label{thm-pre-time}
+  The time complexity of algorithm \ref{ukk-pre} equals the time complexity of
+  algorithms \ref{ac-goto}.
+\end{theorem}
 
-%% next algo time analysis
+Let us now discuss the algorithm that implements the greedy selection of the edges in the
+overlap graph to form the approximate longest Hamiltonian path in more detail. Earlier we simulated
+the greedy heuristic without defining the appropriate data structures. Now, with algorithm
+\ref{ukk-pre} we have augmented the AC-machine with a set of auxiliary functions and one variable.
+This auxiliary data is static in the following algorithm \ref{ukk-h} I.e. the data is only read
+not written at any point. In addition, we need some dynamic data to store the information
+related to the selection of the edges in the overlap graph. As we discussed in the simulation
+of the heuristic, when the execution enters a state $q$, all other states with depth $>d(q)$ is
+already processed and there is an information of every $F(i)$ that starts the failure path to $q$
+such that there is no already selected edge $(s_i, s')$ for any keyword $s'$. Let us denote
+this information with $p$ with the following definition. Let $p(q)$ be a set of keyword indices
+such that for each $i\in p(q)$ $q$ is in the failure path of $F(i)$
+I.e $q = f^k(p_i) : k>0$ and there is no edge $(s_i, s')$ already selected for any $s'\in R$.
+When we encounter a state $q$ s.t. $i\in P(q)$ we know that there exists an overlap of length
+$d(q)$ between $s_i$ and every keyword whose corresponding state is accessbile in the AC-machine
+through the state $q$ i.e. that state is descendant of $q$. We have already defined a data structure
+$L$ for this information, hence there is a maximal overlap of length $d$ between eachevery $s_{P(q)}$
+and every $s_{L(q)}$. Based on this information, the next edge cannot yet be selected.
+Note that although the data structure $P$ ensures that every keyword $s_{P(q)}$ can be selected
+for a start node of the new edge the $L(q)$ returns a static data. If there is already selected
+edges $(s',s_{L(q)})$ for each $L(q)$ no more edges can be selected while processing $q$.
+This constraint is encoded in the function $forbidden(i)$ where $i$ is an index of a keyword.
+If the edge with $s_i$ as an end node is already selected or if $s_i$ is a substring of another
+keyword then $forbidden(i) = true$. Otherwise, when this kind of edge has not been selected
+$forbidden(i) = false$.
 
-%% conclusion theorem.
+We encode the constraints that no node can have multiple inbound or outbound edges
+with the functions $L, P$ and $forbidden$. The last constraint that is to prevents the edge selections
+that form a cycle is guarded with functions $FIRST$ and $LAST$. Both of these functions are defined
+for all keyword indices. At the beginning of the algorithm \ref{ukk-h} $FIRST(i) = LAST(i) = i$
+for every keyword index. The value of these functions is updated such that at any point of execution
+if we have selected a set of edges that forms a path starting from $s_x$ and ending to $s_y$, then
+$FIRST(y)=x$ and $LAST(x)=y$. Note that the values for the nodes in the middle of such paths are
+not updated nor queried. Now, before the new edge $(s_i,s_j)$ is selected we check that the
+selection does form a cycle by checking that $FIRST(i) \neq j$. Note that this is the same thing
+than checking that $LAST(j) \neq i$. Only one of those checks is needed. If the check fails,
+the edge in question must be discarded. The following pseudocode concludes the above discussion.
 
 
-Let us define an auxiliary function
-$p$ that is implemented in algorithm \ref{ukk-pre}. Let $p(state)$ be a set of keyword indices
-such that for each $i\in p(q)$ $q$ is in the failure path of $p_i$ where $p_i$ is a state
-represented by the keyword $s_i$. I.e $q = f^k(p_i) : k>0 \iff i\in p(q)$.
-
-
-tästä päästäänkin varsinaisen algoritmin kuvaukseen. aloita keywordeista ja etsi pisimpiä
-overlappeja failure linkkien avulla. kuvataan ikäänkuin huristiikka ac masiinan termein.
-kuvataan siis heuristiikka
-
-käyttäen aiemman esimerkin ac konetta voidaan saada stringit x tai y joista toinen on scs.
-
-edellä kuvattu algoritmi esitetään pseudona ja introtaan apumuuttujat
-
-time analysis
-
-
-
-TODO: The actual algorithm that uses the ac machine here ...
-
-  
-  %% HUOM!!! Kirjoitetaan pseude alkuun sellaisena kuin se on alkuperäisissä papereissa.
-  %% Omat indeksöinnit voivat poiketa ja tämä korjataan sitten kun pseudo kirjotietaan
-  %% Vastaamaan omaa koodia!
-  
-%Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
-
-  \begin{algorithm}[h]
-    %% TODO: omin sanoin input, output.
-    \caption{Ukkonen90 Algorithm 2 Construction of H} \label{ukk-h}
-    \hspace*{\algorithmicindent} \textbf{Input:} Augmented AC machine for $R$ as constructed by ref\\ %ref?
-    \hspace*{\algorithmicindent} \textbf{Output:} A Hamiltonian path $H$ in the overlap graph of reduced $R$. A common superstring for $R$ can then be constructed by forming $p(H)$.\\
-
+  \begin{algorithm}[h!]
+    \caption{Selection of the edges} \label{ukk-h}
+    \hspace*{\algorithmicindent} \textbf{Input:} The AC-machine including the auxiliary data from algorithm \ref{ukk-pre} \\
+    \hspace*{\algorithmicindent} \textbf{Output:} The approximate longest Hamiltonian path in the overlap graph.
     \begin{algorithmic}[1]
-      \Function{createPath}{Outputs of the previous functions, Set of keywords $R = \{k_1,...,k_m\}$}
+      \Function{createPath}{input?}
         \For {$j = 1,...,m$}
-          \If {$F(j)\neq 0$}
+          \If {$F(j)\neq 1$}
             \State $P(f(F(j)))\gets P(f(F(j)))\cdot {j}$
             \State $FIRST(j)\gets j$
             \State $LAST(j)\gets j$
@@ -1457,22 +1488,26 @@ TODO: The actual algorithm that uses the ac machine here ...
           \EndIf
         \EndFor  
         \State $s\gets b(B)$
-        \While {$s\neq 0$}
+        \While {$s\neq 1$}
           \If {$P(s)$ is not empty}
             \For {each $j$ in $L(s)$ s.t. $forbidden(j) = false$}
+              %% ERRATA: Check emptiness
+              \If {$P(s)$ is empty}
+                \State \textbf{break}
+              \EndIf
               \State $i\gets$ the first element of $P(s)$
               \If {$FIRST(i) = j)$}
                 \If {$P(s)$ has only one element}
-                  \hspace*{\algorithmicindent} \textbf{goto} \textit{next}
+                  \State \textbf{continue}
                 \Else
                   \State $i\gets$ the second element of $P(s)$
                 \EndIf
               \EndIf  
-            \State $H\gets H\cdot \{(x_i,x_j)\}$
-            \State $forbidden(j)\gets true$
-            \State $FIRST(LAST(j))\gets FIRST(i)$
-            \State $LAST(FIRST(i))\gets LAST(j)$
-            \hspace*{\algorithmicindent} \textit{next:}
+              \State $H\gets H\cdot \{(x_i,x_j)\}$
+              \State $forbidden(j)\gets true$
+              \State $P(s)\gets P(s) \backslash\{i\}$
+              \State $FIRST(LAST(j))\gets FIRST(i)$
+              \State $LAST(FIRST(i))\gets LAST(j)$
             \EndFor
           \State $P(f(s))\gets P(f(s))\cdot P(s)$
           \EndIf
@@ -1481,13 +1516,18 @@ TODO: The actual algorithm that uses the ac machine here ...
       \EndFunction
     \end{algorithmic}
   \end{algorithm}
+
+
   
 
+%% next algo time analysis
 
-  \section{correctness}
+%% conclusion theorem.
 
 
-%%
+  %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
+  %Kommentoitu sanoin ERRATA:
+
 \chapter{Relative Lempel-Ziv}
 
 %  Lempel-Ziv dictionary construction.
