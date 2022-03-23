@@ -399,26 +399,29 @@ were originally presented...... to be continued...
 %% and it is not even correct. Any ideas how to improve the reaability and emphasise the important things?
 
 Let there be a set of strings $R=\{s_1,...,s_m\}$. A naive method for constructing a common superstring
-is to concatenate all the strings in the set. For the set $R$ the resulting superstring
+is to concatenate all the strings in the set. For the set $R$, the resulting superstring
 is $s_1s_2\cdots s_m$.
-The following greedy heuristic can be used to the construction of the approximation of the shortest
+The following greedy heuristic can be used to construct an approximation of the shortest
 common superstring.
 
 \begin{enumerate}
-\item Examine the set and remove the two strings $s_i$ and $s_j$ that have the longest overlap among all pairs of strings $(s_i, s_j)$ s.t. $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
+\item Examine the set and remove the two strings $s_i$ and $s_j$ that have the longest overlap among all pairs of strings $(s_i, s_j)$ with $i\neq j$. Note that the longest overlap may be an empty string. If there are multiple pairs of strings with the longest overlap, the decision can be made arbitrarily.
 \item Merge the strings together such that they are maximally overlapped to form a shortest common superstring of the set $\{s_i, s_j\}$.
   \item Add the new string back to the set $R$ and repeat until there is only one string left.
 \end{enumerate}
 
 It turns out that the \textsc{Shortest Common Superstring} problem is analogous with a special case of
-the \textsc{Longest Hamiltonian Path} problem, that is, when the set of strings is converted into
-a weighted complete digraph as follows. The graph $G_R=(V_R,E_R)$ is constructed from the set of strings $R$.
-Let there be a vertex $v_i\in V_R$ for each string $s_i\in R$. Moreover, we define the start node and
-the end node $\{v_{start},v_{end}\}\in V_R$. Each vertex $v_i$ has a directed weighted edge to each
-vertex
-$v_j$ such that $i\neq j$. The start node has an edge to each $v_i$ and each $v_i$ has an edge to the
-end node. The weight $(v_{start}, v_i) = 0$ and the weight $(v_i, v_{end}) = 0$ for all $i=1,...,m$.
+the \textsc{Longest Hamiltonian Path} problem, that is, every instance of the SCS problem can be encoded
+as an instance of a longesta Hamiltonian path problem. The encoding works by creating a weighted
+complete digraph from the set of strings as follows. Let $w(e)$ denote the weight of the edge $e$.
+The graph $G_R=(V_R,E_R,w)$, where $V_R$ is a set of vertices, $E_R$ is a set of edges and $w$ is a
+ weight function defined for each edge in $E_R$, is constructed from the set of strings $R$.
+Let there be a vertex $v_i=s_i$ for each string in $R$. Moreover, we define the start vertex
+$v_{start}$ and the end vertex $v_{end}$. Each vertex $v_i$ has a directed weighted edge to each vertex
+$v_j$ such that $i\neq j$. The start vertex has an edge to each $v_i$ and each $v_i$ has an edge to the
+end vertex. The weight $w(v_{start}, v_i) = 0$ and the weight $w(v_i, v_{end}) = 0$ for all $i=1,...,m$.
 The weight of every other edge $(v_i, v_j)$ is the length of the maximum overlap between $s_i$ and $s_j$.
+More formally $G_R=(V_R=\{v_i=s_i\in R\}\cup\{v_{start},v_{end}\}, E_R=\{(v_i,v_j) : i\neq j\}\cup\{(v_{start},v_{i})\}\cup\{(v_i,v_{end})\},w)$
 
 %-intro hamiltonian pathiin!
 %-special case of shortest hampath in weighted directed graph.
