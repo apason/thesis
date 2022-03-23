@@ -370,16 +370,20 @@ algorithm uses in terms of strings. Then we show that the problem can be reduced
 of finding a longest Hamiltonian path in a specific overlap graph that encodes the same SCS problem.
 After the problems are proven to be equivalent we define the same heuristic in terms of graph theory.
 The equivalency of the two approaches are necessary since the bounds of the achieved compression
-is proven using the \textsc{Longest Hamiltonian Path} problem.
+is proven using the \textsc{Longest Hamiltonian Path} problem. Also, Ukkonen's algorithm conceptually
+resolves the SCS problem by constructing the Hamiltonian path.
 
-Further we define the Aho-Corasick (AC for short) machine as it is used in the algorithm for finding
+Further, we define the Aho-Corasick (AC for short) machine as it is used in the algorithm for finding
 the maximal overlaps between the set of input keywords. The time complexity of the construction of
 the AC-machine is also discussed. We prove the correctness of the property of the AC-machine to find
 the maximal pairwise overlaps between every input keyword.
 
-This chapter also contains four pseudo code blocks which essentially forms the algorithm as whole.
+This chapter contains four pseudo code blocks which essentially forms the algorithm as whole.
+For each of those algorithms, we first discuss their principles in a higher level. Then the pseudocode
+is presented and discussed in more detail. Finally we prove their time complexities.
 The algorithms represented here are slightly changed and contain few corrections from the form they
-were originally presented...... to be continued...
+were originally presented. Each such modification is noted to avoid confusion of how the original
+authors defined the algorithms.
 
 \listofalgorithms
 
