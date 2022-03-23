@@ -1121,12 +1121,12 @@ is $O(n)\cdot O(1) = O(n)$ or $O(n)\cdot O(log(n)) = O(n\cdot log(n))$ when the 
 can be used in linear or logarithmic time respectively.
 
 The former discussion leads us with the following theorem
-\begin{theorem}[]~\label{thm-linear-goto}
+\begin{theorem}[]~\label{thm-time-goto}
 The goto function for the AC-machine can be constructed in linear time.
 \end{theorem}
 
 Let us examine the algorithm \ref{ac-fail}. In the discussion of theorem
-\ref{thm-linear-goto} we reasoned that finding all children of the state can be done in
+\ref{thm-time-goto} we reasoned that finding all children of the state can be done in
 linear time. In the failure calculation we have the same kind of instruction in the for loop
 in line 10. Since this loop is executed for every state of the machine this kind of approach leads
 us to $O(n|\Sigma|)$ time complexity for finding every child of every state. Instead of scanning
@@ -1149,7 +1149,7 @@ $y=f(x)$ has a depth at most one less than the depth of the state $x$. This mean
 loop is always executed at most d times where d is the depth of the state \textit{state}.
 ... Got stuck here..? How to prove that construction of $f$ is in linear time?
 
-\begin{theorem}[]~\label{thm-linear-failure}
+\begin{theorem}[]~\label{thm-time-failure}
 The failure function for the AC-machine can be constructed in linear time.
 \end{theorem}
 
@@ -1350,7 +1350,7 @@ by $s_i$ is not processed like it was a keyword.
               \State $F(i)\gets s$
               \State $E(s)\gets i$
               \If {$s$ is not a leaf of the AC machine}
-                \State $F(i)\gets 1)$
+                \State $F(i)\gets 1$
               \EndIf
             \EndIf
           \EndFor
@@ -1375,7 +1375,7 @@ by $s_i$ is not processed like it was a keyword.
   \end{algorithm}
 
 
-% algoritmin läpikäynti rivi kerrallaan.
+  % algoritmin läpikäynti rivi kerrallaan.
 The algorithm \ref{ukk-pre} proceeds in two independent steps that could be processed in either order.
 In the first part we loop through every keyword (line 2) and every symbol in the keywords (line 5).
 Before we enter the for loop in line 5 we set the state $s$ to the start state. In the loop
@@ -1428,9 +1428,10 @@ On the other hand, if $g$ is implemented using for example balanced binary trees
 time of $g$ is $O(log (n))$ and the total time complexity of the algorithm is $O(n\cdot log(n))$.
 The former discussion leads us to the following theorem.
 
+% flags indicating leaves ?
 \begin{theorem}[]~\label{thm-pre-time}
   The time complexity of algorithm \ref{ukk-pre} equals the time complexity of
-  algorithms \ref{ac-goto}.
+  algorithm \ref{ac-goto}.
 \end{theorem}
 
 Let us now discuss the algorithm that implements the greedy selection of the edges in the
@@ -1517,12 +1518,71 @@ the edge in question must be discarded. The following pseudocode concludes the a
     \end{algorithmic}
   \end{algorithm}
 
+The algorithm \ref{ukk-h} starts by setting the initial values for the dynamic functions
+$P, FIRST, LAST$ and $forbidden$ in the for loop starting at lines 2. In lines 4 to 6 the algorithm
+initializes the data that is related to the used keywords, that is the keywords that forms a reduced set.
+The line 4 sets the $P$ function for each state that has a direct failure link from some of
+those keywords. For those same indices the functions $FIRST(i)$ and $LAST(i)$ are initialized
+to $i$, indicating there is no edges yet selected. The else clause in lines 7 to 8 is
+to ensure that there will be no incoming edges to the keywords that are substrings of other
+keywords. (note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
+the prevention of outcoming edges from those strings). After the initialization is done the
+first state to process is set in line 11. Note that setting $s=B$ would cause one more unnecessary
+iteration of the following while loop since the last state in the BFS ordering can not have
+incoming failure transitions, hence the first state is set to the second last node in that
+ordering.
 
-  
+The while loop starting at line 12 implements the actual selection of the edges. Since the
+most deep states are processed first and nonemptiness of $P(s)$ and $L(s)$ indicates an existing
+overlap of depth $d(s)$ the maximal overlaps are selected first, if allowed by the constraints.
+In line 13 we ensure that $P(s)$ is not empty since otherwise there are no allowed overlaps.
+After that each keyword index in $L(s)$ that is not forbidden are processed (line 14). Each
+iteration (except the last one if no allowed edge is found) of that for loop decreases the
+size of $P(s)$ and $\{i\in L(s) : forbidden(i) = false\}$. In lines 15 to 17 we check that
+the set $P(s)$ to ensure there is at least one possible startpoint to the new edge. after line 18
+there is a potential new edge that needs to be verified against the cyclicality constraint
+(n line 19). If the edge $(s_i,s_j)$ would create a cycle we check in line 20 if there exists
+another index in $P(s)$ and if so, the edge is created. Otherwise the execution is jumped to the
+next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle then no other edge $(s',s_j)$
+will for any $s'$. Therefore it is only needed to query $P(s)$ at most twice with each iteration.
 
-%% next algo time analysis
+In line 26 the edge is selected. The lines 27 ensures the definition for $forbidden$ function
+remains valid and lines 29 and 30 updates the $FIRST$ and $LAST$ functions accordinly. In line
+28 the selected keyword index is removed from $P(s)$. After all possible edges starting from
+$s_{P(s)}$ are examined the process can move on to the next state in the $b$ link chain (line 34).
+Before that in line 32 the $P(s)$ is catenated to $P(f(s))$ so the possibly remaining unused
+keyword indices are passed for the less deeper states.
 
-%% conclusion theorem.
+Let us now discuss the time complexity of algorithm \ref{ukk-h}. As with $L$ in algorithm \ref{ukk-pre}
+we assume that the set returned by function $P$ is implemented using a linked list, allowing a constant
+time insertions, deletions, and catenations. The first for loop starting at line 2 can clearly be
+executed in linear time since all the statements take a constant time and $m <= n $. The wile loop
+starting at line 12 iterates once for each state that is $O(n)$ times. However, the for loop starting
+at line 14 is also executed at most $m = O(n)$ times.
+
+How is that condition in line 14 resolved in linear time ????
+
+
+
+
+\begin{theorem}[]~\label{thm-h-time}
+  The time complexity of algorithm \ref{ukk-h} equals the time complexity of
+  algorithm \ref{ac-goto}
+\end{theorem}
+
+The theorems \ref{thm-time-goto}, \ref{thm-time-failure}, \ref{thm-pre-time} and \ref{thm-h-time}
+conclude that every algorithm presented in this thesis have the same time complexity that depends
+on the implementation of the goto function for the AC-machine. As discussed earlier the implementation
+of the goto function can be done in $O(n)$ using direct indexing over two dimensional array. Other
+feasible possibility, especially for the larger alphabets, is to use balanced binary trees with
+$O(log(n))$ time complexity. This conclusion leads us to the following theorem.
+
+\begin{theorem}[]~\label{thm-overall-time}
+  With algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} the greedy heuristic
+  for the approximate longest hamiltonian path in the overlap graph can be implemented in time
+  $O(n \cdot O(g'))$ where $g'$ is the time complexity of a single read / write query of the
+  goto function.
+\end{theorem}
 
 
   %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
