@@ -179,6 +179,12 @@
 \usepackage[noend]{algpseudocode} % for pseudocode: provides algorithmic environment
 \usepackage{algorithm}     % for pseudocode: enables captioning
 
+\usepackage{tabularx}
+\usepackage{makecell}
+
+\usepackage{minted}
+
+
 %\theoremstyle{definition}
 %\newtheorem{exmp}{Example}[chapter]
 
@@ -1801,14 +1807,14 @@ $\Sigma$ s.t $|\Sigma| \leq 256$. The code is however designed so that the chang
 data type would be as easy as possible if the software is further developed to work with
 bigger alphabets. 
 
-Our implementation can be found from GitHub: https://github.com/apason/ukkonen-90
+The git repository of our implementation can be found from GitHub: https://github.com/apason/ukkonen-90
 
 % Explain links optimization flag
 \paragraph{Compile time parameters:}
 To optimize the memory consumption and the execution time depending on the input data, some approaches
 were done. The purpose was to include various compile or runtime flags that would change the behaviour
 of the application. All of those modifications except one were discarded. The current version includes
-a compile time macro that changes the data structure that is used to save the the children of each
+a compile time macro OPTIMIZE\_LINKS that changes the data structure that is used to save the the children of each
 state. Later on we refer this parameter as a links optimization. The optimization works as follows.
 Each state must be able to refer all its children in a time linear with respect to the number children.
 Each child of a state is saved in a list. When links optimization is turned on, this list is
@@ -1871,34 +1877,166 @@ in the input (real alphabet size), the number of states and a table that lists t
 phases of the execution and their time usages. Without the INFO macro the program only outputs
 the approximate SCS for the input.
 
-The following table summarizes the available compile time options
+The following table summarizes the available compile time options.\\
+
+%\begin{center}
+\hspace{-1.7cm}
+  \begin{tabular}{ |l|c|c|l| }
+    \hline
+    \textbf{Macro name} & \textbf{Possible values} & \textbf{Default value} & \textbf{Notes} \\
+ \hline
+ ARRAY\_GOTO & defined / undefined & N/A & Either one but not both of this macro \\
+ RB\_TREE\_GOTO & defined / undefined & N/A & or this macro must be defined. ~~~ \\
+ OPTIMIZE\_LINKS & defined / undefined  & undefined & Enables the links optimization.\\
+ MAX\_LINE & Any positive integer & 2048 & The size of the keyword buffer. \\
+ LONG\_KEYS & defined / undefined & undefined & Sets max depth to 65536. \\
+ MAX\_STATES & Any positive integer & 4294967296 & Should be as small as possible. \\
+ SCS & defined / undefined & undefined & Calculates the common superstring if defined.  \\
+ INFO & defined / undefined & undefined & Prints additional information if defined.\\
+ \hline
+  \end{tabular}
+%\end{center}
 
 
 
 % details about the leaf calculation ?
 
-\paragraph{Compilation and usage:}~\label{usage}
+\paragraph{Compilation:}~\label{usage}
+The compilation and the usage of our implementation requires a C compiler and the GNU Make software.
+Since the program uses <sys/resource.h> and <sys/time.h> POSIX header files, the program can only
+be used in a POSIX compilant operating system providing these libraries. There are no other
+requirements for building and running the binary. The default C compiler is GCC and it is defined in the
+file \textit{common.mk}.
 
+There is a top level Makefile in the root of the repository and other Makefiles in the \textit{tests/}
+and \textit{src/} folders. Every action can be executed in the repository root since the top level
+Makefile further calls the Makefiles in the subfolders. The default action triggers the project build.
+When the build is done, the \textit{target/scs} binary is created and ready to be executed. To build
+the binary, either the ARRAY\_GOTO or RB\_TREE\_GOTO macro must be defined. There is no default value
+for the goto function's data structure. Also, the user of our implementation probably wants to define
+the SCS macro so the generation of the substring is performed. Other macros can be defined if needed.
+The Makefile in the \textit{src/} folder, that builds the binary is configured to append every
+compilation command with an environment variable named DEFS. This is a convinient way of passing
+macro definitions to the compiler. For example to compile our implementation to calculate the
+shortest common superstring approximation that uses the red black trees one may issue the following
+command.
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ make DEFS="-DRB_TREE_GOTO -DSCS"
+\end{minted}
+
+To compile the binary with support of keywords of length 1000 and direct indexing with links optimization enabled and additional information printed one could issue the following command.
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ make DEFS="-DARRAY_GOTO -DOPTIMIZE_LINKS -DSCS \
+                           -DLONG_KEYS -DMAX_LINE=1002 -DINFO"
+\end{minted}
+
+The Makefile also contains a jobs called clean clobber and delete\_tests. The clean job removes all
+intermediate object files. The clobber does the same and also removes the executable in the
+\textit{target/} folder. The delete\_tests target removes the test instances in the \textit{tests/}
+folder. After that the next time the tests are executed the new random test instances are also generated.
+
+\paragraph{Usage:}
+When the binary is ready to use there is two methods for executing it. The simplest way is to
+execute the binary with a single input file. The file should contain single byte encoded text with
+line feed (keycode 10) delimited keywords. The file should end with a line feed. Note that the input
+can be any single byte encoded text with the following constraints:
+
+\begin{enumerate}
+\item The input keywords must not contain a byte of value 10, since it is reserved for delimiting the
+  keywords. Any keyword that is attempted to contain multiple line feed values are treated as a multiple
+  keywords.
+\item The input file must not contain zero values.
+\end{enumerate}
+
+It does not matter whether the text is ASCII, extended ASCII, some single byte ISO- encoding or any
+custom made single byte encoding. The following example demonstrates the usage with single input
+file as a parameter. In the example the binary is compiled with SCS macro enabled and INFO macro
+disabled.
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ cat input
+baa
+baba
+abab
+aab
+user@host:.../ukkonen-90/$ target/scs input
+aababaa
+\end{minted}
+
+The other way of using our implementation is with command line options that are associated with
+flags. The flag -f defines the input file. The flag -a and -b defines the input types. Only one of the
+input types can be specified at a time. The -a defines the same kind of input method we discussed
+earlier, thus the following command is equivalent with the earlier example:
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ target/scs -a -f input
+\end{minted}
+
+The input type specified with -b flag requires two more options and the behavior of the program is
+different. In this case the input file is considered as a source file where the keywords are randomly
+sampled as defined by -l (line length) and -c (cut) parameters. The sampling of the keywords is
+performed as follows. The -l parameter defines a length of a single keyword (all keywords have
+the same length). The -c parameter defines how many lines are sampled. The cut parameter takes a
+floating point value between 0 and 1. The total number of sampled input keywords multiplied by
+the length of a single keyword must equal (the value can be rounded) the original input file size
+multiplied by the cut parameter. For example if the input file is 10KB and the -l parameter has a value
+of 100 and the cut parameter has a value of 0.50, then the keywords are sampled such that there
+are 50 keywords of length 100 (that is 10KB$\cdot 0.50 = 5KB$). Note that in this method when the
+keywords are sampled from rather than delimited in the input file they can also contain the line
+feed characters. After the keywords are sampled it is possible (especially with highly repetitive
+input files and big cuts) that there exists multiple identical keywords. Before the keywords are
+applied with the actual SCS algorithm the duplicates are first removed. The following example
+demonstrates the usage with an input file that is sampled to get a set of keywords of lengths 128
+such that the size of the sampled keywods equals 10\% of the size of the given input file
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ target/scs -b -f input -l 128 -c 0.1
+\end{minted}
 
 \paragraph{Tests:}
+Our implementation has been tested to be correct with three different sets of tests. The tests are
+located in the same Git repository with the actual implementation. There is also a helper script for
+generating random test instances and scripts that run the actual tests.
+All tests related files are in the \textit{tests/} folder of the
+root of the git repository. To run the tests just issue
+
+\begin{minted}{Text}
+user@host:.../ukkonen-90/$ make tests
+\end{minted}
+
+in the root folder (of the repository). This invokes the Makefile in the \textit{tests/} folder. If the
+test instances have not yet been created the script \textit{create\_instance.sh} is executed and two
+test folders are generated. Note that depending on your hardware, the generation of the test instances can be quite slow (up to 30 min).
+The first test folder contains random instances for alphanumeric, binary,
+dna and hexadecimal alphabets, with different number and length of keywords. This test set is used
+to test that the generated common superstring actually contains every keyword in the test file. This
+test is executed with the \textit{test1.sh} shell script file. The grep utility is used to ensure
+that each keyword are present in the output of our implementation. 
+
+The same set of tests is also used with the \textit{test3.sh} file. In this test we compile two version
+of our implementation, one which uses the direct indexing and another that uses the red black tree
+implementation. The tests instances are then ran with each version of the implementation and for each
+test, the test is passed if the generated superstrings are equal. In othre words the idea of this
+test is to ensure that the data structure that is used with the goto function does not affect
+the outcome.
+
+The second set of test instances is rather small. There are only few very small instances with binary
+alphabet. The test script \textit{test2.sh} runs these tests as follows. First each test instance is
+executed with a python script \textit{scs.py} that uses the \textit{pysat} python library to calculate
+the length of a longest common superstring of the instance. The same instance is then ran with our
+implementation and the compression values for both are calculated. Finally the compressions is compared
+and the test is considered to be passed if the compression of acquired with our implementation is
+at least half of the optimal compression. The idea of this test set is to make sure that the proven
+quality of the compression holds.
+
+Note that in order to run all the tests the python environment with the pysat library must be configured.
+Note also that the make format uses GNU specific features that requires GNU Make or or GNU Make compilant
+makefile software. 
 
 
-%% Note that the Makefiles are specifically written for GNU Make and does not necessarily work with other Make tools.
-
-
-%% - info level
-%% - rb vs direct
-%% - link optimization
-
-%% - Tests
 %% - Differences
-%% -usage
-%% -linkki githubiin
-
-%% LONG_KEYS. oletuksena depth funktio palauttaa uint8 muuten uint16
-%% max line määrittää yhden rivin maksimipituuden.
-
-%% -limitations: fixed size alphabets (no utf-8)
 
 \section{Benchmark Data}
   %HW + instances
@@ -1912,7 +2050,8 @@ example of the time fractions in our implementation!
 %sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
 % sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
 \section{Results}
-
+For each result in this section, the binaries that are used are compiled with the same compiler
+with same optimization flags (gcc, -O3, -flto)
 
 \section{Discussion}
 
