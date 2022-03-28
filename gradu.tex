@@ -27,6 +27,43 @@
 
 % Formal definition for forbidden, first, last ?
 
+%% Regarding motivation: be sure to cite the paper by Alanko and Norri where they specifically state that it would be great to have an efficient implementation of Ukkonen's algorithm (I think they say this toward the end of the paper).
+%% Regarding RLZ dictionary construction: I have put a couple of papers below (there are more, but these will do to start). Using SSS would be a new approach to that problem.
+%% https://rdcu.be/ctUES
+%% https://dl.acm.org/doi/pdf/10.1145/2872427.2883042
+
+
+%% SALMELAN PAPERI
+%% L. Salmela, J. Tarhio, and J. Kytöjoki: Multi-pattern string matching with
+%% q-grams. ACM Journal of Experimental Algorithmics, Volume 11, 2006.
+
+% PUGLISIN ekoista soposteista.. ? ei varmaan olla tekemässä. 
+%4. No requirements yet - you're in control. ASCII with one string per line sounds fine to me while you're developing the basic approach. Remember we talked about strings on large alphabets at some point? For those each symbol will be a fixed width (16 or 32 bits) and all the same length, so we can define a custom binary file format (something like: 32-bit int telling number of strings, 32-bit int telling length of each string, 32-bit int telling width of each symbol, then the strings themselves ....).
+
+% PUGLISIN sähköpostista:
+%Thanks for the results --- they make some sense to me too (at first glance). The duplicate removal method you suggest (using quicksort) is fine. By the way, it would be interesting to know the number of duplicates for each test case (to determine the amount of compression that comes from duplicates and the amount from the main SSS algorithm).
+
+
+%Regarding RLZ dictionary construction: I have put a couple of papers below (there are more, but these will do to start). Using SSS would be a new approach to that problem.
+%https://rdcu.be/ctUES
+%https://dl.acm.org/doi/pdf/10.1145/2872427.2883042
+
+
+
+% Modifief filename tarkottaa EI rivinvaihtoja!?
+
+
+% miten RLZ tulokset saatu?
+% -Sämplätään alkuperäinen file esim cere parametreilla 15_128
+%     - Tämä on valmiiksi tehty löytyy ukkonen-90/data/ hakemistosta.
+% -Ajetaan scs josta saadaan .superstring tiedosto ja compressio
+% -Ajetaan sama file josta tehtiin scs parametreilla cere, 15_128, compressio
+%    - ei taida toimia. pitää samplata alkuperäsestä tiedostosta compressio/x parametrilla?
+% -Nyt on kaksi samankokoista referenssiä. Toinen on scs ja toinen ei
+% HUOM! .ref file sisältää rivinvaihdot !?
+
+% -Lasketaan indeksien määrät tiedostoa cere vasten molemmilla referensseillä
+
 
 
 %% History:
@@ -316,7 +353,7 @@
   \section{Structure of the Thesis}
 
 %%
-\chapter {Shortest Common Superstring (preli)}
+\chapter {Shortest Common Superstring (preli)}~\label{chp-preli}
 
 
 %% preliminaries including syntax
@@ -401,9 +438,9 @@ an \textsc{NP}-hard problem.
 
 
 %%
-\chapter{Ukkonen's Algorithm}
+\chapter{Ukkonen's Algorithm}~\label{chp-ukkonen}
 
-In this chapter we describe Ukkonen's linear time approximation algorithm \ref{Ukkonen90} for
+In this chapter we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
 \textsc{Shortest Common Superstring} problem in detail. First we define the heuristic that the
 algorithm uses in terms of strings. Then we show that the problem can be reduced to the problem
 of finding a longest Hamiltonian path in a specific overlap graph that encodes the same SCS problem.
@@ -1704,23 +1741,180 @@ binary trees with $O(log(n))$ time complexity. This conclusion leads us to the f
   %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
   %Kommentoitu sanoin ERRATA:
 
-\chapter{Relative Lempel-Ziv}
+\chapter{Relative Lempel-Ziv}~\label{chp-rlz}
 
 %  Lempel-Ziv dictionary construction.
 
 %  subsections?
 
 %%
-\chapter{experiments}
+\chapter{Experiments}
 
-  \section{Implementation}
+In this chapter we introduce an open source implementation of the Ukkonen's shortest common superstring
+approximation algorithm discussed in chapter \ref{chp-ukkonen}. We go through the most significant
+aspects of the implementation and usage of the code. We also introduce the data that was used in the
+benchmarking of the efficiency of the implementation as well as the experiment relating
+Lempel-Ziv compression using the SCS of the sampled original data as the reference string.
 
-  \section{Benchmark Data}
+In the results section we show multiple tables of data that compare the implementation with
+another implementation of the same heuristic. We also show how the number of factors in the
+RLZ compression is reduced when the SCS approach is used.
+
+\section{Our implementation}
+% our implementation and reference implementation
+
+% std and LINUX libraries ? time measurements?
+\paragraph{Overview:}
+Our implementation of Ukkonen's shortest common superstring approximation algorithm were written
+for this thesis. The implementation is written with C programming language without any external
+libraries. Only the C standard library were used. Although the Algorithms presented in chapter
+\ref{chp-ukkonen} are relatively short, the actual implementation also contains other code
+that binds the Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} together. 
+Various data structures were also implemented for the algorithm. At total the implementation consists
+of 2400 lines of code, including the comments and empty lines. The implementation also includes some
+test scripts and (GNU) Makefiles\ref{asd} for building and testing the code. 
+
+% Explaion array goto and rb tree goto
+As discussed earlier, the goto function of the AC-machine can be implemented in many different
+ways. In our implementation the underlying data structure for the goto function is defined at compile
+time to be either a two dimensional array or a red black tree\ref{asd}, hence, by Theorem \ref{thm-overall-time}
+the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or $O(n\cdot log(n))$,
+respectively.
+
+% Explain string quicksort
+Since the definition of the input of the algorithm is a set of keywords, we have to guard against that
+constraint too. In practice, that means we need to examine the input keywords and remove any possible
+duplicate values. The duplicate removal is implemented by sorting the input keywords and removing any
+consecutive duplicate strings. The keywords are sorted using a string quickstort \ref{asd}.
+Therefore the overall time complexity of our software is $O(n\cdot log(n))$. At the time of writing, the
+duplicates are forced to be searched. There is no command line parameter that would omit the 
+$O(n\cdot log(n))$ time string sorting. However, as we see later even with the $O(n)$ implementation
+of Ukkonen's algorithm the $O(n\cdot log(n))$ time preprocessing is insignificant even with relatively
+large inputs.
+
+% Explanation of the limitations: char
+Our implementation uses the char datatype of the C programming language as a type of the element
+in an integer alphabet that is used in the algorithm. Char datatype were obvious choise since
+there exists a lot of string processing functions for char arrays in the C standard library.
+However, since char is only 8 bits long, this choise limits our implementation for alphabets
+$\Sigma$ s.t $|\Sigma| \leq 256$. The code is however designed so that the change in the
+data type would be as easy as possible if the software is further developed to work with
+bigger alphabets. 
+
+Our implementation can be found from GitHub: https://github.com/apason/ukkonen-90
+
+% Explain links optimization flag
+\paragraph{Compile time parameters:}
+To optimize the memory consumption and the execution time depending on the input data, some approaches
+were done. The purpose was to include various compile or runtime flags that would change the behaviour
+of the application. All of those modifications except one were discarded. The current version includes
+a compile time macro that changes the data structure that is used to save the the children of each
+state. Later on we refer this parameter as a links optimization. The optimization works as follows.
+Each state must be able to refer all its children in a time linear with respect to the number children.
+Each child of a state is saved in a list. When links optimization is turned on, this list is
+implemented as an array and allocated
+to have as many elements as there are symbols in the alphabet. Since the list has a fixed size there
+will be only one memory allocation for each state. The drawback of this feature is the increased memory
+consumption with large alphabets. When links optimization is turned off, the list containing the
+children of a state is implemented using a linked list. A new node to the list is allocated for each
+child, thus the overhead from the memory management is relatively larger. In practice, the links
+optimization is viable only with small alphabets and can decrease the execution time and the memory
+consumption with larger alphabets. As we see later, in general the best performance for big alphabets
+is achieved with combination of the red black trees and disabled links optimization. On the contrary,
+when the alphabet is small enough, direct indexing over two dimensional array combined with enabled links
+optimization results the best execution time.
+
+% Explain other compile time flags: MAX_LINE LONG_KEYS and SCS INFO MAX_STATE 
+The input keywords are given to the program as an input file that contains one keyword per line. The
+line separator is an ASCII line feed character (code 10). This adds additional limitation to the
+alphabet, since in practice the decimal value 10 can not be a part of any given keyword. In the section
+\ref{usage} we introduce another input system that allows any character code (except 0) to be used. In
+that input method the keywords are merely sampled from the input file and the individual keywords
+are not defined. When the input keywords are read, there is a symbol buffer where the individual lines
+are first read to. No input keyword can be longer than this buffer. The size of the buffer defaults
+to 2048 symbols but can be modified in compile time by setting the wanted value for the macro
+MAX\_LINE.
+Note that the MAX\_LINE macro defines the size of the buffer, not the size of a maximum
+keyword, and
+that the keywords are read to the buffer with the newline character (that is not part of the keyword)
+and that the char arrays must be terminated with the NULL character, the actual maximum
+keyword size is MAX\_LINE -2.
+
+Since the value of the depth function $d$ can not exceed the length of a longest keyword that the
+AC-machine encodes, we can define the datatype for the codomain depending on the maximum keyword length.
+The default data type is an 8 bit positive integer, hence by default, the keywords are supported to the
+length 255. When a keyword longer than 255 is used, the data type for the codomain of the depth function
+must be larger. By defininf the compile time macro LONG\_KEYS the depth function uses 16 bit datatype
+instead. This allows the maximum keyword length to be $2^{16}-1$ which should be enough for any
+reasonable use of the program.
+
+The underlying data type that encodes the numbers of states defaults to 4 byte unsigned integer. That
+means the maximum number of states that teh AC-machine can encode is $2^{32}$ which is approximately
+4 billions. Since the number of states can not be known beforehand, the fact that the number of states
+is at most the number of symbols in the input is useful. As we use one byte alphabet, the size
+of the input file should not exceed 4GiB when using the default configuration. The data type
+for the state numbers can be changed as follows. There is a macro MAX\_STATE that automatically
+defines the data type to be as small as possible. Possible data types are 8, 16, 32 and 64 bit
+unsigned integers. Note that it is not necessary to set the MAX\_STATES macro to a smaller value
+even if the input size were less than $2^{16}$ bytes. This only affects the memory consumption of
+the program which is anyway quite small with input sizes less than 16KiB.
+
+There are also two compile time options that affects the execution. If the macro SCS is not defined,
+the program only executes Algorithms \ref{ac-goto} and \ref{ac-fail} creating a plain AC-machine
+for the input keywords. This option were added in order to compare the construction of the
+AC-machine with another similar implementation \citep{Salmela}. When using the program for approximate
+shortest common superstring calculation, the SCS macro must always be defined. The last compile
+time option is the INFO macro. When INFO is defined, an additional information of the calculation
+is printed along with the approximate shortest common supertsing. The additional information contains
+some used data types, number of removed duplicates in the input keywords, number of different symbols
+in the input (real alphabet size), the number of states and a table that lists the most important
+phases of the execution and their time usages. Without the INFO macro the program only outputs
+the approximate SCS for the input.
+
+The following table summarizes the available compile time options
+
+
+
+% details about the leaf calculation ?
+
+\paragraph{Compilation and usage:}~\label{usage}
+
+
+\paragraph{Tests:}
+
+
+%% Note that the Makefiles are specifically written for GNU Make and does not necessarily work with other Make tools.
+
+
+%% - info level
+%% - rb vs direct
+%% - link optimization
+
+%% - Tests
+%% - Differences
+%% -usage
+%% -linkki githubiin
+
+%% LONG_KEYS. oletuksena depth funktio palauttaa uint8 muuten uint16
+%% max line määrittää yhden rivin maksimipituuden.
+
+%% -limitations: fixed size alphabets (no utf-8)
+
+\section{Benchmark Data}
   %HW + instances
 
-  \section{Results}
+example of the time fractions in our implementation!
 
-  \section{Discussion}
+- gnu time
+-pizzachili/real. Rivinvaihdot korvattu tabulaattoreilla.
+- DNA. Poistettu N kohdat kokonaan
+- dnassa myös paljon duplikaatteja jotka on poistettu
+%sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
+% sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
+\section{Results}
+
+
+\section{Discussion}
 
 %
 \chapter{Conclusions}
