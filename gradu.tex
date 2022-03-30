@@ -1891,7 +1891,7 @@ The following table summarizes the available compile time options.\\
  MAX\_LINE & Any positive integer & 2048 & The size of the keyword buffer. \\
  LONG\_KEYS & defined / undefined & undefined & Sets max depth to 65536. \\
  MAX\_STATES & Any positive integer & 4294967296 & Should be as small as possible. \\
- SCS & defined / undefined & undefined & Calculates the common superstring if defined.  \\
+ SCS & defined / undefined & undefined & Enables a common superstring calculation. \\
  INFO & defined / undefined & undefined & Prints additional information if defined.\\
  \hline
   \end{tabular}
@@ -2036,20 +2036,130 @@ Note also that the make format uses GNU specific features that requires GNU Make
 makefile software. 
 
 
-%% - Differences
+%% - Differences !!!!
 
-\section{Benchmark Data}
-  %HW + instances
+\section{Experiment Data}
+Here we describe the two datasets that are use in Section \ref{sec-results}. We discuss the origin
+of both of those datasets and inspect their basic properties. Since the data is slightly manipulated
+to fit our experiments we also describe the preprocessing that had been done.
 
-example of the time fractions in our implementation!
+\paragraph{PizzaChili datasets:}
+PizzaChili is a deprecated project of University of Pisa and University of Chile, whose purpose is to
+share publicly available corpuses and related full-text indices for others to experiment with.
+The dataset defined here consists of some of the repetitive text collections from PizzaChili project.
+We refer that dataset as a PizzaChili dataset.
+There are seven files of repetitive text from real (as an opposite to artificial) origin in the
+PizzaChili dataset. The following listing gives a short description of each of those files. The table
+under the listing includes some basic information of the files. The inverse match probability is defined
+as the inverse of the probability that two randomly chosen characters from the file are the same. This
+is also referred as an effective alphabet size. With uniformly distributed data, the effective and
+actual alphabet sizes are exactly the same.
 
-- gnu time
--pizzachili/real. Rivinvaihdot korvattu tabulaattoreilla.
-- DNA. Poistettu N kohdat kokonaan
-- dnassa myös paljon duplikaatteja jotka on poistettu
+\begin{enumerate}
+\item The \textbf{cere} file consists of 17 concatenated sequences of Saccharomyces Cerevisiae. The origin of this file is the Saccharomyces Genome Resequencing Project.
+\item The \textbf{coreutils} file consists of 9 versions of the coreutils 5.x source code files.
+\item The \textbf{einstein.de.txt} file consists of all German wikipedia versions of Albert Einstein up to 2010-01-12.
+\item  The \textbf{einstein.en.txt} file consists of all English wikipedia versions of Albert Einstein up to 2006-10-10.
+\item The \textbf{influenza} file consists of 78,041 sequences of Haemophilus Influenzae. The origin of this file is the National Center for Biotechnology Information.
+\item The \textbf{kernel} file consists of 36 versions of the Linux kernel source files of versions 1.0.x and 1.1.x.
+\item The \textbf{para} file consists of 36 concatenated sequences of DNA of Saccharyomyces Paradoxus. The origin of this file is the Saccharomyces Genome Resequencing Project.
+\end{enumerate}
+
+todo: This table is from pizzachili website. Do I need to refer it?
+
+\begin{center}
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{File} & \textbf{Size(MiB)} & \textbf{Alphabet size} & \textbf{Inverse match probability} \\
+    \hline
+    cere & 440 & 5 & 4.301 \\
+    coreutils & 196 & 236 & 19.553 \\
+    einstein.de.txt & 89 & 117 & 19.264 \\
+    einstein.en.txt & 446 & 139 & 19.501 \\
+    influenza & 148 & 15 & 3.845 \\
+    kernel & 247 & 160 & 23.078 \\
+    para & 410 & 5 & 4.096\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\paragraph{Preprocessing of PizzaChili}
+Each file in the dataset is preprocessed as follows. First, the newline characters are substituted
+with tab characters (ASCII key code 9). After that a number of new files are sampled from the files
+such that the new file consists of multiple lines delimited by a newline character. Each line has a
+length $l$ and the total (rounded) number of characters, excluding the newlines, are $0.01c\cdot s$,
+where $s$ is the size of the original file. In other words the $c$ parameter describes the percentage
+of the size of the original file. The parameters $c$ and $l$ have the following value
+combinations: (15, 128), (15, 254), (25, 254), (50, 254), (50, 512), (75, 512), thus at total six
+sampled files are generated. The sampling is performed by selecting a random position between
+the beginning of the file and the end of the file subtracted by $l$ and copying a string of length
+$l$ from that point to the sample file. This process is then repeated until the wanted file size is
+achieved. The possible duplicate lines are removed and the process is repeated until the wanted
+number of lines is reached. Finally we have a sample file that contains unique keywords of length
+$l$ such that the size of all keywords combined is $c\%$ of the original size. The files are
+named $s$\_$c$\_$l$. For example the file $cere\_50\_128$ has a size 220MB (plus the number of newlines)
+and contains unique keywords of length 128.
+
+\paragraph{The Dna dataset:}
+The second dataset is called a Dna dataset. The origin of this dataset is xxxx xxxx xxxx.
+It contains xxxx lines of 100 xxxxx. The alphabet $\Sigma=\{A,C,G,T,N\}$ size of the original file is 5.
+The 'N' characters were relatively rare in this file. Since the PizzaChili dataset does not have a
+file with alphabet size less than 5 the Dna dataset was modified by removing all lines containing
+the 'N' character, resulting a file with alphabet of size 4.
+Further, the duplicates were removed from the data and the data was randomly sampled to 11 different
+files as follows. The first file was from the main file such that the number of lines was 3125, thus
+the first have a size of $3125+3125\cdot 100 = 315625$ bytes. The first file was named
+\textit{1\_dna\_3125.acgt}. The process was repeated for the last ten files such that the number
+of lines for each file was two times the number of fileslines in the previous file.
+The same naming convention
+was used with the exception that each consecutive set of three zeros was substituted with the letter k.
+The first character in the file name is a hexadecimal digit of the number of the file.
+For example, the third file was named to \textit{3\_dna\_12500.acgt}, the fourth file was named
+to \textit{4\_dna\_25k.acgt} and the last file was named to \textit{B\_dna\_3200k.acgt}
+
+\section{Experiment Environments}
+
+The experiments were done in two different environments. In this section we describe the relevant
+aspects of the used software and hardware for both of them. We also name the environments so they
+can be referred in Section \ref{sec-results}. The first environment is called Haapa. It is the more
+powerful of the environments providing, due to its larger amount of memory, a possibility to run
+much bigger problem instances. The second
+environment is referred as XXXXXXX. For running
+our experiments, Haapa is however the slower one of the two environments. Although Haapa has many times
+the more CPUs the single CPU is significantly slower. Since the code used in the experiments
+are all single threaded the performance of a single core is all that matters. The memory
+clock speed in Haapa is also configured to be significantly slower, thus limiting the performance
+of our implementation with huge memory requirements. Less experiments are run with XXXX since the
+memory of the machine provided a limitation to the size of the problem instances.
+The following table describes the main features of both environments.
+
+\begin{tabular}{l|r|r}
+  & \textbf{Haapa} & \textbf{XXXXX} \\
+  \hline
+  Operating System & Ubuntu Linux 20.04 LTS & Gentoo Linux \\
+  GCC version & 9.4.0 & 10.2.0 \\
+  glibc version & 2.31 & 2.32 \\
+  \hline
+  processor model & Intel Xeon E7-4830 v3 & Intel Core i7-6700K \\
+  processor clock speed & 2.1 GHz & 4.0 GHz \\
+  processor cache size & 30 MiB & 8 MiB \\
+  memory density & 1.5 TiB & 32 GiB \\
+  configured memory clock speed & 1333 MHz & 2133 MHz \\
+\end{tabular}
+\\
+
+
+
+
+
+
+%example of the time fractions in our implementation!
+
+%- gnu time
+
 %sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
 % sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
-\section{Results}
+\section{Results}~\label{sec-results}
 For each result in this section, the binaries that are used are compiled with the same compiler
 with same optimization flags (gcc, -O3, -flto)
 
