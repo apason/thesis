@@ -178,14 +178,6 @@
 
 \usepackage{pgfplots}
 \usepackage{filecontents}
-\begin{filecontents*}{data.csv}
-a,b,c,d
-15,4,5,1
-25,3,1,5
-50,5,6,1
-4,1,4,9
-5,3,4,7
-\end{filecontents*}
 
 \usepackage{amsmath, amssymb, amsthm, amsfonts, hyperref} % For better math
 
@@ -2381,18 +2373,176 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 		xlabel=Cut\%
                 xmax=100,
                 xmin=0,
-                xtick={10, 50, 90},
+                xtick={5, 50, 95},
                 xticklabels={$15$, $25$, $50$}
           ]
-	\addplot[color=red,mark=x] coordinates {
-		(10,69)
-		(50,146)
-		(90,377)
+          % coreutils
+	%% \addplot[color=red,mark=x] coordinates {
+	%%   (5,69)
+	%%   (50,146)
+	%%   (95,377)
+	%% };
+        %% \addplot[color=red,mark=*] coordinates {
+        %%   (5, 55)
+        %%   (50, 96)
+        %%   (95, 189)
+        %% };
+        % einstein en
+	%% \addplot[color=blue,mark=x] coordinates {
+	%%   (5, 246)
+	%%   (50, 484)
+	%%   (95, 994)
+	%% };
+        %% \addplot[color=blue,mark=*] coordinates {
+        %%   (5, 103)
+        %%   (50, 159)
+        %%   (95, 294)
+        %% };
+        % einstein de
+	\addplot[color=green,mark=x] coordinates {
+          (5, 39)
+          (50, 74)
+          (95, 171)
 	};
-        \addplot[color=blue,mark=*] coordinates {
-          (10, 55)
+        \addplot[color=green,mark=*] coordinates {
+	  (5,19)
+	  (50,33)
+	  (95,68)
+        };        
+        % cere
+	%% \addplot[color=yellow,mark=x] coordinates {
+        %%   (5, 144)
+        %%   (50, 294)
+        %%   (95, 716)
+	%% };
+        %% \addplot[color=yellow,mark=*] coordinates {
+	%%   (5, 103)
+	%%   (50, 175)
+	%%   (95, 351)
+        %% };
+        % influenza
+	%% \addplot[color=brown,mark=x] coordinates {
+        %%   (5, 39)
+        %%   (50, 80)
+        %%   (95, 197)
+	%% };
+        %% \addplot[color=brown,mark=*] coordinates {
+	%%   (5, 33)
+	%%   (50, 59)
+	%%   (95, 118)
+        %% };        
+        % kernel
+	%% \addplot[color=black,mark=x] coordinates {
+        %%   (5, 114)
+        %%   (50, 235)
+        %%   (95, 570)
+	%% };
+        %% \addplot[color=black,mark=*] coordinates {
+	%%   (5, 72)
+	%%   (50, 119)
+	%%   (95, 242)
+        %% };
+        % para
+	%% \addplot[color=cyan,mark=x] coordinates {
+        %%   (5, 119)
+        %%   (50, 254)
+        %%   (95, 629)
+	%% };
+        %% \addplot[color=cyan,mark=*] coordinates {
+	%%   (5, 97)
+	%%   (50, 164)
+	%%   (95, 336)
+        %% };
+
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=percentage,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+           % coreutils
+          %% \addplot[color=red, mark=triangle] coordinates {
+          %%   (5, 78)
+          %%   (48, 66)
+          %%   (91, 50)
+          %% };
+          % einstein en
+          %% \addplot[color=blue, mark=triangle] coordinates {
+          %%   (5, 42)
+          %%   (48, 33)
+          %%   (91, 30)
+          %% };
+          % einstein de
+          \addplot[color=green, mark=triangle] coordinates {
+            (5, 80)
+            (48, 66)
+            (91, 50)
+          };
+          % cere
+          %% \addplot[color=yellow, mark=triangle] coordinates {
+          %%   (5, 71)
+          %%   (48, 60)
+          %%   (91, 49)
+          %% };
+          % influenza
+          %% \addplot[color=brown, mark=triangle] coordinates {
+          %%   (5, 85)
+          %%   (48, 74)
+          %%   (91, 60)
+          %% };                    
+          % kernepl
+          %% \addplot[color=black, mark=triangle] coordinates {
+          %%   (5, 63)
+          %%   (48, 51)
+          %%   (91, 42)
+          %% };          
+          % para
+          %% \addplot[color=cyan, mark=triangle] coordinates {
+          %%   (5, 82)
+          %%   (48, 65)
+          %%   (91, 53)
+          %% };
+          
+        \end{axis}
+        
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=Runtime(sec),
+		xlabel=Cut\%
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+          % coreutils
+	\addplot[color=red,mark=x] coordinates {
+	  (5,69)
+	  (50,146)
+	  (95,377)
+	};
+        \addplot[color=red,mark=*] coordinates {
+          (5, 55)
           (50, 96)
-          (90, 189)
+          (95, 189)
+        };
+        % para
+        \addplot[color=cyan,mark=x] coordinates {
+          (5, 119)
+          (50, 254)
+          (95, 629)
+	};
+        \addplot[color=cyan,mark=*] coordinates {
+	  (5, 97)
+	  (50, 164)
+	  (95, 336)
         };
 	\end{axis}
         \begin{axis}[
@@ -2400,23 +2550,148 @@ Let us now examine the runtimes more carefully for the instances with keyword le
             ylabel=percentage,
             xmax=100,
             xmin=0,
-            xtick={10, 50, 90},
+            xtick={5, 50, 95},
             xticklabels={,,},
             xtick style={draw=none},
             ylabel near ticks, yticklabel pos=right
-            ]
-          \addplot[color=green, mark=triangle] coordinates {
-            (10, 78)
-            (50, 66)
-            (90, 50)
+          ]
+          % coreutils
+          \addplot[color=red, mark=triangle] coordinates {
+            (5, 78)
+            (48, 66)
+            (91, 50)
+          };
+          % para
+          \addplot[color=cyan, mark=triangle] coordinates {
+            (5, 82)
+            (48, 65)
+            (91, 53)
           };
         \end{axis}
-        
 \end{tikzpicture}
 
 
 
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=Runtime(sec),
+		xlabel=Cut\%
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+        % cere
+	\addplot[color=yellow,mark=x] coordinates {
+          (5, 144)
+          (50, 294)
+          (95, 716)
+	};
+        \addplot[color=yellow,mark=*] coordinates {
+	  (5, 103)
+	  (50, 175)
+	  (95, 351)
+        };
+        % influenza
+	\addplot[color=brown,mark=x] coordinates {
+          (5, 39)
+          (50, 80)
+          (95, 197)
+	};
+        \addplot[color=brown,mark=*] coordinates {
+	  (5, 33)
+	  (50, 59)
+	  (95, 118)
+        };        
 
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=percentage,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+          % cere
+          \addplot[color=yellow, mark=triangle] coordinates {
+            (5, 71)
+            (48, 60)
+            (91, 49)
+          };
+          % influenza
+          \addplot[color=brown, mark=triangle] coordinates {
+            (5, 85)
+            (48, 74)
+            (91, 60)
+          };                    
+          
+        \end{axis}
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=Runtime(sec),
+		xlabel=Cut\%
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+
+        % einstein en
+	\addplot[color=blue,mark=x] coordinates {
+	  (5, 246)
+	  (50, 484)
+	  (95, 994)
+	};
+        \addplot[color=blue,mark=*] coordinates {
+          (5, 103)
+          (50, 159)
+          (95, 294)
+        };
+        % kernel
+	\addplot[color=black,mark=x] coordinates {
+          (5, 114)
+          (50, 235)
+          (95, 570)
+	};
+        \addplot[color=black,mark=*] coordinates {
+	  (5, 72)
+	  (50, 119)
+	  (95, 242)
+        };
+
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=percentage,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+          % einstein en
+          \addplot[color=blue, mark=triangle] coordinates {
+            (5, 42)
+            (48, 33)
+            (91, 30)
+          };
+          % kernel
+          \addplot[color=black, mark=triangle] coordinates {
+            (5, 63)
+            (48, 51)
+            (91, 42)
+          };          
+
+        \end{axis}
+        
+\end{tikzpicture}
 
 
 
