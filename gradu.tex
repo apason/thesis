@@ -176,6 +176,17 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
+\usepackage{pgfplots}
+\usepackage{filecontents}
+\begin{filecontents*}{data.csv}
+a,b,c,d
+15,4,5,1
+25,3,1,5
+50,5,6,1
+4,1,4,9
+5,3,4,7
+\end{filecontents*}
+
 \usepackage{amsmath, amssymb, amsthm, amsfonts, hyperref} % For better math
 
 \usepackage[noend]{algpseudocode} % for pseudocode: provides algorithmic environment
@@ -2154,11 +2165,6 @@ The following table describes the main features of both environments.
 
 
 
-
-
-
-%example of the time fractions in our implementation!
-
 %- gnu time
 
 %sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
@@ -2172,7 +2178,7 @@ is also $O(n \cdot log(|\Sigma|))$. In contrast, our implementation of Ukkonen's
 works in linear time when the code is compiled to use direct indexing for the operations with
 the goto function. Our implementation also have a possibility to use red-black trees for the goto
 operations, thus both of these approaches were tested.
-This difference in the time complexities can be seen especially with a large input sizes.
+%This difference in the time complexities can be seen especially with a large input sizes.
 In addition, as discussed in Section
 \ref{sec-our}, our implementation has an additional compile time parameter that defines the data
 structure used for the children list of the states. As it is, there are four different versions of
@@ -2187,7 +2193,7 @@ our implementation, at total:
 
 For convinience we refer these versions as DIE, DID, RBE and RBD respectively. All the results,
 from our as well as the reference implementation,
-represented in this chapter are from binaries that have been compiled with the same C
+represented in this section are from binaries that have been compiled with the same C
 compiler (gcc) with the same optimization settings. The predefined optimization set -O3 have
 been used as well as the linking time optimization (-flto). For all the results related to the
 speed of the implementations have been run as follows. Each experiment was repeated five times. For
@@ -2195,20 +2201,22 @@ the five execution times we picked the median value. After that, if there were a
 at least 5 per cent difference, those values were removed and the new median value was picked.
 If there were even number of values left, the bigger one of the two middle values were chosen.
 The idea behind this procedure was to eliminate the possible outliers from the results. Most often
-there were no outliers and the presented value was acquired immidietly. 
+there were no outliers and the presented value was acquired immidietly.
 
+\paragraph{Preprocssing time:}
 As discussed in Section \ref{sec-our}, our program uses the $O(n\cdot log(n))$ string quicksort
 algorithm to remove the possible duplicate input keywords. By compiling our program with the
-INFO macro defined we get, among other things, an analysis of the time spent in different phases
+INFO macro defined, we get, among other things, an analysis of the time spent in different phases
 of the program. The RBD implementation was the fastest one to process any sampled einstein.en.txt
 file. Correspondingly the DIE version was the fastest one for any cere file. In Table
 \ref{table-duplicate-time}
 we show the time portion of our implementations (DIE for cere and RBD for einstein.en.txt) that were
-used for the duplicate removal as a percentage of the total runtime. Since theused  implementation
+used for the duplicate removal as a percentage of the total runtime. Since the used  implementation
 versions are the fastest ones for the particular instances, the time portions for the duplicate
 removals are maximal, i.e. Table \ref{table-duplicate-time} shows the worst case time percentages
 for the preprocessing phase.
 
+\begin{center}
 \begin{table}
 \begin{tabular}{l | c c}
   & \textbf{cere} & \textbf{einstein.en.txt} \\
@@ -2222,24 +2230,203 @@ for the preprocessing phase.
   \caption{Worst case time consumptions in percentage for the input preprocessing}
   \label{table-duplicate-time}
 \end{table}
+\end{center}
 
-As we see, the maximum time portion for the cere files is 1.06\% of the total runtime. The results
-were similar for all instances with a small ($\leq 12$} alphabets. Based on this data, it is reasonable
-to say that the preprocessing time of the program is insignificant for instances with a small alphabet.
-  
-  
+Investigatint Table \ref{table-duplicate-time}, a few observations can be made.
+
+\begin{enumerate}
+\item With the same line length, increasing the input size increases the time portion required to preprocess the input. This is expected since the preprocessing part of the program works in $O(n\cdot log(n))$ time, which is more than the implementation of the greedy heuristic.
+\item With the same input size, an increase in the keyword length causes the relative preprocessing time to decrease. 
+\end{enumerate}
+
+As we see, the maximum relative preprocessing time for the cere files is 1.06\% of the total runtime.
+The results were similar for all instances with a small ($<12$) alphabets. Based on this data,
+it is reasonable to say that the preprocessing time of the program is insignificant for instances
+with a small alphabet while the instance sizes are in the ranges of our experiment. For bigger
+alphabets ($|\Sigma|>12$) the relative preprocessing time is greater. However, in our experiments
+the time required for the preprocessing with large alphabets was maximally around 5 per cent. One may
+interpretate this value to be significant, however while comparing our implementation with large
+inputs to the reference implementation, the differences with the relative time usages are usually
+significantly more than 5\%.
 
 
-todetaan että oikeesti nlogn aina mutta näytetään aikameininki ja todetaan että näillä inputeilla
-nlogn voidaan jättää huomiotta.
+\paragraph{Performance comparisons}
+The performance of our implementation and the reference implementation was compared. The acquired
+time usages were measured using a GNU time software. For PizzaChili dataset, all files with line
+legths of 128 and 254 were investigated. This experiment was run in Haapa. For the Dna dataset,
+the comparisons were run for each file. This experiment was also run in Env2 for all but the
+biggest problem instance, since the memory of Env2 was not sufficient for that.
 
-...
-...
-...
+The runtimes for the PizzaChili dataset are specified in Tables \ref{runtimes-15-128},
+\ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254}. Each table shows the
+runtimes for the set of each 7 sampled with the same parameters. The File column is the
+prefix of the used filename. For examples the files in Table \ref{runtimes-15-128} are
+cere\_15\_128, coreutils\_15\_128 and so on. The column labeled Reference shows the runtimes
+with our reference implementation. Colums labeled with DIE, DID, RBE and RBD shows the
+runtimes of our implementation versions. The best runtimes for each input file are boldel.
+The last two columns are discussed later.
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r r r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference} & ~~~~\textbf{DIE} & ~~~~\textbf{DID} & ~~~~\textbf{RBE} & ~~~~\textbf{RBD} & \textbf{-Comp.} & \textbf{Rsize} \\
+    \hline
+    cere & 146.00 & \textbf{91.65} & 100.44 & 115.76 & 120.89            & 0.319  & 0.0478  \\
+    coreutils & 73.23 & 105.04 & 74.24 & 104.80 & \textbf{51.27}         & 0.463  & 0.0694  \\
+    einstein.de.txt & 37.76 & 29.11 & 23.95 & 29.79 & \textbf{18.13}     & 0.0463 & 0.00694 \\
+    einstein.en.txt & 246.17 & 134.09 & 110.58 & 135.21 & \textbf{85.12} & 0.0269 & 0.00403 \\
+    influenza & 40.62 & 29.97 & \textbf{29.79} & 34.35 & 32.92           & 0.338  & 0.0507  \\
+    kernel & 114.56 & 109.74 & 85.58 & 111.53 & \textbf{65.13}           & 0.244  & 0.0366  \\
+    para & 122.66 & \textbf{86.50} & 94.77 & 110.11 & 116.21             & 0.387  & 0.0580  \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes for PizzaChili dataset with cut 0.15 and keyword length 128, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-15-128}
+  \end{table}
+\end{center}
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r r r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference} & ~~~~\textbf{DIE} & ~~~~\textbf{DID} & ~~~~\textbf{RBE} & ~~~~\textbf{RBD} & \textbf{-Comp.} & \textbf{Rsize} \\
+    \hline
+    cere & 144.06 & \textbf{102.97} & 113.97 & 129.63 & 136.11            & 0.409  & 0.0614  \\
+    coreutils & 69.29 & 112.36 & 78.83 & 107.45 & \textbf{55.21}          & 0.527  & 0.0791  \\
+    einstein.de.txt & 39.44 & 30.27 & 24.44 & 30.05 & \textbf{18.54}      & 0.0652 & 0.0098  \\
+    einstein.en.txt & 278.75 & 154.52 & 129.48 & 154.96 & \textbf{102.88} & 0.0268 & 0.00402 \\
+    influenza & 38.75 & 33.03 & \textbf{32.76} & 38.23 & 37.28            & 0.463  & 0.0695  \\
+    kernel & 113.62 & 117.58 & 91.70 & 117.96 & \textbf{71.77}            & 0.269  & 0.0403  \\
+    para & 119.23 & \textbf{97.25} & 107.02 & 123.52 & 129.05             & 0.445  & 0.0668  \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes for PizzaChili dataset with cut 0.15 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-15-254}
+  \end{table}
+\end{center}
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r r r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference} & ~~~~\textbf{DIE} & ~~~~\textbf{DID} & ~~~~\textbf{RBE} & ~~~~\textbf{RBD} & \textbf{-Comp.} & \textbf{Rsize} \\
+    \hline
+    cere & 294.24 & \textbf{175.33} & 191.33 & 216.54 & 221.55            & 0.316  & 0.0790  \\
+    coreutils & 145.94 & 187.77 & 131.09 & 180.38 & \textbf{95.82}        & 0.426  & 0.106   \\
+    einstein.de.txt & 73.96 & 52.18 & 42.56 & 52.80 & \textbf{33.40}      & 0.0442 & 0.0110  \\
+    einstein.en.txt & 483.52 & 244.33 & 202.77 & 246.41 & \textbf{159.36} & 0.0210 & 0.00524 \\
+    influenza & 80.12 & \textbf{57.89} & 59.75 & 65.41 & 63.83            & 0.410  & 0.103   \\
+    kernel & 235.27 & 194.60 & 154.91 & 198.07 & \textbf{118.92}          & 0.182  & 0.0455  \\
+    para & 253.59 & \textbf{163.89} & 179.08 & 208.02 & 214.48            & 0.348  & 0.0870  \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes for PizzaChili dataset with cut 0.25 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-25-254}
+  \end{table}
+\end{center}
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r r r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference} & ~~~~\textbf{DIE} & ~~~~\textbf{DID} & ~~~~\textbf{RBE} & ~~~~\textbf{RBD} & \textbf{-Comp.} & \textbf{Rsize} \\
+    \hline
+    cere & 715.62 & \textbf{350.59} & 384.95 & 431.81 & 439.19            & 0.213  & 0.106   \\
+    coreutils & 377.27 & 370.95 & 261.72 & 358.27 & \textbf{188.88}       & 0.289  & 0.145   \\
+    einstein.de.txt & 171.43 & 99.20 & 83.85 & 101.56 & \textbf{67.74}    & 0.0255 & 0.0127  \\
+    einstein.en.txt & 993.62 & 463.47 & 371.48 & 456.26 & \textbf{294.33} & 0.0157 & 0.00786 \\
+    influenza & 197.47 & \textbf{118.44} & 120.73 & 129.16 & 128.45       & 0.335  & 0.167   \\
+    kernel & 569.85 & 392.67 & 306.08 & 392.72 & \textbf{241.98}          & 0.104  & 0.0519  \\
+    para & 629.26 & \textbf{336.03} & 361.32 & 403.99 & 424.42            & 0.237  & 0.119   \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes for PizzaChili dataset with cut 0.50 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-50-254}
+  \end{table}
+\end{center}
+
+As discussed in Section \ref{sec-our} the links optimization was designed to improve the performance
+of our implementation with small alphabets. In general, also the direct indexing over two
+dimensional array is only reasonable with small alphabets, since it significantly increases
+the memory consumption of the program. Also, in practice, our implementations with red-black trees
+were faster with big alphabets. Investigating the runtimes from Tables \ref{runtimes-15-128},
+\ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254} we make the following observation
+
+\begin{enumerate}
+\item The DIE version was the fastest for all instances with small ($<12$) alphabets.
+\item The RBD version was the fastest for all instances with big ($>12$) alphabets.
+\item The DID version was slightly ($<1\%$) faster than the DIE version of for the files influensa\_128\_15 and influensa\_128\_25 ($|\Sigma| = 12$).
+\item The RBE version was the fastest for none of the instances.
+\end{enumerate}
+
+As expected, the DID and RBE versions are generally not competitive with the DIE
+and RBD versions. In practice, we can limit the number of our implementations to two.
+For later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
+or RBD (when alphabet size $>12$) versions of our implementation.
+
+Let us now examine the runtimes more carefully for the instances with keyword length of 254.
+
+
+
+%% \begin{tikzpicture}
+%% \begin{axis} [ xlabel=Runtime(sec), ylabel=Cut\% ]
+%% \addplot table [x=a, y=c, col sep=comma] {data.csv};
+%% \end{axis}
+%% \end{tikzpicture}
+
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=Runtime(sec),
+		xlabel=Cut\%
+                xmax=100,
+                xmin=0,
+                xtick={10, 50, 90},
+                xticklabels={$15$, $25$, $50$}
+          ]
+	\addplot[color=red,mark=x] coordinates {
+		(10,69)
+		(50,146)
+		(90,377)
+	};
+        \addplot[color=blue,mark=*] coordinates {
+          (10, 55)
+          (50, 96)
+          (90, 189)
+        };
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=percentage,
+            xmax=100,
+            xmin=0,
+            xtick={10, 50, 90},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+            ]
+          \addplot[color=green, mark=triangle] coordinates {
+            (10, 78)
+            (50, 66)
+            (90, 50)
+          };
+        \end{axis}
+        
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
+
+
+
 
 outliers: 31 / 700
-times grom gnu time!
-
 
 \section{Discussion}
 
