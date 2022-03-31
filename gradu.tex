@@ -13,6 +13,8 @@
 % number in a ball ?
 % sigma ac:n määritelmään
 
+% The implementation is n log sigma. We refer n log n everywhere!
+
 % REDUCED SET !?!?!
 
 % TERMIT
@@ -1766,7 +1768,7 @@ In the results section we show multiple tables of data that compare the implemen
 another implementation of the same heuristic. We also show how the number of factors in the
 RLZ compression is reduced when the SCS approach is used.
 
-\section{Our implementation}
+\section{Our implementation}~\label{sec-our}
 % our implementation and reference implementation
 
 % std and LINUX libraries ? time measurements?
@@ -1783,7 +1785,7 @@ test scripts and (GNU) Makefiles\ref{asd} for building and testing the code.
 % Explaion array goto and rb tree goto
 As discussed earlier, the goto function of the AC-machine can be implemented in many different
 ways. In our implementation the underlying data structure for the goto function is defined at compile
-time to be either a two dimensional array or a red black tree\ref{asd}, hence, by Theorem \ref{thm-overall-time}
+time to be either a two dimensional array or a red-black tree\ref{asd}, hence, by Theorem \ref{thm-overall-time}
 the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or $O(n\cdot log(n))$,
 respectively.
 
@@ -1791,7 +1793,7 @@ respectively.
 Since the definition of the input of the algorithm is a set of keywords, we have to guard against that
 constraint too. In practice, that means we need to examine the input keywords and remove any possible
 duplicate values. The duplicate removal is implemented by sorting the input keywords and removing any
-consecutive duplicate strings. The keywords are sorted using a string quickstort \ref{asd}.
+consecutive duplicate strings. The keywords are sorted using a string quicksort \ref{asd}.
 Therefore the overall time complexity of our software is $O(n\cdot log(n))$. At the time of writing, the
 duplicates are forced to be searched. There is no command line parameter that would omit the 
 $O(n\cdot log(n))$ time string sorting. However, as we see later even with the $O(n)$ implementation
@@ -1826,7 +1828,7 @@ children of a state is implemented using a linked list. A new node to the list i
 child, thus the overhead from the memory management is relatively larger. In practice, the links
 optimization is viable only with small alphabets and can decrease the execution time and the memory
 consumption with larger alphabets. As we see later, in general the best performance for big alphabets
-is achieved with combination of the red black trees and disabled links optimization. On the contrary,
+is achieved with combination of the red-black trees and disabled links optimization. On the contrary,
 when the alphabet is small enough, direct indexing over two dimensional array combined with enabled links
 optimization results the best execution time.
 
@@ -1918,7 +1920,7 @@ the SCS macro so the generation of the substring is performed. Other macros can 
 The Makefile in the \textit{src/} folder, that builds the binary is configured to append every
 compilation command with an environment variable named DEFS. This is a convinient way of passing
 macro definitions to the compiler. For example to compile our implementation to calculate the
-shortest common superstring approximation that uses the red black trees one may issue the following
+shortest common superstring approximation that uses the red-black trees one may issue the following
 command.
 
 \begin{minted}{Text}
@@ -2016,7 +2018,7 @@ test is executed with the \textit{test1.sh} shell script file. The grep utility 
 that each keyword are present in the output of our implementation. 
 
 The same set of tests is also used with the \textit{test3.sh} file. In this test we compile two version
-of our implementation, one which uses the direct indexing and another that uses the red black tree
+of our implementation, one which uses the direct indexing and another that uses the red-black tree
 implementation. The tests instances are then ran with each version of the implementation and for each
 test, the test is passed if the generated superstrings are equal. In othre words the idea of this
 test is to ensure that the data structure that is used with the goto function does not affect
@@ -2124,27 +2126,29 @@ aspects of the used software and hardware for both of them. We also name the env
 can be referred in Section \ref{sec-results}. The first environment is called Haapa. It is the more
 powerful of the environments providing, due to its larger amount of memory, a possibility to run
 much bigger problem instances. The second
-environment is referred as XXXXXXX. For running
+environment is referred as Env2. For running
 our experiments, Haapa is however the slower one of the two environments. Although Haapa has many times
 the more CPUs the single CPU is significantly slower. Since the code used in the experiments
 are all single threaded the performance of a single core is all that matters. The memory
 clock speed in Haapa is also configured to be significantly slower, thus limiting the performance
-of our implementation with huge memory requirements. Less experiments are run with XXXX since the
+of our implementation with huge memory requirements. Less experiments are run with Env2 since the
 memory of the machine provided a limitation to the size of the problem instances.
 The following table describes the main features of both environments.
 
 \begin{tabular}{l|r|r}
-  & \textbf{Haapa} & \textbf{XXXXX} \\
+  & \textbf{Haapa} & \textbf{Env2} \\
   \hline
-  Operating System & Ubuntu Linux 20.04 LTS & Gentoo Linux \\
+  Operating system & Ubuntu Linux 20.04 LTS & Gentoo Linux \\
+  Linux kernel version & 5.11.0 & 5.4.80 \\
   GCC version & 9.4.0 & 10.2.0 \\
-  glibc version & 2.31 & 2.32 \\
+  Glibc version & 2.31 & 2.32 \\
+  GNU Time version & 1.7 & 1.9 \\
   \hline
-  processor model & Intel Xeon E7-4830 v3 & Intel Core i7-6700K \\
-  processor clock speed & 2.1 GHz & 4.0 GHz \\
-  processor cache size & 30 MiB & 8 MiB \\
-  memory density & 1.5 TiB & 32 GiB \\
-  configured memory clock speed & 1333 MHz & 2133 MHz \\
+  Processor model & Intel Xeon E7-4830 v3 & Intel Core i7-6700K \\
+  Processor clock speed & 2.1 GHz & 4.0 GHz \\
+  Processor cache size & 30 MiB & 8 MiB \\
+  Memory density & 1.5 TiB & 32 GiB \\
+  Configured memory clock speed & 1333 MHz & 2133 MHz \\
 \end{tabular}
 \\
 
@@ -2160,8 +2164,82 @@ The following table describes the main features of both environments.
 %sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
 % sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
 \section{Results}~\label{sec-results}
-For each result in this section, the binaries that are used are compiled with the same compiler
-with same optimization flags (gcc, -O3, -flto)
+In this section we examine the performance of our implementation. As a reference we use another
+implementation of the same greedy heuristic of the approximate shortest common superstring problem.
+The reference implementation \citep{Alanko19} performs the computation in a space efficient way using
+only $O(n \cdot log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation,
+is also $O(n \cdot log(|\Sigma|))$. In contrast, our implementation of Ukkonen's algorithm
+works in linear time when the code is compiled to use direct indexing for the operations with
+the goto function. Our implementation also have a possibility to use red-black trees for the goto
+operations, thus both of these approaches were tested.
+This difference in the time complexities can be seen especially with a large input sizes.
+In addition, as discussed in Section
+\ref{sec-our}, our implementation has an additional compile time parameter that defines the data
+structure used for the children list of the states. As it is, there are four different versions of
+our implementation, at total:
+
+\begin{enumerate}
+\item Direct indexing ($O(n)$) with links optimization enabled.
+\item Dicect indexing ($O(n)$) with links optimization disabled.
+\item Red-black tree ($O(n\cdot log(n))$) with links optimization enabled.
+\item Red-black tree ($O(n\cdot log(n))$) with links optimization disabled.
+\end{enumerate}
+
+For convinience we refer these versions as DIE, DID, RBE and RBD respectively. All the results,
+from our as well as the reference implementation,
+represented in this chapter are from binaries that have been compiled with the same C
+compiler (gcc) with the same optimization settings. The predefined optimization set -O3 have
+been used as well as the linking time optimization (-flto). For all the results related to the
+speed of the implementations have been run as follows. Each experiment was repeated five times. For
+the five execution times we picked the median value. After that, if there were any values with 
+at least 5 per cent difference, those values were removed and the new median value was picked.
+If there were even number of values left, the bigger one of the two middle values were chosen.
+The idea behind this procedure was to eliminate the possible outliers from the results. Most often
+there were no outliers and the presented value was acquired immidietly. 
+
+As discussed in Section \ref{sec-our}, our program uses the $O(n\cdot log(n))$ string quicksort
+algorithm to remove the possible duplicate input keywords. By compiling our program with the
+INFO macro defined we get, among other things, an analysis of the time spent in different phases
+of the program. The RBD implementation was the fastest one to process any sampled einstein.en.txt
+file. Correspondingly the DIE version was the fastest one for any cere file. In Table
+\ref{table-duplicate-time}
+we show the time portion of our implementations (DIE for cere and RBD for einstein.en.txt) that were
+used for the duplicate removal as a percentage of the total runtime. Since theused  implementation
+versions are the fastest ones for the particular instances, the time portions for the duplicate
+removals are maximal, i.e. Table \ref{table-duplicate-time} shows the worst case time percentages
+for the preprocessing phase.
+
+\begin{table}
+\begin{tabular}{l | c c}
+  & \textbf{cere} & \textbf{einstein.en.txt} \\
+  75\_512 & 0.36\% & 3.54\% \\
+  50\_512 & 0.33\% & 3.06\% \\
+  50\_254 & 0.71\% & 4.87\% \\
+  25\_254 & 0.59\% & 4.04\% \\
+  15\_254 & 0.54\% & 3.25\% \\
+  15\_128 & 1.06\% & 4.77\% \\
+\end{tabular}
+  \caption{Worst case time consumptions in percentage for the input preprocessing}
+  \label{table-duplicate-time}
+\end{table}
+
+As we see, the maximum time portion for the cere files is 1.06\% of the total runtime. The results
+were similar for all instances with a small ($\leq 12$} alphabets. Based on this data, it is reasonable
+to say that the preprocessing time of the program is insignificant for instances with a small alphabet.
+  
+  
+
+
+todetaan että oikeesti nlogn aina mutta näytetään aikameininki ja todetaan että näillä inputeilla
+nlogn voidaan jättää huomiotta.
+
+...
+...
+...
+
+outliers: 31 / 700
+times grom gnu time!
+
 
 \section{Discussion}
 
