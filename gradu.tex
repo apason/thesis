@@ -158,7 +158,7 @@
 \usepackage{textcomp}        % Package for special symbols
 \usepackage[pdftex]{color, graphicx} % For pdf output and jpg/png graphics
 \usepackage{epsfig}
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage[pdftex, plainpages=false]{hyperref} % For hyperlinks and pdf metadata
 \usepackage{fancyhdr}        % For nicer page headers
 \usepackage{tikz}            % For making vector graphics (hard to learn but powerful)
@@ -189,7 +189,8 @@
 
 \usepackage{minted}
 
-
+%\usepackage{caption}
+%\usepackage{subcaption}
 %\theoremstyle{definition}
 %\newtheorem{exmp}{Example}[chapter]
 
@@ -207,7 +208,7 @@
 \newtheorem{definition}[theorem]{Definition}
 
 \usepackage[pdftex]{graphicx}
-\usepackage{subfigure}
+%%\usepackage{subfigure}
 \usepackage{float}
 
 
@@ -2360,17 +2361,12 @@ or RBD (when alphabet size $>12$) versions of our implementation.
 Let us now examine the runtimes more carefully for the instances with keyword length of 254.
 
 
-
-%% \begin{tikzpicture}
-%% \begin{axis} [ xlabel=Runtime(sec), ylabel=Cut\% ]
-%% \addplot table [x=a, y=c, col sep=comma] {data.csv};
-%% \end{axis}
-%% \end{tikzpicture}
-
+\begin{figure}
+\begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
 		ylabel=Runtime(sec),
-		xlabel=Cut\%
+		xlabel=Cut\%,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
@@ -2399,12 +2395,12 @@ Let us now examine the runtimes more carefully for the instances with keyword le
         %%   (95, 294)
         %% };
         % einstein de
-	\addplot[color=green,mark=x] coordinates {
+	\addplot[color=black,mark=x] coordinates {
           (5, 39)
           (50, 74)
           (95, 171)
 	};
-        \addplot[color=green,mark=*] coordinates {
+        \addplot[color=black,mark=*] coordinates {
 	  (5,19)
 	  (50,33)
 	  (95,68)
@@ -2478,10 +2474,10 @@ Let us now examine the runtimes more carefully for the instances with keyword le
           %%   (91, 30)
           %% };
           % einstein de
-          \addplot[color=green, mark=triangle] coordinates {
+          \addplot[color=black, mark=triangle] coordinates {
             (5, 80)
-            (48, 66)
-            (91, 50)
+            (50, 66)
+            (95, 50)
           };
           % cere
           %% \addplot[color=yellow, mark=triangle] coordinates {
@@ -2511,35 +2507,35 @@ Let us now examine the runtimes more carefully for the instances with keyword le
         \end{axis}
         
 \end{tikzpicture}
-
-
+\end{minipage}
+\begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
 		ylabel=Runtime(sec),
-		xlabel=Cut\%
+		xlabel=Cut\%,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
                 xticklabels={$15$, $25$, $50$}
           ]
           % coreutils
-	\addplot[color=red,mark=x] coordinates {
+	\addplot[color=black,mark=x] coordinates {
 	  (5,69)
 	  (50,146)
 	  (95,377)
 	};
-        \addplot[color=red,mark=*] coordinates {
+        \addplot[color=black,mark=*] coordinates {
           (5, 55)
           (50, 96)
           (95, 189)
         };
         % para
-        \addplot[color=cyan,mark=x] coordinates {
+        \addplot[color=blue,mark=x] coordinates {
           (5, 119)
           (50, 254)
           (95, 629)
 	};
-        \addplot[color=cyan,mark=*] coordinates {
+        \addplot[color=blue,mark=*] coordinates {
 	  (5, 97)
 	  (50, 164)
 	  (95, 336)
@@ -2556,49 +2552,48 @@ Let us now examine the runtimes more carefully for the instances with keyword le
             ylabel near ticks, yticklabel pos=right
           ]
           % coreutils
-          \addplot[color=red, mark=triangle] coordinates {
+          \addplot[color=black, mark=triangle] coordinates {
             (5, 78)
-            (48, 66)
-            (91, 50)
+            (50, 66)
+            (95, 50)
           };
           % para
-          \addplot[color=cyan, mark=triangle] coordinates {
+          \addplot[color=blue, mark=triangle] coordinates {
             (5, 82)
-            (48, 65)
-            (91, 53)
+            (50, 65)
+            (95, 53)
           };
         \end{axis}
 \end{tikzpicture}
-
-
-
+\end{minipage}
+\end{figure}
 \begin{tikzpicture}
 	\begin{axis}[
 		ylabel=Runtime(sec),
-		xlabel=Cut\%
+		xlabel=Cut\%,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
                 xticklabels={$15$, $25$, $50$}
           ]
         % cere
-	\addplot[color=yellow,mark=x] coordinates {
+	\addplot[color=black,mark=x] coordinates {
           (5, 144)
           (50, 294)
           (95, 716)
 	};
-        \addplot[color=yellow,mark=*] coordinates {
+        \addplot[color=black,mark=*] coordinates {
 	  (5, 103)
 	  (50, 175)
 	  (95, 351)
         };
         % influenza
-	\addplot[color=brown,mark=x] coordinates {
+	\addplot[color=blue,mark=x] coordinates {
           (5, 39)
           (50, 80)
           (95, 197)
 	};
-        \addplot[color=brown,mark=*] coordinates {
+        \addplot[color=blue,mark=*] coordinates {
 	  (5, 33)
 	  (50, 59)
 	  (95, 118)
@@ -2616,26 +2611,25 @@ Let us now examine the runtimes more carefully for the instances with keyword le
             ylabel near ticks, yticklabel pos=right
           ]
           % cere
-          \addplot[color=yellow, mark=triangle] coordinates {
+          \addplot[color=black, mark=triangle] coordinates {
             (5, 71)
-            (48, 60)
-            (91, 49)
+            (50, 60)
+            (95, 49)
           };
           % influenza
-          \addplot[color=brown, mark=triangle] coordinates {
+          \addplot[color=blue, mark=triangle] coordinates {
             (5, 85)
-            (48, 74)
-            (91, 60)
+            (50, 74)
+            (95, 60)
           };                    
           
         \end{axis}
 \end{tikzpicture}
 
-
 \begin{tikzpicture}
 	\begin{axis}[
 		ylabel=Runtime(sec),
-		xlabel=Cut\%
+		xlabel=Cut\%,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
@@ -2679,14 +2673,14 @@ Let us now examine the runtimes more carefully for the instances with keyword le
           % einstein en
           \addplot[color=blue, mark=triangle] coordinates {
             (5, 42)
-            (48, 33)
-            (91, 30)
+            (50, 33)
+            (95, 30)
           };
           % kernel
           \addplot[color=black, mark=triangle] coordinates {
             (5, 63)
-            (48, 51)
-            (91, 42)
+            (50, 51)
+            (95, 42)
           };          
 
         \end{axis}
