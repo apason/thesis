@@ -1,6 +1,8 @@
 
 %% TODO: todo todo todo
 
+% texttt for every "special" word like filenames, types etc
+% Should AC-machine be AC machine without the hyphen?
 % SCS lyhenteen intro
 % FSA lyhenteen intro
 % algon method muotoon note
@@ -23,7 +25,7 @@
 % ACM (start) state, goto and failure transitions
 
 % represented by string... this is shit. Just state somewhere that states and strings
-% are sometimes referred interchangeably. 
+% are sometimes referred interchangeably: By slight abuse of notation...
 
 % STRUCTURE!
 
@@ -188,11 +190,6 @@
 \usepackage{makecell}
 
 \usepackage{minted}
-
-%\usepackage{caption}
-%\usepackage{subcaption}
-%\theoremstyle{definition}
-%\newtheorem{exmp}{Example}[chapter]
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -507,15 +504,21 @@ analogous with a special case of
 the \textsc{Longest Hamiltonian Path} problem, that is, every instance of the SCS problem can be encoded
 as an instance of a longesta Hamiltonian path problem. The encoding works by creating a weighted
 complete digraph from the set of strings as follows. 
-The graph $G_R=(V_R,E_R,w())$, where $V_R$ is a set of vertices, $E_R$ is a set of edges and $w()$ is a
+The graph $G_R=(V_R,E_R,w)$, where $V_R$ is a set of vertices, $E_R$ is a set of edges and $w$ is a
  weight function defined for each edge in $E_R$, is constructed from the set of strings $R$.
 Let there be a vertex $v_i=s_i$ for each string in $R$. Moreover, we define the start vertex
 $v_{start}$ and the end vertex $v_{end}$. Each vertex $v_i$ has a directed weighted edge to each vertex
 $v_j$ such that $i\neq j$. The start vertex has an edge to each $v_i$ and each $v_i$ has an edge to the
 end vertex. The weight $w(v_{start}, v_i) = 0$ and the weight $w(v_i, v_{end}) = 0$ for all $i=1,...,m$.
 The weight of every other edge $(v_i, v_j)$ is the length of the maximum overlap between $s_i$ and $s_j$.
-More formally $G_R=(V_R=\{v_i=s_i\in R\}\cup\{v_{start},v_i | i=1,...,m\}, E_R=\{(v_i,v_j) | i=1,...,m | j=1,...,m | i\neq j\}\cup\{(v_{start},v_{i}) | i=1,...,m\}\cup\{(v_i,v_{end}) | i=1,...,m\},w)$, where
+More formally,
 
+% Pitäskö tossa nyt kuitenkin olla: vi = si \in R ????
+$G_R=(V_R,E_R,w)$ with
+\begin{align*}
+  V_R &= \{v_i~|~s_i\in R\} \cup \{v_{start},v_{end}\} \\
+  E_R &= \{(v_i,v_j)~|~i=1,...,m, j=1,...,m, i\neq j\}
+\end{align*}
 \[   
 w((x,y)) = 
      \begin{cases}
@@ -523,7 +526,10 @@ w((x,y)) =
        0 &\quad\text{ when } x=v_{start} \text{ and } y\in R \\
        0 &\quad\text{ when } x\in R \text{ and } y=v_{end} \\
      \end{cases}
-\]
+     \]
+
+
+
 
 %-intro hamiltonian pathiin!
 %-special case of shortest hampath in weighted directed graph.
@@ -600,8 +606,9 @@ projection $p(H)$ have different lengths, hence the projection changes depending
 % PAPERISSA TÄÄ KOKO PASKA ON REDUCED. eli käydään ensin reduced läpi ja tehdään tämä sille.. ?
 
 Figure \ref{fig-projection} shows an example of the projection constructed from a
-Hamiltonian path $H$ in an overlap graph. The corresponding set of keywords consists of
-strings $s_1$ to $s_m$. The strings $t_1$ to $t_m$ are the same strings in the order they appear on $H$.
+Hamiltonian path $H$ in an overlap graph. The corresponding set of
+strings consists of $s_1$ to $s_m$.
+The strings $t_1$ to $t_m$ are the same strings in the order they appear on $H$.
 We can represent the string $t_i, i=1,...,m-1$ as a prefix-suffix pair
 $(u_i,v_i)$ where $v_i$ is the suffix of $t_i$ that is also a prefix of $t_{i+1}$ such that the
 overlap between $t_i$ and $t_{i+1}$ is maximal. The prefix of $t_i$ whose length is $|t_i|-|v_i|$ is
@@ -620,7 +627,7 @@ With this analogy the size of $H$ is the compression of the common superstring,
 and the length of $p(H)$ is the length of the common superstring.
 
 We now know that the Hamiltonian path in the overlap graph can be used to form a common superstring
-of the set of keywords. Next, we show that also a shortest common superstring of $R$ has a
+of the set of strings. Next, we show that also a shortest common superstring of $R$ has a
 corresponding Hamiltonian path. To prove this we introduce the following lemma.
 
 
@@ -628,12 +635,12 @@ corresponding Hamiltonian path. To prove this we introduce the following lemma.
 The compositions of $p(H)$ and a shortest common superstring $z$ for a reduced set of strings are equivalent.
 \end{lemma}
 \begin{proof}[Proof (by construction)]
-  The lemma can be proven by construction. Let there be a set of strings $R=\{r_1,r_2,...,r_m\}$ and
+  Let there be a reduced set of strings $R=\{r_1,r_2,...,r_m\}$ and
   a shortest common superstring $z$ for $R$. The indices of the strings $r_1$ to $r_m$ are in the same
   order they appear in $z$. Let $y_i$ be the longest suffix of $r_i$ such that it is also a prefix
   of $r_{i+1}$, i.e there is an overlap $y_i$ between $r_i$ and $R_{i+1}$. Additionally, let us
   define $x_i$ to be the prefix of $r_i$ that does not overlap with $y_i$. By this construction we
-  see that the composition of any SCS for any set of strings is equivalent with the composition
+  see that the composition of any SCS for any reduced set of strings is equivalent with the composition
   of the superstring acquired via the projection from the Hamiltonian path.
 
   Hence, there exists a
@@ -655,8 +662,8 @@ a Hamiltonian path in the overlap graph.
 To  construct an approximate longest Hamiltonian path select an edge $e$ from the set $E_R$ such that
 
 \begin{enumerate}
-\item $e$ has the largest weight. If there are multiple such edges, the decision can be made arbitrarily.
-\item $e$ has not been selected before.
+\item The edge $e$ has the largest weight. If there are multiple such edges, the decision can be made arbitrarily.
+\item The edge $e$ has not been selected before.
 \item It is possible to construct a Hamiltonian path with $e$ and the already selected edges. 
 \end{enumerate}
 
@@ -717,16 +724,16 @@ As the string searching part of \citep{Aho75} is not used in \citep{Ukkonen90} n
 this thesis, we only discuss the AC-machine as a data structure and omit the string searching
 functionality of the original author.
 
-Formally AC-machine is defined\footnote{\citep{Aho75} also defined an output function.
+Formally, AC-machine is defined\footnote{\citep{Aho75} also defined an output function.
 This is needed only when the AC-machine is used for searching strings.} as follows.
 
 \begin{definition}
-  Aho-Corasick machine is a tuple $(Q, g, f, \Sigma)$, where
+  Aho-Corasick machine is a tuple $(Q, \Sigma, g, f)$, where
   \begin{enumerate}
     \item $Q$ is a set of states which contains at least the start state, \\
+    \item $\Sigma$ is the alphabet.
     \item $g : Q \times \Sigma \rightarrow Q, g(s_s,c) = s_d$ is a function that defines a state transition from a state $s_s$ to a state $s_d$ for a symbol $c$, \\
     \item $f : Q \rightarrow Q, f(s_s) = s_d$, is a function that defines a failure transition from state $s_s$ to state $s_d$,
-      \item $\Sigma$ is the alphabet.
   \end{enumerate}
 \end{definition}
 todo: should the following lines be included in the definition?
@@ -768,7 +775,6 @@ Figure \ref{fig-ac} illustrates an example of the AC-machine constructed from th
 keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$. The solid lines describe the goto function
 and the dashed lines describe the failure function, for example, $g(8, a) = 9$ and $f(4)=11$.
 
-``as''
 %  Can produce "aababaa" (scs with compression 14-7=7) or "baababab" with compression 14-8 = 6.
 
 \begin{algorithm}[h!]
@@ -827,7 +833,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
   algorithm starts from line 2 where the root node is created. Figure \ref{fig-ac-step1}
   presents this state. Since there are four keywords the first for loop is executed four times.
-  In the first round the \textit{insert} function is called for the first keyword "baa".
+  In the first round the \textit{insert} function is called for the first keyword ``baa''.
   In the \textit{insert} function the first while loop is not executed since there are no
   outgoing edges from the root node yet. The for loop is executed for every symbol and the three
   nodes (2,3,4) are added to the goto graph with edge labels 'b', 'a', and 'a'.
@@ -865,8 +871,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \caption{first key added. TODO: bigger arrow heads.} \label{fig-ac-step2}
 \end{figure}
 
-  With the second round of the for loop we add the keyword "baba". In this case the \textit{insert}
-  function executes the while loop two times since the common prefix of "baa" and "baba" has a length
+  With the second round of the for loop we add the keyword ``baba''. In this case the \textit{insert}
+  function executes the while loop two times since the common prefix of ``baa'' and ``baba'' has a length
   2. At this point the goto graph is branched and the remaining symbols 'b' and 'a' are inserted. The
   figure \ref{fig-ac-step3} corresponds with this state.
 
@@ -905,8 +911,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   the second loop on lines 6 to 8 creates an edge from root to root for every symbol in the
   alphabet such that $g(1,\sigma)$ is not defined. With this example, we already have an edge from the
   root for both of the symbols in the binary alphabet, hence no edges are created in this step.
-  However, the corresponding edge is drawn to the image for clarity. This completes the
-  algorithm \ref{ac-goto}.
+  However, the corresponding edge is drawn to the image for clarity. This completes 
+  Algorithm \ref{ac-goto}.
   The resulting goto graph is described in Figure \ref{fig-ac-goto}
 
   \begin{figure}[h]
@@ -965,7 +971,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   for a state is calculated using the failure function of the parent of that state. Thus the computation
   starts from the start state to the states of depth 1 to the states of depth 2 and so on. That clearly
   is equal to index of a symbol in the string that the node spells out. I.e. the depth of
-  the state that spells out "baa" is 3.
+  the state that spells out ``baa'' is 3.
 
   Since the failure function is not defined for the start state (depth 0), the calculation is started
   from depth 1. We define $f(s)=1$ for all states $s$ with depth = 1. Assuming the failure function is
@@ -976,8 +982,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \begin{enumerate}
   \item Let $p$ be the parent of the node $s$ such that $g(p,\sigma) = s$.
   \item Set $state = f(p)$.
-  \item Set $state = f(state)$ until $g(state,\sigma)$ is defined. Since $g(1,\sigma)$ is defined
-    for all symbols that state is always defined.
+  \item Set $state = f(state)$ until $g(state,\sigma)$ is defined. Since $g(start,\sigma)$ is defined
+    for all symbols, at some point, the condition is met.
   \item Set $f(s) = state$
   \end{enumerate}
    \caption{Listing of the failure calculation} \label{lst-failure-calculation}    
@@ -1153,7 +1159,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \end{algorithm}
 
 
-  Since the failure values must be calculated from lowest depth nodes to the highest depth states
+  Since the failure values must be calculated from lowest depth states to the highest depth states
   we go through the goto path using a breadth-first search. This is provided by the queue that is
   appended in every non-leaf state, i.e. the children of the currently processed state are put into the
   queue and the next state to be processed is popped. The queue is initialized to be empty in the first
@@ -1226,11 +1232,11 @@ operations are performed in logarithmic time.
 
 
 \begin{theorem}[]~\label{thm-time-goto}
-  The goto function for the AC-machine can be constructed in time $O(n \cdot O(g'))$,
-  where $g'$ is the time complexity of a single read / write query of the
+  The goto function for the AC-machine can be constructed in time $O(n \cdot t(g))$,
+  where $t(g)$ is the time complexity of a single read / write query of the
   goto function.
 \end{theorem}
-\begin{proof}[Proof scetch]
+\begin{proof}[Proof sketch]
 The main function of Algorithm \ref{ac-goto} consists of two for loops.
 The first loop calls a procedure once for each keyword of the input. The function calls are
 executed in a constant time so the time complexity of the first for loop is linear with respect
@@ -1255,10 +1261,10 @@ can be used in linear or logarithmic time respectively.
 
 
 \begin{theorem}[]~\label{thm-time-failure}
-    The time complexity of Algorithm \ref{ac-fail} equals the time complexity of
-  Algorithm \ref{ac-goto}
+    The time complexity of Algorithm \ref{ac-fail} is the same as the time complexity of
+  Algorithm \ref{ac-goto}.
 \end{theorem}
-\begin{proof}[Proof scetch]
+\begin{proof}[Proof sketch]
 In the discussion of Theorem
 \ref{thm-time-goto} we reasoned that finding all children of the state can be done in
 linear time. In the failure calculation we have the same kind of instruction in the for loop
@@ -1298,12 +1304,13 @@ followed by Algorithm \ref{ukk-h} which implements the greedy selection of the e
 overlap graph.
 
 By Lemma \ref{lem-overlap}, we can find the longest proper suffix of any state that is also
-a prefix on some keyword by following the failure path of the state. In particular let the start
+a prefix of some keyword by following the failure path of the state. In particular let the start
 state $p$ itself be represented by some keyword (i.e. $p$ is a leaf). Now the failure value $f(p)$
 defines the state $q$ that is represented by the longest proper suffix of $p$ that is also a prefix
 of every keyword $r_i$ such that $q$ is an ancestor of $r_i$.
 %is that name "supporters" ever used?
-Let us denote this kind of descendant relationship with a function $L(p)$ and call it a set ofsupporters.
+Let us denote this kind of descendant relationship with a function $L(p)$ and call it a set of
+supporters.
 
 \begin{definition}
 $L(p)$ is a set of indices of the keyword set $R$ such that states represented by
@@ -1311,11 +1318,11 @@ $r_i\in R, i\in L(p)$ are descendants of the state $p$.
 \end{definition}
 
 In other words, if a keyword index
-$j$ is in $L(p)$, then the state represented by $r_j$ is a descendant of the state $p$
+$j$ is in $L(p)$, then the state represented by $r_j$ is a descendant of the state $p$.
 For example, the set $L(3) = 1,2$ for the example AC-machine in Figure \ref{fig-ac}.
 Since the prefix relation is transitive we can iterate over the failure function to find every
 pairwise overlap between $p$ and the keywords. Algorithm \ref{ukk-h} does exactly this.
-Lemma \ref{lem-overlap-length} concludes this property.
+Lemma \ref{lem-overlap-length} formalizes this property.
 
 %% nyt näytetään miten aiemmin mainittua heuristiikkaa pisimmälle hampathille voidaan käyttää
 %% yhdessä ac-koneen kanssa muodostamaan scs approksimaatio
@@ -1349,7 +1356,7 @@ Lemma \ref{lem-overlap-length} concludes this property.
   overlap $u$ represents a state $q$.
   There are three possibilities:
   \begin{enumerate}
-  \item The overlap $u$ is the string $s$ itself. In this case clerarly $i\in L(p)$. Since
+  \item The overlap $u$ is the string $s$ itself. In this case clearly $i\in L(p)$. Since
     $p=f^0(p)$, that is $p=q$ and $d(q) = d(p) = |s|$, the lemma is true. 
   \item The overlap $u$ is the longest proper suffix of $s$ that is also a prefix of $t_i$.
     By Lemma \ref{lem-overlap} this is true if and only if $f(p) = q$. In this case
@@ -1364,7 +1371,8 @@ Lemma \ref{lem-overlap-length} concludes this property.
     $d(q)$ between $q'$ and a keyword $t_i$ (which we know is true) if and only if for some
     $k \geq 0$ state $q=f^k(q')$ is such that $i\in L(q)$. Since we know by assumption $q'=f(p)$ and
     by induction $q=f^k(q')$ it follows that $q=f^{k+1}(p)$. We also know that $i\in L(q)$ and
-    $|u|=d(q)$
+    $|u|=d(q)$. This concludes the proof.
+    
   \end{enumerate}
 \end{proof}
 
@@ -1373,112 +1381,115 @@ Lemma \ref{lem-overlap-length} concludes this property.
   $s_i$ and $s_j$ is represented by the state $q$ such that $q$ is the first sate in the failure
   path of $p$ $f^k(p)$ and $j\in L(q)$. The length of this maximum overlap is $d(q)$.
 \end{theorem}
-\begin{proof}[Proof scketch]
-  The theorem \ref{thm-maximal-overlaps} directly follows from the lemmas \ref{lem-overlap} and \ref{lem-overlap-length}
+\begin{proof}[Proof sketch]
+  The proof directly follows from Lemmas \ref{lem-overlap} and \ref{lem-overlap-length}
 \end{proof}
 
-\paragraph{Explanation of Algorithm \ref{ukk-pre}}
-By Theorem \ref{thm-maximal-overlaps} the AC-machine implicitely encodes the information of the
+\paragraph{Explanation of Algorithm \ref{ukk-pre}.}
+By Theorem \ref{thm-maximal-overlaps} the AC-machine implicitly encodes the information of the
 longest pairwise overlaps between any two keywords. By Lemma \ref{lem-composition} the lengths of the
-maximal overlaps encoded in the AC-machine are equivalent with the weights of the corresponding edges
-in the overlap graph. We use the property of the Theorem \ref{thm-maximal-overlaps} to implement
+maximal overlaps encoded in the AC-machine are equivalent to the weights of the corresponding edges
+in the overlap graph. We use the property of Theorem \ref{thm-maximal-overlaps} to implement
 the greedy heuristic for the \textsc{Longest Hamiltonian Path} problem in the overlap graph. The
-overlaps encoded by the failure function have the length equivalent with the depth of the state that
-have an incoming failure path hence the longest possible overlap can be found by searching the state
-that has some incoming failure path(s) such that the depth of that state is maximized. This suggest
+overlaps encoded by the failure function have length equivalent to the depth of the state that
+have an incoming failure path. Hence the longest possible overlap can be found by searching the state
+that has some incoming failure path(s) such that the depth of that state is maximized. This suggests
 the following implementation.
 
-\paragraph{Implementation of the heuristic using the AC-machine}
-We process every state by following the failure path and saving the
-information of which state the failure transition is coming from. 
-the states with greater depth are processed first. This can be done with a reversed breadth
-first ordering. Since $d(p) > d(f(p))$ for every $p$, the reversed BFS ordering of the states
-ensures that when the state $q$ is being processed, all the states $p$ s.t. $q=f^k(p)$ are already
+\paragraph{Implementation of the heuristic using the AC-machine.}
+We process every state by following the failure path and saving 
+which state the failure transition is coming from. 
+The states with greater depth are processed first. This can be done with a reversed breadth-first
+search (BFS) ordering. Since $d(p) > d(f(p))$ for every $p$, the reversed BFS ordering of the states
+ensures that when the state $q$ is being processed, all the states $p$ with $q=f^k(p)$ are already
 processed and we have the information of each such state. Since we have the information of every such
 state we also have the information of all the overlaps between $L(q)$ and each state $q$, s.t.
 $q$ is in failure path from $p$. We can now select a corresponding edge in the overlap graph as long
 as it does not violate the constraints of the heuristic, that is, considering earlier selections
-the corresponding edge does not form a cycle nor its start state does already have an outcoming
-edge nor its end node does already have an incoming edge. By processing all the states in this
-fashion we end up with the set of edges that forms a hamiltonian path in the
+the corresponding edge does not form a cycle, nor does its start state already have an outcoming
+edge, nor does its end node already have an incoming edge. By processing all the states in this
+fashion we end up with the set of edges that forms a Hamiltonian path in the
 overlap graph. 
 
 \begin{example}
 Let us apply this method to the AC-machine described in Figure \ref{fig-ac}. The processing is started
 with depth 4 from state 6 or state 10. While processing those states we save the information of
-the incoming failure path for state 9 and 5 respectively. Depending on the order of which we process
+the incoming failure path for state 9 and 5 respectively. Depending on the order in which we process
 the states with depth 3 we end up selecting one of the two possible overlaps. Either the state 5
-is processed first and the overlap between $s_3$ and $s_2$ is selected or the state 9 is processed
+is processed first and the overlap between $s_3$ and $s_2$ is selected, or the state 9 is processed
 first and the overlap between $s_2$ and $s_3$ is selected. The information of the incoming failure
 paths for states 3, 8 and 11 is also saved while processing the states of depth 3. Let us assume
 that the state 9 was processed first and the second of the presented overlaps were selected.
 While processing the state 3 we have an information of the incoming failure path from state 6 (via the
-state 9). This indicates there exists an overlap between the state 6 and every state
-in $L(3)=\{6,4\}$ The self overlap between $s_2$ and $s_2$ is of course forbidden since it would
+state 9). This indicates that there exists an overlap between the state 6 and every state
+in $L(3)=\{6,4\}$ The self-overlap between $s_2$ and $s_2$ is forbidden since it would
 create a cycle. However the other overlap between $s_2$ and $s_1$ cannot be selected either because
 the edge from $s_2$ is selected earlier. The state 8 also has information of two incoming failure
-paths. How there already exists an edge with $s_3$ as an end node thus, no edges are selected.
+paths. Now there already exists an edge with $s_3$ as an end node. Thus no edges are selected.
 When processing the state 11 the only possible overlap is compatible with the rules and the edge
 from $s_1$ to $s_4$ is selected. For the states of depth 1 it does not matter which one is processed
-first. In any case while processing the state 7 we find only one failure path coming from a leaf state
-corresponding with keyword $s_2$. Since $s_2$ already has an outgoing edge the processing continues
+first. In any case, while processing the state 7 we find only one failure path coming from a leaf state
+corresponding to keyword $s_2$. Since $s_2$ already has an outgoing edge the process continues
 without any selection. While processing the state 2 we find two possible selections. We can select
 either $(s_3,s_1)$ or $(s_4,s_2)$. Depending on this last selection the common superstring for
-the projection of the selected Hamiltonian path is either "baababab" or "bababaab", which
-both have the same length 8 an the same compression 14-8=6.
+the projection of the selected Hamiltonian path is either ``baababab'' or ``bababaab'', which
+both have the same length 8 and the same compression 14-8=6.
 
-Since, when finding two equally long maximal overlaps the heuristic allows arbitrary selections,
-the outcome of the algorithm may differ between implementations. For example, in the first time
+When finding two equally long maximal overlaps the heuristic allows arbitrary selections.
+Because of this, the outcome of the algorithm may differ between implementations. For example,
+the first time
 we made a selection between two allowed edges, if we selected otherwise the heuristics would
-have produced either "aababaa", "baababa" or "ababaab". These all are the actual shorest common
+have produced either ``aababaa'', ``baababa'' or ``ababaab''. These all are the actual shortest common
 superstrings with length 7 and compression 7.
 \end{example}
 
 %Todo: Why define these here. We could use at least $F(index)$ all over the text.
 The actual algorithm is implemented in two parts. Algorithm \ref{ukk-pre} defines the first part
 which is used to calculate a set of auxiliary data structures that are needed in order to implement
-the actual heuristic. The algorithm takes as an input the AC-machine consturted with
-algorithms \ref{ac-goto} and \ref{ac-fail} as well as the set of keywords $R$ which is also
+the actual heuristic. The algorithm takes as an input the AC-machine constructed with
+Algorithms \ref{ac-goto} and \ref{ac-fail} as well as the set of keywords $R$ which is also
 the same set that the goto and failure functions were constructed for. 
-The following listing consists of the data structures that are calculated
-in algorithm \ref{ukk-pre} and used in algorithm \ref{ukk-h}. The following listin uses $\mathbb{I}$ as
+The listing in Figure \ref{lst-auxiliary-data} consists of the data structures that are calculated
+in algorithm \ref{ukk-pre} and used in algorithm \ref{ukk-h}. It uses $I$ as
 a set of keyword indices in $R$.
 
 \begin{figure}[h!]
 \begin{enumerate}
-  \item $F : \mathbb{I} \rightarrow Q, F(i)=q$ Maps the index of the keyword to the corresponding state. I.e a state $q=F(i)$ is represented by the keyword $s_i$.
-  \item $E : Q \rightarrow \mathbb{I}, E(q)=i$ Inverse function of $F$. If the state $q$ is a leaf represented by $s_i$ then $E(q)=i$. For every non-leaf states $q'$ we define $E(q')=0$.
+  \item $F : I \rightarrow Q, F(i)=q$ Maps the index of the keyword to the corresponding state. I.e a state $q=F(i)$ is represented by the keyword $s_i$.
+  \item $E : Q \rightarrow I, E(q)=i$ Inverse function of $F$. If the state $q$ is a leaf represented by $s_i$ then $E(q)=i$. For every non-leaf states $q'$ we define $E(q')=0$.
   \item $d : Q \rightarrow Q$ Depth function for each state as defined before.
-  \item $L : Q \rightarrow 2^{\mathbb{I}}$ Set of supporters as defined before.
+  \item $L : Q \rightarrow 2^{I}$ Set of supporters as defined before.
   \item $b : Q \rightarrow Q, b(q)=r$ Reverse breadth first search ordering of the states.
   \item $B$ The last state in the BFS ordering of the machine. I.e. $b(B)$ is the second last state in BFS ordering, $b(b(B))$ is the third last and so on.
 \end{enumerate}
 \caption{Static data structures created in Algorithm \ref{ukk-pre}} \label{lst-auxiliary-data}
 \end{figure}
-Since by lemma \ref{lem-reduced} a shortest common superstring for a reduced set of keywords
-is same with the set where it was reduced from, Algorithm \ref{ukk-pre} also performs
+
+Since by Lemma \ref{lem-reduced} a shortest common superstring for a reduced set of keywords
+is same as the set where it was reduced from, Algorithm \ref{ukk-pre} also performs
 the elimination of those keywords that are substrings of other keywords in the set. There are two
 situations when the structure of the AC-machine indicates the occurrence of such a keyword. First,
-if there is a goto transition from a a state that is represented by a keyword that keyword
+if there is a goto transition from a state that is represented by a keyword that keyword
 must be a substring of some other keyword. I.e. If $g(F(i),\sigma)$ is defined for any pair
 $(i,\sigma)$ then the keyword $s_i$ must be a substring (prefix)  of some other keyword and can be
 removed. The second indication of such a keyword is when a leaf state has an incoming failure
-transition from some other state. By lemma \ref{lem-overlap}, if $F(i) = f(q)$ then the keyword
+transition from some other state. By Lemma \ref{lem-overlap}, if $F(i) = f(q)$ then the keyword
 $s_i$ must be a proper suffix of some other state. This means that $s_i$ is either a suffix
 (if the state $q$ is itself a leaf) or a substring that is not a prefix nor suffix of some other
 keyword. The removal of a substring is done using the function $F$. If some keyword
 $s_i$ is a substring of another keyword, we set $F(i)=1$ to indicate that the state represented
 by $s_i$ is not processed like it was a keyword.
 
+% Näihin voi myös raittaa labelit per rivi ja viitata siten.
   \begin{algorithm}[h!]
 
     \caption{Preprocessing algorithm for the greedy heuristic} \label{ukk-pre}
     \hspace*{\algorithmicindent} \textbf{Input:} AC-machine constructed with algorithms \ref{ac-goto} and \ref{ac-fail} and the associated set of keywords $R=\{s_1,...,s_m\}$ \\
     \hspace*{\algorithmicindent} \textbf{Output:} $F, E, d, L, b$ and $B$ as defined earlier.\\
-    \hspace*{\algorithmicindent} \textbf{Notes:} initially $E(s) = 0$ for every state s.
+    \hspace*{\algorithmicindent} \textbf{Preconditions:} Initially $E(s) = 0$ for every state s.
     
     \begin{algorithmic}[1]
-      \Function{calculateAuxiliaryFunctions}{$g : \mathbb{Q} \rightarrow \mathbb{Q}$, $f : \mathbb{Q} \rightarrow \mathbb{Q}, R=\{s_1,...,s_m\}$}
+      \Function{calculateAuxiliaryFunctions}{$g, f, R$}
         \For {$i = 1,...,m$} \\
           \hspace*{1.1cm plus \algorithmicindent} let $x_i = a_0,...,a_{k-1}$
           \State $s\gets 1$
@@ -1516,7 +1527,7 @@ by $s_i$ is not processed like it was a keyword.
 
 
   % algoritmin läpikäynti rivi kerrallaan.
-\paragraph{Explanation of Algorithm \ref{ukk-pre}:}  
+\paragraph{Explanation of Algorithm \ref{ukk-pre}.}  
 Algorithm \ref{ukk-pre} proceeds in two independent steps that could be processed in either order.
 In the first part we loop through every keyword (line 2) and every symbol in the keywords (line 5).
 Before we enter the for loop on line 5 we set the state $s$ to the start state. In the loop
@@ -1527,8 +1538,8 @@ way constructs the function $L$ as defined. At the end of every keyword (if line
 Further we set $F(i) = 1$ for those keyword indices that correspond to a keyword that is a prefix
 of some other keyword. (lines 11, 12).
 
-The second part of this algorithm calculates the reversed breadth first ordering $b$ for the
-AC-machine and set the depths for every state. In addition, substring keywords others than
+The second part of this algorithm calculates the reversed breadth-first ordering $b$ for the
+AC-machine and set the depths for every state. In addition, substring keywords other than
 prefixes are removed. This part is basically a BFS travel through the machine. We create a queue
 and initialize it with the start state $1$ on line 17 and set the depth of the start state to
 zero (line 18). The variable $B$ initialized on line 19 contains the value of the latest state
@@ -1541,39 +1552,38 @@ of the current state to be one greater than its parent state. We also update the
 as discussed before. Finally the line 27 sets $F(i) = 1$ for each keyword index $i$ such that
 the state represented by $s_i$ has an incoming failure transition from any other state.
 
-The lines 12 together with line 27 ensures that for all keywords $i$ such that $s_i$ is a substring
-of some other keyword, the value of $F(i)=1$. I.e. The set of keywords $\{s_j : F(j) \neq 1\}$ is
+The lines 12 together with line 27 ensure that for all keywords $i$ such that $s_i$ is a substring
+of some other keyword, the value of $F(i)=1$, i.e., the set of keywords $\{s_j : F(j) \neq 1\}$ is
 reduced.
 
 % flags indicating leaves ?
 \begin{theorem}[]~\label{thm-time-pre}
-  The time complexity of Algorithm \ref{ukk-pre} equals the time complexity of
+  The time complexity of Algorithm \ref{ukk-pre} is the same as time complexity of
   Algorithm \ref{ac-goto}.
 \end{theorem}
-\begin{proof}[Proof scketch]
+\begin{proof}[Proof sketch]
 As with the construction of
 the AC-machine the time complexity of querying the goto function depends on its underlying
 implementation. At first we ignore the queries for the goto function and focus on the rest.
 In the first part of the algorithm we iterate over all keywords at the outer for loop. In the
 inner for loop we iterate over each symbol in the keyword so the total number of iterations
 in the inner loop equals the total number of symbols in all the keywords combined. On line 7
-we add an element to a set of items $L(s)$. Since this set needs not to be ordered it can be
+we add an element to a set of items $L(s)$. Since this set does not need to be ordered it can be
 implemented for example as a linked list so the time complexity for adding an item is $O(1)$.
 Also the statements on lines 8 to 12 can clearly be performed in constant time. This means that
-the time complexity of the outer for loop is $O(n\cdot g')$ where $n$ is the total number of
-symbols in the input and $g'$ is the time complexity of querying the goto function.
+the time complexity of the outer for loop is $O(n\cdot t(x))$ where $n$ is the total number of
+symbols in the input and $t(x)$ is the time complexity of querying the goto function.
 
 The lines 17 to 19 can clearly be executed in constant time. The while loop starting at line 20
 does the breadth first search for the AC-machine. Since the number of states in the machine is
-$O(n)$ the execution time for the BFS is also $O(n)$. Here we assume that the queue is also
-implemented using a structure that enables insertions and deletions in a constant time (E.g.
+$O(n)$, the execution time for the BFS is also $O(n)$. Here we assume that the queue is also
+implemented using a structure that enables insertions and deletions in a constant time (e.g.
 a linked list). The lines 25 to 27 that are not related to the BFS search itself can also clearly
-be executed at constant time. This results the total time complexity of algorithm \ref{ukk-pre} to be
-$O(n\cdot g')$. For example if the goto function is implemented using a direct indexing the
+be executed at constant time. This results in the total time complexity of algorithm \ref{ukk-pre} to be
+$O(n\cdot t(x))$. For example, if the goto function is implemented using a direct indexing, the
 reading and writing of $g$ is performed at constant time, thus the time complexity is $O(n)$.
-On the other hand, if $g$ is implemented using for example balanced binary trees then the acces
+On the other hand, if $g$ is implemented using for example balanced binary trees, then the access
 time of $g$ is $O(log (n))$ and the total time complexity of the algorithm is $O(n\cdot log(n))$.
-The former discussion leads us to the following theorem.
 \end{proof}
 
 Let us now discuss the algorithm that implements the greedy selection of the edges in the
@@ -1588,7 +1598,7 @@ of the heuristic, when the execution enters a state $q$, all other states with d
 already processed and there is an information of every $F(i)$ that is a starting point of any failure
 path to $q$,
 such that there is no already selected edge $(s_i, s')$ for any keyword $s'$. Let us denote
-this information with $p$ with Definition \ref{def-p}
+this information with $p$.
 
 \begin{definition}~\label{def-p}
   At the point of the execution of Algorithm \ref{ukk-h} when a state $q$ is being processed,
@@ -1597,33 +1607,32 @@ this information with $p$ with Definition \ref{def-p}
   edge $(s_i, s')$ already selected for any $s'\in R$.
 \end{definition}
 
-When we encounter a state $q$ s.t. $i\in P(q)$ we know that there exists an overlap of length
-$d(q)$ between $s_i$ and every keyword whose corresponding state is accessbile in the AC-machine
-through the state $q$ i.e. that state is descendant of $q$. We have already defined a data structure
+When we encounter a state $q$ with $i\in P(q)$ we know that there exists an overlap of length
+$d(q)$ between $s_i$ and every keyword whose corresponding state is accessible in the AC-machine
+through the state $q$, i.e. that state is descendant of $q$. We have already defined a data structure
 $L$ for this information, hence there is a maximal overlap of length $d$ between every $s_{P(q)}$
 and every $s_{L(q)}$. Based on this information, the next edge cannot yet be selected.
 Note that although the data structure $P$ ensures that every keyword $s_{P(q)}$ can be selected
-for a start node of the new edge the $L(q)$ returns a static data. If there is already selected
-edges $(s',s_{L(q)})$ for each $L(q)$ no more edges can be selected while processing $q$.
+for a start node of the new edge the $L(q)$ returns static data. If there are already selected
+edges $(s',s_{L(q)})$ for each $L(q)$, no more edges can be selected while processing $q$.
 This constraint, that is to prevent a node having multiple ingoing edges, is encoded in the
-function $forbidden(i)$ where $i$ is an index of a keyword,
-with Definition \ref{def-forbidden}
+function $forbidden(i)$ where $i$ is an index of a keyword.
 
 \begin{definition}~\label{def-forbidden}
   At any point of execution of Algorithm \ref{ukk-h}
   \[
   forbidden(i) =
   \begin{cases}
-    true &\text{ if }  (s',s_i)\in H \text{ for any } s'\in R \\
-    true &\text{ if }  s_i \text{ is a substring of any other string in } R \\
-    false &\text{ otherwise} \\
+    true, &\text{ if }  (s',s_i)\in H \text{ for any } s'\in R; \\
+    true, &\text{ if }  s_i \text{ is a substring of any other string in } R; \\
+    false, &\text{ otherwise}. \\
   \end{cases}
   \]
 \end{definition}
 
 We encode the constraints that no node can have multiple inbound or outbound edges
-with the functions $L, P$ and $forbidden$. The last constraint that is to prevents the edge selections
-that form a cycle is guarded with functions $FIRST$ and $LAST$. Both of these functions are defined
+with the functions $L, P$ and $forbidden$. The last constraint, which prevents the edge selections
+that form a cycle, is guarded with functions $FIRST$ and $LAST$. Both of these functions are defined
 for all keyword indices. At the beginning of Algorithm \ref{ukk-h}, $FIRST(i) = LAST(i) = i$
 for every keyword index $i$. The value of these functions is updated such that at any point of execution
 if we have selected a set of edges that forms a path starting from $s_x$ and ending to $s_y$, then
@@ -1631,8 +1640,7 @@ $FIRST(y)=x$ and $LAST(x)=y$. Note that the values for the nodes in the middle o
 not updated nor queried. Now, before the new edge $(s_i,s_j)$ is selected we check that the
 selection does form a cycle by checking that $FIRST(i) \neq j$. Note that this is the same thing
 than checking that $LAST(j) \neq i$. Only one of those checks are necessary. If the check fails,
-the edge in question must be discarded. The following pseudocode concludes the above discussion.
-
+the edge in question must be discarded. 
 
   \begin{algorithm}[h!]
     \caption{Selection of the edges} \label{ukk-h}
@@ -1679,7 +1687,7 @@ the edge in question must be discarded. The following pseudocode concludes the a
     \end{algorithmic}
   \end{algorithm}
 
-\paragraph{Explanation of Algorithm \ref{ukk-h}:}
+\paragraph{Explanation of Algorithm \ref{ukk-h}.}
 Algorithm \ref{ukk-h} starts by setting the initial values for the dynamic functions
 $P, FIRST, LAST$ and $forbidden$ in the for loop starting at lines 2. On lines 4 to 6 the algorithm
 initializes the data that is related to the used keywords, that is the keywords that forms a reduced set.
@@ -1687,15 +1695,15 @@ The line 4 sets the $P$ function for each state that has a direct failure link f
 those keywords. For those same indices the functions $FIRST(i)$ and $LAST(i)$ are initialized
 to $i$, indicating there is no edges yet selected. The else clause on lines 7 to 8 is
 to ensure that there will be no incoming edges to the keywords that are substrings of other
-keywords. (note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
-the prevention of outcoming edges from those strings). After the initialization is done the
+keywords. (Note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
+the prevention of outcoming edges from those strings.) After the initialization is done the
 first state to process is set on line 11. Note that setting $s=B$ would cause one more unnecessary
 iteration of the following while loop since the last state in the BFS ordering can not have
 incoming failure transitions, hence the first state is set to the second last node in that
 ordering.
 
-The while loop starting at line 12 implements the actual selection of the edges. Since the
-most deep states are processed first and nonemptiness of $P(s)$ and $L(s)$ indicates an existing
+The while loop starting at line 12 implements the actual selection of the edges. Since
+deepest states are processed first and nonemptiness of $P(s)$ and $L(s)$ indicates an existing
 overlap of depth $d(s)$ the maximal overlaps are selected first, if allowed by the constraints.
 On line 13 we ensure that $P(s)$ is not empty since otherwise there are no allowed overlaps.
 After that each keyword index in $L(s)$ that is not forbidden are processed (line 14). Each
@@ -1712,8 +1720,8 @@ On line 26 the edge is selected. The lines 27 ensures the definition for $forbid
 remains valid and lines 29 and 30 updates the $FIRST$ and $LAST$ functions accordinly. On line
 28 the selected keyword index is removed from $P(s)$. After all possible edges starting from
 $s_{P(s)}$ are examined the process can move on to the next state in the $b$ link chain (line 34).
-Before that on line 32 the $P(s)$ is catenated to $P(f(s))$ so the possibly remaining unused
-keyword indices are passed for the less deeper states.
+Before that on line 32 the $P(s)$ is concatenated to $P(f(s))$ so the possibly remaining unused
+keyword indices are passed to the less deep states.
 
 
 
@@ -1724,10 +1732,10 @@ keyword indices are passed for the less deeper states.
 \end{theorem}
 \begin{proof}[Proof scketch]
 
-Let us now discuss the time complexity of algorithm \ref{ukk-h}. As with $L$ in algorithm \ref{ukk-pre}
+As with $L$ in Algorithm \ref{ukk-pre}
 we assume that the set returned by function $P$ is implemented using a linked list, allowing a constant
-time insertions, deletions, and catenations. The first for loop starting at line 2 can clearly be
-executed in linear time since all the statements take a constant time and $m <= n $. The wile loop
+time insertions, deletions, and concatenations. The first for loop starting at line 2 can clearly be
+executed in linear time since all the statements take constant time and $m \leq n $. The while loop
 starting at line 12 iterates once for each state that is $O(n)$ times. However, the for loop starting
 at line 14 is also executed at most $m = O(n)$ times.
 
@@ -1736,16 +1744,17 @@ How is that condition on line 14 resolved in linear time ????
 \end{proof}
 
 Theorems \ref{thm-time-goto}, \ref{thm-time-failure}, \ref{thm-time-pre} and \ref{thm-time-h}
-conclude that every algorithm presented in this chapter have the same time complexity that depends
+show that every algorithm presented in this chapter have the same time complexity that depends
 on the implementation of the goto function for the AC-machine. As discussed earlier, the goto function
-can be implemented to allow read and write queries in  $O(1)$ using direct indexing over two
-dimensional array. Other feasible possibility, especially for the larger alphabets, is to use balanced
+can be implemented to allow read and write queries in  $O(1)$ using direct indexing over a
+two-dimensional array. Another feasible possibility, especially for the larger alphabets,
+is to use balanced
 binary trees with $O(log(n))$ time complexity. This conclusion leads us to the following theorem.
 
 \begin{theorem}[]~\label{thm-overall-time}
-  With algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} the greedy heuristic
-  for the approximate longest hamiltonian path in the overlap graph can be implemented in time
-  $O(n \cdot O(g'))$ where $g'$ is the time complexity of a single read / write query of the
+  With Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} the greedy heuristic
+  for the approximate longest Hamiltonian path in the overlap graph can be implemented in time
+  $O(n \cdot t(x))$ where $t(x)$ is the time complexity of a single read / write query of the
   goto function.
 \end{theorem}
 
@@ -1760,36 +1769,40 @@ binary trees with $O(log(n))$ time complexity. This conclusion leads us to the f
 %  subsections?
 
 %%
-\chapter{Experiments}
+\chapter{Empirical Evaluation}
 
-In this chapter we introduce an open source implementation of the Ukkonen's shortest common superstring
-approximation algorithm discussed in chapter \ref{chp-ukkonen}. We go through the most significant
-aspects of the implementation and usage of the code. We also introduce the data that was used in the
-benchmarking of the efficiency of the implementation as well as the experiment relating
-Lempel-Ziv compression using the SCS of the sampled original data as the reference string.
+% todo: This section.
+In this chapter we introduce and describe an open-source implementation of Ukkonen's shortest
+common superstring
+approximation algorithm discussed in Chapter \ref{chp-ukkonen}. We go through the most significant
+aspects of the implementation and usage of the code. We also describe the data that was used to
+benchmark the efficiency of the implementation as well as the experiments related to
+relative Lempel-Ziv compression using the SCS of the sampled original data as the reference string.
 
-In the results section we show multiple tables of data that compare the implementation with
+Finally, we show multiple tables of data that compare the implementation with
 another implementation of the same heuristic. We also show how the number of factors in the
 RLZ compression is reduced when the SCS approach is used.
 
-\section{Our implementation}~\label{sec-our}
+\section{Implementation}~\label{sec-our}
 % our implementation and reference implementation
 
 % std and LINUX libraries ? time measurements?
 \paragraph{Overview:}
-Our implementation of Ukkonen's shortest common superstring approximation algorithm were written
-for this thesis. The implementation is written with C programming language without any external
-libraries. Only the C standard library were used. Although the Algorithms presented in chapter
+%Our implementation of Ukkonen's shortest common superstring approximation algorithm were written
+%for this thesis.
+The implementation is written in the C programming language without any external
+libraries. Only the C standard library and POSIX libraries were used.
+Although algorithms presented in Chapter
 \ref{chp-ukkonen} are relatively short, the actual implementation also contains other code
-that binds the Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} together. 
-Various data structures were also implemented for the algorithm. At total the implementation consists
+that binds Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} together. 
+Various data structures were also implemented for the algorithm. In total, the implementation consists
 of 2400 lines of code, including the comments and empty lines. The implementation also includes some
-test scripts and (GNU) Makefiles\ref{asd} for building and testing the code. 
+test scripts for building and testing the code. 
 
 % Explaion array goto and rb tree goto
 As discussed earlier, the goto function of the AC-machine can be implemented in many different
 ways. In our implementation the underlying data structure for the goto function is defined at compile
-time to be either a two dimensional array or a red-black tree\ref{asd}, hence, by Theorem \ref{thm-overall-time}
+time to be either a two dimensional array or a red-black tree\ref{asd}. Hence, by Theorem \ref{thm-overall-time}
 the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or $O(n\cdot log(n))$,
 respectively.
 
@@ -1797,7 +1810,7 @@ respectively.
 Since the definition of the input of the algorithm is a set of keywords, we have to guard against that
 constraint too. In practice, that means we need to examine the input keywords and remove any possible
 duplicate values. The duplicate removal is implemented by sorting the input keywords and removing any
-consecutive duplicate strings. The keywords are sorted using a string quicksort \ref{asd}.
+consecutive duplicate strings. The keywords are sorted using string quicksort \ref{asd}.
 Therefore the overall time complexity of our software is $O(n\cdot log(n))$. At the time of writing, the
 duplicates are forced to be searched. There is no command line parameter that would omit the 
 $O(n\cdot log(n))$ time string sorting. However, as we see later even with the $O(n)$ implementation
@@ -1805,85 +1818,94 @@ of Ukkonen's algorithm the $O(n\cdot log(n))$ time preprocessing is insignifican
 large inputs.
 
 % Explanation of the limitations: char
-Our implementation uses the char datatype of the C programming language as a type of the element
-in an integer alphabet that is used in the algorithm. Char datatype were obvious choise since
-there exists a lot of string processing functions for char arrays in the C standard library.
-However, since char is only 8 bits long, this choise limits our implementation for alphabets
-$\Sigma$ s.t $|\Sigma| \leq 256$. The code is however designed so that the change in the
+Our implementation uses the \texttt{char} datatype of the C programming language as the
+type of the element
+in an integer alphabet that is used in the algorithm. The \texttt{char} datatype is an obvious
+choice since the C starndard defines many string processing functions for \texttt{char} arrays.
+However, since \texttt{char} is only 8 bits long, this choice limits our implementation for alphabets
+$\Sigma$ with $|\Sigma| \leq 256$. The code is however designed so that the alphabet data type
+is bound to a macro. Thus, the change in the
 data type would be as easy as possible if the software is further developed to work with
 bigger alphabets. 
 
-The git repository of our implementation can be found from GitHub: https://github.com/apason/ukkonen-90
+The git repository of our implementation can be found from GitHub:\\ \url{https://github.com/apason/ukkonen-90}
 
 % Explain links optimization flag
-\paragraph{Compile time parameters:}
-To optimize the memory consumption and the execution time depending on the input data, some approaches
-were done. The purpose was to include various compile or runtime flags that would change the behaviour
+\paragraph{Compile-time parameters:}
+To optimize the memory consumption and the execution time depending on the input data,
+various alternative approaches were implemented.
+The purpose was to include various compile or runtime flags that would change the behaviour
 of the application. All of those modifications except one were discarded. The current version includes
-a compile time macro OPTIMIZE\_LINKS that changes the data structure that is used to save the the children of each
-state. Later on we refer this parameter as a links optimization. The optimization works as follows.
-Each state must be able to refer all its children in a time linear with respect to the number children.
+a compile-time macro OPTIMIZE\_LINKS that changes the data structure that is used to the the children of each
+state. Later on we refer to this parameter as links optimization. The optimization works as follows.
+Each state must be able to refer to all of its children in time linear with respect to the number
+of children.
 Each child of a state is saved in a list. When links optimization is turned on, this list is
 implemented as an array and allocated
-to have as many elements as there are symbols in the alphabet. Since the list has a fixed size there
+to have as many elements as there are symbols in the alphabet. Since the list has a fixed size, there
 will be only one memory allocation for each state. The drawback of this feature is the increased memory
 consumption with large alphabets. When links optimization is turned off, the list containing the
 children of a state is implemented using a linked list. A new node to the list is allocated for each
 child, thus the overhead from the memory management is relatively larger. In practice, the links
 optimization is viable only with small alphabets and can decrease the execution time and the memory
-consumption with larger alphabets. As we see later, in general the best performance for big alphabets
-is achieved with combination of the red-black trees and disabled links optimization. On the contrary,
-when the alphabet is small enough, direct indexing over two dimensional array combined with enabled links
-optimization results the best execution time.
+consumption with larger alphabets. As we will see later, in general the best performance for big
+alphabets
+is achieved with the combination of red-black trees and disabled links optimization. On the contrary,
+when the alphabet is small enough, direct indexing over two dimensional arrays combined with
+enabled links
+optimization results in the best execution time.
 
 % Explain other compile time flags: MAX_LINE LONG_KEYS and SCS INFO MAX_STATE 
 The input keywords are given to the program as an input file that contains one keyword per line. The
-line separator is an ASCII line feed character (code 10). This adds additional limitation to the
-alphabet, since in practice the decimal value 10 can not be a part of any given keyword. In the section
+line separator is an ASCII line feed character (code 10). This adds an additional limitation to the
+alphabet, since in practice the decimal value 10 cannot be a part of any given keyword. In Section
 \ref{usage} we introduce another input system that allows any character code (except 0) to be used. In
 that input method the keywords are merely sampled from the input file and the individual keywords
 are not defined. When the input keywords are read, there is a symbol buffer where the individual lines
 are first read to. No input keyword can be longer than this buffer. The size of the buffer defaults
-to 2048 symbols but can be modified in compile time by setting the wanted value for the macro
-MAX\_LINE.
-Note that the MAX\_LINE macro defines the size of the buffer, not the size of a maximum
+to 2048 symbols but can be modified in compile time by setting the desired value for the macro
+\texttt{MAX\_LINE}.
+Note that the \texttt{MAX\_LINE} macro defines the size of the buffer, not the size of a maximum
 keyword, and
 that the keywords are read to the buffer with the newline character (that is not part of the keyword)
-and that the char arrays must be terminated with the NULL character, the actual maximum
-keyword size is MAX\_LINE -2.
+and that the char arrays must be terminated with the \texttt{NULL} character, the actual maximum
+keyword size is \texttt{MAX\_LINE} -2.
 
-Since the value of the depth function $d$ can not exceed the length of a longest keyword that the
-AC-machine encodes, we can define the datatype for the codomain depending on the maximum keyword length.
-The default data type is an 8 bit positive integer, hence by default, the keywords are supported to the
-length 255. When a keyword longer than 255 is used, the data type for the codomain of the depth function
-must be larger. By defininf the compile time macro LONG\_KEYS the depth function uses 16 bit datatype
-instead. This allows the maximum keyword length to be $2^{16}-1$ which should be enough for any
-reasonable use of the program.
+Since the value of the depth function $d$ can not exceed the length of the longest keyword(s) that the
+AC-machine encodes, we can define the datatype for the codomain of $d$ depending on the maximum
+keyword length. The default data type is an 8-bit positive integer, hence by default,
+up to 255-length keywords are supported.
+When a keyword longer than 255 is used, the data type for the codomain of the depth function
+must be larger. By defining the compile-time macro \texttt{LONG\_KEYS} the depth function
+uses a 16-bit datatype instead. This allows the maximum keyword length to be $2^{16}-1$ which
+should be enough for the RLZ dictionary construction. \ref{joku}
 
-The underlying data type that encodes the numbers of states defaults to 4 byte unsigned integer. That
-means the maximum number of states that teh AC-machine can encode is $2^{32}$ which is approximately
-4 billions. Since the number of states can not be known beforehand, the fact that the number of states
-is at most the number of symbols in the input is useful. As we use one byte alphabet, the size
+The underlying data type that encodes the numbers of states defaults to a 4-byte unsigned integer. That
+means the maximum number of states that the AC-machine can encode is $2^{32}$ which is approximately
+4 billion. Since the number of states cannot be known beforehand, the fact that the number of states
+is at most the number of symbols in the input is useful. As we use a one-byte alphabet, the size
 of the input file should not exceed 4GiB when using the default configuration. The data type
-for the state numbers can be changed as follows. There is a macro MAX\_STATE that automatically
-defines the data type to be as small as possible. Possible data types are 8, 16, 32 and 64 bit
-unsigned integers. Note that it is not necessary to set the MAX\_STATES macro to a smaller value
+for the state numbers can be changed as follows. There is a macro \texttt{MAX\_STATE} that automatically
+defines the data type to be as small as possible. Possible data types are 8, 16, 32 and 64-bit
+unsigned integers. Note that it is not necessary to set the \texttt{MAX\_STATES} macro to a smaller value
 even if the input size were less than $2^{16}$ bytes. This only affects the memory consumption of
 the program which is anyway quite small with input sizes less than 16KiB.
 
-There are also two compile time options that affects the execution. If the macro SCS is not defined,
+There are also two compile-time options that affects the execution. If the macro \texttt{SCS}
+is not defined,
 the program only executes Algorithms \ref{ac-goto} and \ref{ac-fail} creating a plain AC-machine
-for the input keywords. This option were added in order to compare the construction of the
+for the input keywords. This option was added in order to compare to the construction of the
 AC-machine with another similar implementation \citep{Salmela}. When using the program for approximate
-shortest common superstring calculation, the SCS macro must always be defined. The last compile
-time option is the INFO macro. When INFO is defined, an additional information of the calculation
+shortest common superstring calculation, the \texttt{SCS} macro must always be defined. The last
+compile-time option is the INFO macro. When \texttt{INFO} is defined, additional information
+of the calculation
 is printed along with the approximate shortest common supertsing. The additional information contains
 some used data types, number of removed duplicates in the input keywords, number of different symbols
 in the input (real alphabet size), the number of states and a table that lists the most important
 phases of the execution and their time usages. Without the INFO macro the program only outputs
 the approximate SCS for the input.
 
-The following table summarizes the available compile time options.\\
+The following table summarizes the available compile-time options.\\
 
 %\begin{center}
 \hspace{-1.7cm}
@@ -1909,57 +1931,63 @@ The following table summarizes the available compile time options.\\
 
 \paragraph{Compilation:}~\label{usage}
 The compilation and the usage of our implementation requires a C compiler and the GNU Make software.
-Since the program uses <sys/resource.h> and <sys/time.h> POSIX header files, the program can only
-be used in a POSIX compilant operating system providing these libraries. There are no other
+Since the program uses \texttt{<sys/resource.h>} and \texttt{<sys/time.h>} POSIX header files,
+the program can only
+be used in a POSIX compliant (e.g. Linux, BSD, MacOs) operating system providing these libraries.
+There are no other
 requirements for building and running the binary. The default C compiler is GCC and it is defined in the
-file \textit{common.mk}.
+file \texttt{common.mk}.
 
-There is a top level Makefile in the root of the repository and other Makefiles in the \textit{tests/}
-and \textit{src/} folders. Every action can be executed in the repository root since the top level
+There is a top-level Makefile in the root of the repository and other Makefiles in the \texttt{tests/}
+and \texttt{src/} folders. Every action can be executed in the repository root since the top level
 Makefile further calls the Makefiles in the subfolders. The default action triggers the project build.
-When the build is done, the \textit{target/scs} binary is created and ready to be executed. To build
-the binary, either the ARRAY\_GOTO or RB\_TREE\_GOTO macro must be defined. There is no default value
-for the goto function's data structure. Also, the user of our implementation probably wants to define
-the SCS macro so the generation of the substring is performed. Other macros can be defined if needed.
-The Makefile in the \textit{src/} folder, that builds the binary is configured to append every
+When the build is done, the \texttt{target/scs} binary is created and ready to be executed. To build
+the binary, either the \texttt{ARRAY\_GOTO} or \texttt{RB\_TREE\_GOTO} macro must be defined.
+There is no default value
+for the goto function's data structure. Other macros can be defined if needed.
+The Makefile in the \texttt{src/} folder, that builds the binary is configured to append every
 compilation command with an environment variable named DEFS. This is a convinient way of passing
-macro definitions to the compiler. For example to compile our implementation to calculate the
-shortest common superstring approximation that uses the red-black trees one may issue the following
+macro definitions to the compiler. For example, to compile our implementation to calculate the
+shortest common superstring approximation that uses the red-black trees, one may issue the following
 command.
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ make DEFS="-DRB_TREE_GOTO -DSCS"
 \end{minted}
 
-To compile the binary with support of keywords of length 1000 and direct indexing with links optimization enabled and additional information printed one could issue the following command.
+To compile the binary with support of keywords of length 1000 and direct indexing with links
+optimization enabled and additional information printed one may issue the following command.
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ make DEFS="-DARRAY_GOTO -DOPTIMIZE_LINKS -DSCS \
                            -DLONG_KEYS -DMAX_LINE=1002 -DINFO"
 \end{minted}
 
-The Makefile also contains a jobs called clean clobber and delete\_tests. The clean job removes all
-intermediate object files. The clobber does the same and also removes the executable in the
-\textit{target/} folder. The delete\_tests target removes the test instances in the \textit{tests/}
-folder. After that the next time the tests are executed the new random test instances are also generated.
+The Makefile also contains jobs called \texttt{clean}, \texttt{clobber} and \texttt{delete\_tests}.
+The \texttt{clean} job removes all
+intermediate object files. The \texttt{clobber} does the same and also removes the executable in the
+\texttt{target/} folder. The \texttt{delete\_tests} target removes the test instances in the
+\texttt{tests/}
+folder. After that, the next time the tests are executed the new random test instances are
+also generated.
 
 \paragraph{Usage:}
-When the binary is ready to use there is two methods for executing it. The simplest way is to
+When the binary is ready to use there are two methods for executing it. The simplest method is to
 execute the binary with a single input file. The file should contain single byte encoded text with
 line feed (keycode 10) delimited keywords. The file should end with a line feed. Note that the input
 can be any single byte encoded text with the following constraints:
 
 \begin{enumerate}
 \item The input keywords must not contain a byte of value 10, since it is reserved for delimiting the
-  keywords. Any keyword that is attempted to contain multiple line feed values are treated as a multiple
+  keywords. Any keyword that contains line feed values are treated as multiple
   keywords.
 \item The input file must not contain zero values.
 \end{enumerate}
 
 It does not matter whether the text is ASCII, extended ASCII, some single byte ISO- encoding or any
 custom made single byte encoding. The following example demonstrates the usage with single input
-file as a parameter. In the example the binary is compiled with SCS macro enabled and INFO macro
-disabled.
+file as a parameter. In the example the binary is compiled with \texttt{SCS} macro enabled and
+\texttt{INFO} macro disabled.
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ cat input
@@ -1972,28 +2000,32 @@ aababaa
 \end{minted}
 
 The other way of using our implementation is with command line options that are associated with
-flags. The flag -f defines the input file. The flag -a and -b defines the input types. Only one of the
-input types can be specified at a time. The -a defines the same kind of input method we discussed
-earlier, thus the following command is equivalent with the earlier example:
+flags. The flag \texttt{-f} defines the input file. The flag \texttt{-a} and \texttt{-b} defines
+the input types. Only one of the
+input types can be specified at a time. The \texttt{-a} flag defines the same kind of input method
+we discussed earlier, thus the following command is equivalent to the earlier example:
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ target/scs -a -f input
 \end{minted}
 
-The input type specified with -b flag requires two more options and the behavior of the program is
+The input type specified with the \texttt{-b} flag requires two more options and the behavior of
+the program is
 different. In this case the input file is considered as a source file where the keywords are randomly
-sampled as defined by -l (line length) and -c (cut) parameters. The sampling of the keywords is
-performed as follows. The -l parameter defines a length of a single keyword (all keywords have
-the same length). The -c parameter defines how many lines are sampled. The cut parameter takes a
+sampled as defined by \texttt{-l} (line length) and \texttt{-c} (cut) parameters.
+The sampling of the keywords is
+performed as follows. The \texttt{-l} parameter defines the length of a single keyword (all keywords have
+the same length). The \texttt{-c} parameter defines how many lines are sampled. The cut parameter takes a
 floating point value between 0 and 1. The total number of sampled input keywords multiplied by
 the length of a single keyword must equal (the value can be rounded) the original input file size
-multiplied by the cut parameter. For example if the input file is 10KB and the -l parameter has a value
+multiplied by the cut parameter. For example, if the input file is 10KB and the \texttt{-l}
+parameter has a value
 of 100 and the cut parameter has a value of 0.50, then the keywords are sampled such that there
-are 50 keywords of length 100 (that is 10KB$\cdot 0.50 = 5KB$). Note that in this method when the
-keywords are sampled from rather than delimited in the input file they can also contain the line
+are 50 keywords of length 100 (that is 10KB$\cdot 0.50 = 5$KB). Note that when the
+keywords are sampled from rather than delimited in the input file, they can also contain the line
 feed characters. After the keywords are sampled it is possible (especially with highly repetitive
-input files and big cuts) that there exists multiple identical keywords. Before the keywords are
-applied with the actual SCS algorithm the duplicates are first removed. The following example
+input files and big cuts) that there are multiple identical keywords. Before the SCS algorithm
+is executed, the duplicates are first removed. The following example
 demonstrates the usage with an input file that is sampled to get a set of keywords of lengths 128
 such that the size of the sampled keywods equals 10\% of the size of the given input file
 
@@ -2002,26 +2034,29 @@ user@host:.../ukkonen-90/$ target/scs -b -f input -l 128 -c 0.1
 \end{minted}
 
 \paragraph{Tests:}
+TODO: should I just ignore the tests in the thesis?
+
 Our implementation has been tested to be correct with three different sets of tests. The tests are
-located in the same Git repository with the actual implementation. There is also a helper script for
+located in the same Git repository as the actual implementation. There is also a helper script for
 generating random test instances and scripts that run the actual tests.
-All tests related files are in the \textit{tests/} folder of the
+All test-related files are in the \texttt{tests/} folder of the
 root of the git repository. To run the tests just issue
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ make tests
 \end{minted}
 
-in the root folder (of the repository). This invokes the Makefile in the \textit{tests/} folder. If the
-test instances have not yet been created the script \textit{create\_instance.sh} is executed and two
-test folders are generated. Note that depending on your hardware, the generation of the test instances can be quite slow (up to 30 min).
+in the root folder (of the repository). This invokes the Makefile in the \texttt{tests/} folder. If the
+test instances have not yet been created, the script \texttt{create\_instance.sh} is executed and two
+test folders are generated. Note that depending on your hardware, the generation of the test instances
+can be quite slow (up to 30 min).
 The first test folder contains random instances for alphanumeric, binary,
-dna and hexadecimal alphabets, with different number and length of keywords. This test set is used
+DNA and hexadecimal alphabets, with different number and length of keywords. This test set is used
 to test that the generated common superstring actually contains every keyword in the test file. This
-test is executed with the \textit{test1.sh} shell script file. The grep utility is used to ensure
-that each keyword are present in the output of our implementation. 
+test is executed with the \texttt{test1.sh} shell script file. The grep utility is used to ensure
+that each keyword is present in the output of our implementation. 
 
-The same set of tests is also used with the \textit{test3.sh} file. In this test we compile two version
+The same set of tests is also used with the \texttt{test3.sh} file. In this test we compile two version
 of our implementation, one which uses the direct indexing and another that uses the red-black tree
 implementation. The tests instances are then ran with each version of the implementation and for each
 test, the test is passed if the generated superstrings are equal. In othre words the idea of this
@@ -2029,8 +2064,8 @@ test is to ensure that the data structure that is used with the goto function do
 the outcome.
 
 The second set of test instances is rather small. There are only few very small instances with binary
-alphabet. The test script \textit{test2.sh} runs these tests as follows. First each test instance is
-executed with a python script \textit{scs.py} that uses the \textit{pysat} python library to calculate
+alphabet. The test script \texttt{test2.sh} runs these tests as follows. First each test instance is
+executed with a python script \texttt{scs.py} that uses the \texttt{pysat} python library to calculate
 the length of a longest common superstring of the instance. The same instance is then ran with our
 implementation and the compression values for both are calculated. Finally the compressions is compared
 and the test is considered to be passed if the compression of acquired with our implementation is
@@ -2038,27 +2073,28 @@ at least half of the optimal compression. The idea of this test set is to make s
 quality of the compression holds.
 
 Note that in order to run all the tests the python environment with the pysat library must be configured.
-Note also that the make format uses GNU specific features that requires GNU Make or or GNU Make compilant
+Note also that the make format uses GNU specific features that requires GNU Make or or GNU Make compliant
 makefile software. 
 
 
 %% - Differences !!!!
 
-\section{Experiment Data}
+\section{Benchmark Data}
 Here we describe the two datasets that are use in Section \ref{sec-results}. We discuss the origin
 of both of those datasets and inspect their basic properties. Since the data is slightly manipulated
 to fit our experiments we also describe the preprocessing that had been done.
 
 \paragraph{PizzaChili datasets:}
-PizzaChili is a deprecated project of University of Pisa and University of Chile, whose purpose is to
+PizzaChili\ref{PizzaChili} is a deprecated project of University of Pisa and University of Chile,
+whose purpose is to
 share publicly available corpuses and related full-text indices for others to experiment with.
 The dataset defined here consists of some of the repetitive text collections from PizzaChili project.
-We refer that dataset as a PizzaChili dataset.
-There are seven files of repetitive text from real (as an opposite to artificial) origin in the
+We refer to this dataset as the PizzaChili dataset.
+There are seven files of repetitive text from real (as opposed to artificial) origin in the
 PizzaChili dataset. The following listing gives a short description of each of those files. The table
 under the listing includes some basic information of the files. The inverse match probability is defined
 as the inverse of the probability that two randomly chosen characters from the file are the same. This
-is also referred as an effective alphabet size. With uniformly distributed data, the effective and
+is also referred to the effective alphabet size. With uniformly distributed data, the effective and
 actual alphabet sizes are exactly the same.
 
 \begin{enumerate}
@@ -2071,8 +2107,8 @@ actual alphabet sizes are exactly the same.
 \item The \textbf{para} file consists of 36 concatenated sequences of DNA of Saccharyomyces Paradoxus. The origin of this file is the Saccharomyces Genome Resequencing Project.
 \end{enumerate}
 
-todo: This table is from pizzachili website. Do I need to refer it?
 
+\begin{figure}
 \begin{center}
   \begin{tabular}{|l|c|c|c|}
     \hline
@@ -2087,14 +2123,17 @@ todo: This table is from pizzachili website. Do I need to refer it?
     para & 410 & 5 & 4.096\\
     \hline
   \end{tabular}
+  \caption{Basic information of the PizzaChili files. \ref{PizzaChili}}
 \end{center}
+\end{figure}
 
-\paragraph{Preprocessing of PizzaChili}
+
+\paragraph{Preprocessing of PizzaChili:}
 Each file in the dataset is preprocessed as follows. First, the newline characters are substituted
 with tab characters (ASCII key code 9). After that a number of new files are sampled from the files
 such that the new file consists of multiple lines delimited by a newline character. Each line has a
 length $l$ and the total (rounded) number of characters, excluding the newlines, are $0.01c\cdot s$,
-where $s$ is the size of the original file. In other words the $c$ parameter describes the percentage
+where $s$ is the size of the original file. In other words, the $c$ parameter describes the percentage
 of the size of the original file. The parameters $c$ and $l$ have the following value
 combinations: (15, 128), (15, 254), (25, 254), (50, 254), (50, 512), (75, 512), thus at total six
 sampled files are generated. The sampling is performed by selecting a random position between
@@ -2103,42 +2142,43 @@ $l$ from that point to the sample file. This process is then repeated until the 
 achieved. The possible duplicate lines are removed and the process is repeated until the wanted
 number of lines is reached. Finally we have a sample file that contains unique keywords of length
 $l$ such that the size of all keywords combined is $c\%$ of the original size. The files are
-named $s$\_$c$\_$l$. For example the file $cere\_50\_128$ has a size 220MB (plus the number of newlines)
-and contains unique keywords of length 128.
+named \texttt{s\_c\_l}. For example the file \texttt{cere\_50\_128} has size 220MB
+(plus the number of newlines) and contains unique keywords of length 128.
 
 \paragraph{The Dna dataset:}
-The second dataset is called a Dna dataset. The origin of this dataset is xxxx xxxx xxxx.
+The second dataset is called the Dna dataset. The origin of this dataset is xxxx xxxx xxxx.
 It contains xxxx lines of 100 xxxxx. The alphabet $\Sigma=\{A,C,G,T,N\}$ size of the original file is 5.
 The 'N' characters were relatively rare in this file. Since the PizzaChili dataset does not have a
-file with alphabet size less than 5 the Dna dataset was modified by removing all lines containing
-the 'N' character, resulting a file with alphabet of size 4.
+file with alphabet size less than 5, the Dna dataset was modified by removing all lines containing
+the 'N' character, resulting in a file with alphabet of size 4.
 Further, the duplicates were removed from the data and the data was randomly sampled to 11 different
 files as follows. The first file was from the main file such that the number of lines was 3125, thus
-the first have a size of $3125+3125\cdot 100 = 315625$ bytes. The first file was named
-\textit{1\_dna\_3125.acgt}. The process was repeated for the last ten files such that the number
-of lines for each file was two times the number of fileslines in the previous file.
+the first has a size of $3125+3125\cdot 100 = 315625$ bytes. The first file was named
+\texttt{1\_dna\_3125.acgt}. The process was repeated for the last ten files such that the number
+of lines for each file was two times the number of lines in the previous file.
 The same naming convention
 was used with the exception that each consecutive set of three zeros was substituted with the letter k.
 The first character in the file name is a hexadecimal digit of the number of the file.
-For example, the third file was named to \textit{3\_dna\_12500.acgt}, the fourth file was named
-to \textit{4\_dna\_25k.acgt} and the last file was named to \textit{B\_dna\_3200k.acgt}
+For example, the third file was named to \texttt{3\_dna\_12500.acgt}, the fourth file was named
+to \texttt{4\_dna\_25k.acgt} and the last file was named to \texttt{B\_dna\_3200k.acgt}
 
-\section{Experiment Environments}
+\section{Benchmark Setups}
 
 The experiments were done in two different environments. In this section we describe the relevant
 aspects of the used software and hardware for both of them. We also name the environments so they
-can be referred in Section \ref{sec-results}. The first environment is called Haapa. It is the more
+can be referred to in Section \ref{sec-results}. The first environment is called Haapa. It is the more
 powerful of the environments providing, due to its larger amount of memory, a possibility to run
 much bigger problem instances. The second
-environment is referred as Env2. For running
+environment is referred to as Env2. For running
 our experiments, Haapa is however the slower one of the two environments. Although Haapa has many times
-the more CPUs the single CPU is significantly slower. Since the code used in the experiments
-are all single threaded the performance of a single core is all that matters. The memory
+more CPUs, the single CPU is significantly slower. Since the code used in the experiments
+are all single-threaded, the performance of a single core is all that matters. The memory
 clock speed in Haapa is also configured to be significantly slower, thus limiting the performance
 of our implementation with huge memory requirements. Less experiments are run with Env2 since the
 memory of the machine provided a limitation to the size of the problem instances.
-The following table describes the main features of both environments.
+Table \ref{tbl-sys} describes the main features of both environments.
 
+\begin{table}
 \begin{tabular}{l|r|r}
   & \textbf{Haapa} & \textbf{Env2} \\
   \hline
@@ -2154,8 +2194,9 @@ The following table describes the main features of both environments.
   Memory density & 1.5 TiB & 32 GiB \\
   Configured memory clock speed & 1333 MHz & 2133 MHz \\
 \end{tabular}
-\\
-
+\caption{Software and hardware specifications of the environments Haapa and Env2.}
+\label{tbl-sys}
+\end{table}
 
 
 %- gnu time
@@ -2166,14 +2207,14 @@ The following table describes the main features of both environments.
 In this section we examine the performance of our implementation. As a reference we use another
 implementation of the same greedy heuristic of the approximate shortest common superstring problem.
 The reference implementation \citep{Alanko19} performs the computation in a space efficient way using
-only $O(n \cdot log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation,
+only $O(n \cdot log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation
 is also $O(n \cdot log(|\Sigma|))$. In contrast, our implementation of Ukkonen's algorithm
 works in linear time when the code is compiled to use direct indexing for the operations with
-the goto function. Our implementation also have a possibility to use red-black trees for the goto
+the goto function. Our implementation also has a possibility to use red-black trees for the goto
 operations, thus both of these approaches were tested.
 %This difference in the time complexities can be seen especially with a large input sizes.
 In addition, as discussed in Section
-\ref{sec-our}, our implementation has an additional compile time parameter that defines the data
+\ref{sec-our}, our implementation has an additional compile-time parameter that defines the data
 structure used for the children list of the states. As it is, there are four different versions of
 our implementation, at total:
 
@@ -2184,33 +2225,38 @@ our implementation, at total:
 \item Red-black tree ($O(n\cdot log(n))$) with links optimization disabled.
 \end{enumerate}
 
-For convinience we refer these versions as DIE, DID, RBE and RBD respectively. All the results,
+For convinience we refer these versions as DIE, DID, RBE and RBD, respectively. All of the results,
 from our as well as the reference implementation,
 represented in this section are from binaries that have been compiled with the same C
-compiler (gcc) with the same optimization settings. The predefined optimization set -O3 have
-been used as well as the linking time optimization (-flto). For all the results related to the
-speed of the implementations have been run as follows. Each experiment was repeated five times. For
+compiler (gcc) with the same optimization settings. The predefined optimization set \texttt{-O3} have
+been used as well as the linking time optimization \texttt{-flto}. The following process was executed
+with all presented time benchmarks. Each experiment was repeated five times. For
 the five execution times we picked the median value. After that, if there were any values with 
-at least 5 per cent difference, those values were removed and the new median value was picked.
-If there were even number of values left, the bigger one of the two middle values were chosen.
+at least 5 percent difference, those values were removed and the new median value was picked.
+If there was an even number of values left, the bigger one of the two middle values were chosen.
 The idea behind this procedure was to eliminate the possible outliers from the results. Most often
-there were no outliers and the presented value was acquired immidietly.
+there were no outliers and the presented value was acquired immediately. For the PizzaChili files
+with keyword lengths $\leq 256$ there was $31/700$ discarded values when time usages were
+measured in Haapa.
 
-\paragraph{Preprocssing time:}
+\paragraph{Preprocessing time:}
 As discussed in Section \ref{sec-our}, our program uses the $O(n\cdot log(n))$ string quicksort
 algorithm to remove the possible duplicate input keywords. By compiling our program with the
 INFO macro defined, we get, among other things, an analysis of the time spent in different phases
-of the program. The RBD implementation was the fastest one to process any sampled einstein.en.txt
-file. Correspondingly the DIE version was the fastest one for any cere file. In Table
+of the program. Referring to Tables \ref{runtimes-15-128}, \ref{runtimes-15-254},
+\ref{runtimes-25-254} and \ref{runtimes-50-254}, the RBD implementation was the fastest one
+to process any sampled \texttt{einstein.en.txt}
+file. Correspondingly the DIE version was the fastest one for any \texttt{cere} file. In Table
 \ref{table-duplicate-time}
-we show the time portion of our implementations (DIE for cere and RBD for einstein.en.txt) that were
+we show the time portion of our implementations (DIE for cere and RBD for \texttt{einstein.en.txt})
+that were
 used for the duplicate removal as a percentage of the total runtime. Since the used  implementation
 versions are the fastest ones for the particular instances, the time portions for the duplicate
 removals are maximal, i.e. Table \ref{table-duplicate-time} shows the worst case time percentages
 for the preprocessing phase.
 
-\begin{center}
 \begin{table}
+\begin{centering}
 \begin{tabular}{l | c c}
   & \textbf{cere} & \textbf{einstein.en.txt} \\
   75\_512 & 0.36\% & 3.54\% \\
@@ -2220,12 +2266,11 @@ for the preprocessing phase.
   15\_254 & 0.54\% & 3.25\% \\
   15\_128 & 1.06\% & 4.77\% \\
 \end{tabular}
-  \caption{Worst case time consumptions in percentage for the input preprocessing}
+  \caption{Worst case time consumptions in percentage for the input preprocessing.}
   \label{table-duplicate-time}
+\end{centering}
 \end{table}
-\end{center}
-
-Investigatint Table \ref{table-duplicate-time}, a few observations can be made.
+Investigating Table \ref{table-duplicate-time}, a few observations can be made.
 
 \begin{enumerate}
 \item With the same line length, increasing the input size increases the time portion required to preprocess the input. This is expected since the preprocessing part of the program works in $O(n\cdot log(n))$ time, which is more than the implementation of the greedy heuristic.
@@ -2237,16 +2282,16 @@ The results were similar for all instances with a small ($<12$) alphabets. Based
 it is reasonable to say that the preprocessing time of the program is insignificant for instances
 with a small alphabet while the instance sizes are in the ranges of our experiment. For bigger
 alphabets ($|\Sigma|>12$) the relative preprocessing time is greater. However, in our experiments
-the time required for the preprocessing with large alphabets was maximally around 5 per cent. One may
-interpretate this value to be significant, however while comparing our implementation with large
+the time required for the preprocessing with large alphabets was at most around 5 per cent. One may
+interpret this value to be significant, however while comparing our implementation with large
 inputs to the reference implementation, the differences with the relative time usages are usually
 significantly more than 5\%.
 
 
-\paragraph{Performance comparisons}
+\paragraph{Performance comparisons:}
 The performance of our implementation and the reference implementation was compared. The acquired
-time usages were measured using a GNU time software. For PizzaChili dataset, all files with line
-legths of 128 and 254 were investigated. This experiment was run in Haapa. For the Dna dataset,
+time usages were measured using the GNU time software. For the PizzaChili dataset, all files with line
+lengths of 128 and 254 were investigated. This experiment was run in Haapa. For the Dna dataset,
 the comparisons were run for each file. This experiment was also run in Env2 for all but the
 biggest problem instance, since the memory of Env2 was not sufficient for that.
 
@@ -2256,7 +2301,7 @@ runtimes for the set of each 7 sampled with the same parameters. The File column
 prefix of the used filename. For examples the files in Table \ref{runtimes-15-128} are
 cere\_15\_128, coreutils\_15\_128 and so on. The column labeled Reference shows the runtimes
 with our reference implementation. Colums labeled with DIE, DID, RBE and RBD shows the
-runtimes of our implementation versions. The best runtimes for each input file are boldel.
+runtimes of our implementation versions. The best runtimes for each input file are bolded.
 The last two columns are discussed later.
 
 \begin{center}
@@ -2274,7 +2319,7 @@ The last two columns are discussed later.
     para & 122.66 & \textbf{86.50} & 94.77 & 110.11 & 116.21             & 0.387  & 0.0580  \\
     \hline
   \end{tabular}
-  \caption{Runtimes for PizzaChili dataset with cut 0.15 and keyword length 128, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.15 and keyword length 128, compression, relative size of the dictionary. The fastest runtimes are bolded.}
   \label{runtimes-15-128}
   \end{table}
 \end{center}
@@ -2294,7 +2339,7 @@ The last two columns are discussed later.
     para & 119.23 & \textbf{97.25} & 107.02 & 123.52 & 129.05             & 0.445  & 0.0668  \\
     \hline
   \end{tabular}
-  \caption{Runtimes for PizzaChili dataset with cut 0.15 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.15 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
   \label{runtimes-15-254}
   \end{table}
 \end{center}
@@ -2314,7 +2359,7 @@ The last two columns are discussed later.
     para & 253.59 & \textbf{163.89} & 179.08 & 208.02 & 214.48            & 0.348  & 0.0870  \\
     \hline
   \end{tabular}
-  \caption{Runtimes for PizzaChili dataset with cut 0.25 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.25 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
   \label{runtimes-25-254}
   \end{table}
 \end{center}
@@ -2334,28 +2379,28 @@ The last two columns are discussed later.
     para & 629.26 & \textbf{336.03} & 361.32 & 403.99 & 424.42            & 0.237  & 0.119   \\
     \hline
   \end{tabular}
-  \caption{Runtimes for PizzaChili dataset with cut 0.50 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.50 and keyword length 254, compression, relative size of the dictionary. The fastest runtimes are bolded.}
   \label{runtimes-50-254}
   \end{table}
 \end{center}
 
-As discussed in Section \ref{sec-our} the links optimization was designed to improve the performance
+As discussed in Section \ref{sec-our}, the links optimization was designed to improve the performance
 of our implementation with small alphabets. In general, also the direct indexing over two
 dimensional array is only reasonable with small alphabets, since it significantly increases
 the memory consumption of the program. Also, in practice, our implementations with red-black trees
 were faster with big alphabets. Investigating the runtimes from Tables \ref{runtimes-15-128},
-\ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254} we make the following observation
+\ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254} we make the following observation.
 
 \begin{enumerate}
 \item The DIE version was the fastest for all instances with small ($<12$) alphabets.
 \item The RBD version was the fastest for all instances with big ($>12$) alphabets.
-\item The DID version was slightly ($<1\%$) faster than the DIE version of for the files influensa\_128\_15 and influensa\_128\_25 ($|\Sigma| = 12$).
+\item The DID version was slightly ($<1\%$) faster than the DIE version of for the files \texttt{influensa\_128\_15} and \texttt{influensa\_128\_25} ($|\Sigma| = 12$).
 \item The RBE version was the fastest for none of the instances.
 \end{enumerate}
 
 As expected, the DID and RBE versions are generally not competitive with the DIE
 and RBD versions. In practice, we can limit the number of our implementations to two.
-For later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
+Later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
 or RBD (when alphabet size $>12$) versions of our implementation.
 
 Let us now examine the runtimes more carefully for the instances with keyword length of 254.
@@ -2694,8 +2739,6 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 
 
 
-
-outliers: 31 / 700
 
 \section{Discussion}
 
