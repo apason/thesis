@@ -2406,223 +2406,22 @@ or RBD (when alphabet size $>12$) versions of our implementation.
 Let us now examine the runtimes more carefully for the instances with keyword length of 254.
 
 
-\begin{figure}
-\begin{minipage}{.5\textwidth}
-\begin{tikzpicture}
-	\begin{axis}[
-		ylabel=Runtime(sec),
-		xlabel=Cut\%,
-                xmax=100,
-                xmin=0,
-                xtick={5, 50, 95},
-                xticklabels={$15$, $25$, $50$}
-          ]
-          % coreutils
-	%% \addplot[color=red,mark=x] coordinates {
-	%%   (5,69)
-	%%   (50,146)
-	%%   (95,377)
-	%% };
-        %% \addplot[color=red,mark=*] coordinates {
-        %%   (5, 55)
-        %%   (50, 96)
-        %%   (95, 189)
-        %% };
-        % einstein en
-	%% \addplot[color=blue,mark=x] coordinates {
-	%%   (5, 246)
-	%%   (50, 484)
-	%%   (95, 994)
-	%% };
-        %% \addplot[color=blue,mark=*] coordinates {
-        %%   (5, 103)
-        %%   (50, 159)
-        %%   (95, 294)
-        %% };
-        % einstein de
-	\addplot[color=black,mark=x] coordinates {
-          (5, 39)
-          (50, 74)
-          (95, 171)
-	};
-        \addplot[color=black,mark=*] coordinates {
-	  (5,19)
-	  (50,33)
-	  (95,68)
-        };        
-        % cere
-	%% \addplot[color=yellow,mark=x] coordinates {
-        %%   (5, 144)
-        %%   (50, 294)
-        %%   (95, 716)
-	%% };
-        %% \addplot[color=yellow,mark=*] coordinates {
-	%%   (5, 103)
-	%%   (50, 175)
-	%%   (95, 351)
-        %% };
-        % influenza
-	%% \addplot[color=brown,mark=x] coordinates {
-        %%   (5, 39)
-        %%   (50, 80)
-        %%   (95, 197)
-	%% };
-        %% \addplot[color=brown,mark=*] coordinates {
-	%%   (5, 33)
-	%%   (50, 59)
-	%%   (95, 118)
-        %% };        
-        % kernel
-	%% \addplot[color=black,mark=x] coordinates {
-        %%   (5, 114)
-        %%   (50, 235)
-        %%   (95, 570)
-	%% };
-        %% \addplot[color=black,mark=*] coordinates {
-	%%   (5, 72)
-	%%   (50, 119)
-	%%   (95, 242)
-        %% };
-        % para
-	%% \addplot[color=cyan,mark=x] coordinates {
-        %%   (5, 119)
-        %%   (50, 254)
-        %%   (95, 629)
-	%% };
-        %% \addplot[color=cyan,mark=*] coordinates {
-	%%   (5, 97)
-	%%   (50, 164)
-	%%   (95, 336)
-        %% };
+\begin{table}
+\hskip-1.5cm\resizebox{1.1\columnwidth}{!}{%
+  \begin{tabular}{c c}
 
-	\end{axis}
-        \begin{axis}[
-            xlabel=,
-            ylabel=percentage,
-            xmax=100,
-            xmin=0,
-            xtick={5, 50, 95},
-            xticklabels={,,},
-            xtick style={draw=none},
-            ylabel near ticks, yticklabel pos=right
-          ]
-           % coreutils
-          %% \addplot[color=red, mark=triangle] coordinates {
-          %%   (5, 78)
-          %%   (48, 66)
-          %%   (91, 50)
-          %% };
-          % einstein en
-          %% \addplot[color=blue, mark=triangle] coordinates {
-          %%   (5, 42)
-          %%   (48, 33)
-          %%   (91, 30)
-          %% };
-          % einstein de
-          \addplot[color=black, mark=triangle] coordinates {
-            (5, 80)
-            (50, 66)
-            (95, 50)
-          };
-          % cere
-          %% \addplot[color=yellow, mark=triangle] coordinates {
-          %%   (5, 71)
-          %%   (48, 60)
-          %%   (91, 49)
-          %% };
-          % influenza
-          %% \addplot[color=brown, mark=triangle] coordinates {
-          %%   (5, 85)
-          %%   (48, 74)
-          %%   (91, 60)
-          %% };                    
-          % kernepl
-          %% \addplot[color=black, mark=triangle] coordinates {
-          %%   (5, 63)
-          %%   (48, 51)
-          %%   (91, 42)
-          %% };          
-          % para
-          %% \addplot[color=cyan, mark=triangle] coordinates {
-          %%   (5, 82)
-          %%   (48, 65)
-          %%   (91, 53)
-          %% };
-          
-        \end{axis}
-        
-\end{tikzpicture}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
+    \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
-		ylabel=Runtime(sec),
-		xlabel=Cut\%,
-                xmax=100,
-                xmin=0,
-                xtick={5, 50, 95},
-                xticklabels={$15$, $25$, $50$}
-          ]
-          % coreutils
-	\addplot[color=black,mark=x] coordinates {
-	  (5,69)
-	  (50,146)
-	  (95,377)
-	};
-        \addplot[color=black,mark=*] coordinates {
-          (5, 55)
-          (50, 96)
-          (95, 189)
-        };
-        % para
-        \addplot[color=blue,mark=x] coordinates {
-          (5, 119)
-          (50, 254)
-          (95, 629)
-	};
-        \addplot[color=blue,mark=*] coordinates {
-	  (5, 97)
-	  (50, 164)
-	  (95, 336)
-        };
-	\end{axis}
-        \begin{axis}[
-            xlabel=,
-            ylabel=percentage,
-            xmax=100,
-            xmin=0,
-            xtick={5, 50, 95},
-            xticklabels={,,},
-            xtick style={draw=none},
-            ylabel near ticks, yticklabel pos=right
-          ]
-          % coreutils
-          \addplot[color=black, mark=triangle] coordinates {
-            (5, 78)
-            (50, 66)
-            (95, 50)
-          };
-          % para
-          \addplot[color=blue, mark=triangle] coordinates {
-            (5, 82)
-            (50, 65)
-            (95, 53)
-          };
-        \end{axis}
-\end{tikzpicture}
-\end{minipage}
-\end{figure}
-\begin{tikzpicture}
-	\begin{axis}[
-		ylabel=Runtime(sec),
-		xlabel=Cut\%,
+		ylabel=a) \texttt{cere},
+		xlabel=,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
                 xticklabels={$15$, $25$, $50$}
           ]
         % cere
-	\addplot[color=black,mark=x] coordinates {
+	\addplot[color=blue,mark=x] coordinates {
           (5, 144)
           (50, 294)
           (95, 716)
@@ -2632,22 +2431,11 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	  (50, 175)
 	  (95, 351)
         };
-        % influenza
-	\addplot[color=blue,mark=x] coordinates {
-          (5, 39)
-          (50, 80)
-          (95, 197)
-	};
-        \addplot[color=blue,mark=*] coordinates {
-	  (5, 33)
-	  (50, 59)
-	  (95, 118)
-        };        
 
 	\end{axis}
         \begin{axis}[
             xlabel=,
-            ylabel=percentage,
+            ylabel=,
             xmax=100,
             xmin=0,
             xtick={5, 50, 95},
@@ -2656,29 +2444,115 @@ Let us now examine the runtimes more carefully for the instances with keyword le
             ylabel near ticks, yticklabel pos=right
           ]
           % cere
-          \addplot[color=black, mark=triangle] coordinates {
+          \addplot[color=orange, mark=triangle] coordinates {
             (5, 71)
             (50, 60)
             (95, 49)
           };
-          % influenza
-          \addplot[color=blue, mark=triangle] coordinates {
-            (5, 85)
-            (50, 74)
-            (95, 60)
-          };                    
           
         \end{axis}
 \end{tikzpicture}
+    \end{minipage} &
 
+\begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
-		ylabel=Runtime(sec),
-		xlabel=Cut\%,
+		ylabel=,
+		xlabel=,
                 xmax=100,
                 xmin=0,
                 xtick={5, 50, 95},
                 xticklabels={$15$, $25$, $50$}
+          ]
+          % coreutils
+	\addplot[color=blue,mark=x] coordinates {
+	  (5,69)
+	  (50,146)
+	  (95,377)
+	};
+        \addplot[color=black,mark=*] coordinates {
+          (5, 55)
+          (50, 96)
+          (95, 189)
+        };
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=b) \texttt{coreutils},
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+          % coreutils
+          \addplot[color=orange, mark=triangle] coordinates {
+            (5, 78)
+            (50, 66)
+            (95, 50)
+          };
+        \end{axis}
+\end{tikzpicture}
+\end{minipage} \\
+
+    
+\begin{minipage}{.5\textwidth}
+  \begin{tikzpicture}
+    \begin{axis}[
+		ylabel=c) \texttt{einstein.de.txt},
+		xlabel=,
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+        % einstein de
+	\addplot[color=blue,mark=x] coordinates {
+          (5, 39)
+          (50, 74)
+          (95, 171)
+	};
+        \addplot[color=black,mark=*] coordinates {
+	  (5,19)
+	  (50,33)
+	  (95,68)
+        };        
+
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+          % einstein de
+          \addplot[color=orange, mark=triangle] coordinates {
+            (5, 80)
+            (50, 66)
+            (95, 50)
+          };
+          
+        \end{axis}
+        
+\end{tikzpicture}
+\end{minipage} &
+
+    
+\begin{minipage}{.5\textwidth}
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=,
+		xlabel=,
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$},
+                ytick={200, 400, 600, 800, 999}
           ]
 
         % einstein en
@@ -2687,13 +2561,94 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	  (50, 484)
 	  (95, 994)
 	};
-        \addplot[color=blue,mark=*] coordinates {
+        \addplot[color=black,mark=*] coordinates {
           (5, 103)
           (50, 159)
           (95, 294)
         };
+
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=d) \texttt{einstein.en.txt},
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+          % einstein en
+          \addplot[color=orange, mark=triangle] coordinates {
+            (5, 42)
+            (50, 33)
+            (95, 30)
+          };
+
+        \end{axis}
+        
+\end{tikzpicture}
+\end{minipage} \\
+
+\begin{minipage}{.5\textwidth}
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=e) \texttt{influenza},
+		xlabel=,
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+
+        % influenza
+	\addplot[color=blue,mark=x] coordinates {
+          (5, 39)
+          (50, 80)
+          (95, 197)
+	};
+        \addplot[color=black,mark=*] coordinates {
+	  (5, 33)
+	  (50, 59)
+	  (95, 118)
+        };        
+
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+
+          % influenza
+          \addplot[color=orange, mark=triangle] coordinates {
+            (5, 85)
+            (50, 74)
+            (95, 60)
+          };                    
+          
+        \end{axis}
+\end{tikzpicture}
+\end{minipage} &
+
+\begin{minipage}{.5\textwidth}
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=,
+		xlabel=,
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+
         % kernel
-	\addplot[color=black,mark=x] coordinates {
+	\addplot[color=blue,mark=x] coordinates {
           (5, 114)
           (50, 235)
           (95, 570)
@@ -2707,7 +2662,7 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	\end{axis}
         \begin{axis}[
             xlabel=,
-            ylabel=percentage,
+            ylabel=f) \texttt{kernel},
             xmax=100,
             xmin=0,
             xtick={5, 50, 95},
@@ -2715,14 +2670,9 @@ Let us now examine the runtimes more carefully for the instances with keyword le
             xtick style={draw=none},
             ylabel near ticks, yticklabel pos=right
           ]
-          % einstein en
-          \addplot[color=blue, mark=triangle] coordinates {
-            (5, 42)
-            (50, 33)
-            (95, 30)
-          };
+
           % kernel
-          \addplot[color=black, mark=triangle] coordinates {
+          \addplot[color=orange, mark=triangle] coordinates {
             (5, 63)
             (50, 51)
             (95, 42)
@@ -2731,6 +2681,63 @@ Let us now examine the runtimes more carefully for the instances with keyword le
         \end{axis}
         
 \end{tikzpicture}
+\end{minipage} \\
+
+\begin{minipage}{.5\textwidth}
+\begin{tikzpicture}
+	\begin{axis}[
+		ylabel=g) \texttt{para},
+		xlabel=,
+                xmax=100,
+                xmin=0,
+                xtick={5, 50, 95},
+                xticklabels={$15$, $25$, $50$}
+          ]
+
+        % para
+        \addplot[color=blue,mark=x] coordinates {
+          (5, 119)
+          (50, 254)
+          (95, 629)
+	};
+        \addplot[color=black,mark=*] coordinates {
+	  (5, 97)
+	  (50, 164)
+	  (95, 336)
+        };
+	\end{axis}
+        \begin{axis}[
+            xlabel=,
+            ylabel=,
+            xmax=100,
+            xmin=0,
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+
+          % para
+          \addplot[color=orange, mark=triangle] coordinates {
+            (5, 82)
+            (50, 65)
+            (95, 53)
+          };
+        \end{axis}
+\end{tikzpicture}
+\end{minipage} &
+
+\hspace{1cm}
+\begin{minipage}{.5\textwidth}
+  \caption{  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum}
+  \label{tbl-graphs}    
+\end{minipage}
+
+  \end{tabular}%
+  }
+
+\end{table}
+
 
 
 
