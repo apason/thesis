@@ -191,6 +191,8 @@
 
 \usepackage{minted}
 
+\usepackage{afterpage}
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
 
@@ -2403,17 +2405,34 @@ and RBD versions. In practice, we can limit the number of our implementations to
 Later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
 or RBD (when alphabet size $>12$) versions of our implementation.
 
+% refinetty tähän asti.
 Let us now examine the runtimes more carefully for the instances with keyword length of 254.
+Table \ref{tbl-graphs}
 
 
-\begin{table}
-\hskip-1.5cm\resizebox{1.1\columnwidth}{!}{%
-  \begin{tabular}{c c}
+% käydään läpi taulukot
+% -> meidän on parempi kuin ref samalla pituudella instanssin kasvaessa
 
+% Todetaan että tämä on kuitenkin päinvastoin kun instanssin koko pysyy samana mutta pituus kasvaa.
+
+% esitellään vastaavat tulokset dna datalle. Todedaan että lineaarisuus on hyvin näkyvissä
+
+
+
+%\afterpage{%
+%\thispagestyle{empty}
+\begin{table}[H]
+  \vspace{-1.1cm}
+\hskip-1.2cm\resizebox{1.1\columnwidth}{!}{%
+  \begin{tabular}{c@{\hskip 0.5in}c}
+
+
+    \vspace{0.5cm}
+    
     \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
-		ylabel=a) \texttt{cere},
+		ylabel=\texttt{a) cere},
 		xlabel=,
                 xmax=100,
                 xmin=0,
@@ -2478,7 +2497,7 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	\end{axis}
         \begin{axis}[
             xlabel=,
-            ylabel=b) \texttt{coreutils},
+            ylabel=\texttt{b) coreutils},
             xmax=100,
             xmin=0,
             xtick={5, 50, 95},
@@ -2496,11 +2515,12 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 \end{tikzpicture}
 \end{minipage} \\
 
+\vspace{0.5cm}
     
 \begin{minipage}{.5\textwidth}
   \begin{tikzpicture}
     \begin{axis}[
-		ylabel=c) \texttt{einstein.de.txt},
+		ylabel=\texttt{c) einstein.de.txt},
 		xlabel=,
                 xmax=100,
                 xmin=0,
@@ -2570,7 +2590,7 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	\end{axis}
         \begin{axis}[
             xlabel=,
-            ylabel=d) \texttt{einstein.en.txt},
+            ylabel=\texttt{d) einstein.en.txt},
             xmax=100,
             xmin=0,
             xtick={5, 50, 95},
@@ -2590,10 +2610,12 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 \end{tikzpicture}
 \end{minipage} \\
 
+\vspace{0.5cm}
+
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
-		ylabel=e) \texttt{influenza},
+		ylabel=\texttt{e) influenza},
 		xlabel=,
                 xmax=100,
                 xmin=0,
@@ -2662,7 +2684,7 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 	\end{axis}
         \begin{axis}[
             xlabel=,
-            ylabel=f) \texttt{kernel},
+            ylabel=\texttt{f) kernel},
             xmax=100,
             xmin=0,
             xtick={5, 50, 95},
@@ -2683,10 +2705,12 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 \end{tikzpicture}
 \end{minipage} \\
 
+\vspace{0.5cm}
+
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}
 	\begin{axis}[
-		ylabel=g) \texttt{para},
+		ylabel=\texttt{g) para},
 		xlabel=,
                 xmax=100,
                 xmin=0,
@@ -2727,22 +2751,89 @@ Let us now examine the runtimes more carefully for the instances with keyword le
 \end{tikzpicture}
 \end{minipage} &
 
-\hspace{1cm}
+\hspace{0.6cm}
 \begin{minipage}{.5\textwidth}
-  \caption{  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum}
+  \caption{Illustration of the runtimes of the PizzaChili files with 254 line length. The blue lines
+    marked with x show the runtimes of the reference implementation. Black lines market with * show the
+    runtimes of our implementation. Runtimes are shown in the left vertical axis. Orange lines marked
+    with triangles show the percentage of the runtime of our implementation compared to the reference
+    implementation. Percentage values are shown in the right vertical axis. The horizontal axis
+    shows the cut parameter of the sampled input file.}
   \label{tbl-graphs}    
 \end{minipage}
 
   \end{tabular}%
-  }
+}
+  \pagenumbering{gobble}
 
-\end{table}
+\end{table}%
+%}
+
+\begin{center}
+  \begin{table}
+  \hspace{-1cm}
+  \begin{tabular} {|l|r r r|r r r|l|}
+    \hline
+     & \multicolumn{3}{c}{Haapa} & \multicolumn{3}{c}{Env2} & \\
+     \textbf{\#} & \textbf{Reference} & ~~~~\textbf{DIE} & \textbf{Percentage}  &~~~~\textbf{Reference} & ~~~~\textbf{FIE} & \textbf{Percentage} & ~~~~\textbf{-Comp.} \\
+     \hline
+     1 & 0.24            & \textbf{0.21}   & 87.5   & \textbf{0.09}  & \textbf{0.09}   & 100.0           & 0.927 \\
+     2 & \textbf{0.45}   & \textbf{0.45}   & 100.0  & \textbf{0.19}  & 0.21            & 110.5           & 0.909 \\
+     3 & \textbf{0.88}   & 0.97            & 119.2  & \textbf{0.39}  & 0.5             & 128.2           & 0.887 \\
+     4 & \textbf{1.83}   & 1.94            & 106.0  & \textbf{0.88}  & 1.22            & 138.6           & 0.840 \\
+     5 & \textbf{4.06}   & 4.65            & 114.5  & \textbf{2.03}  & 2.85            & 140.4           & 0.769 \\
+     6 & \textbf{9.56}   & 10.98           & 114.9  & \textbf{5.46}  & 6.25            & 114.5           & 0.660 \\
+     7 & \textbf{23.45}  & 24.53           & 104.6  & 16.12          & \textbf{13.14}  & 81.51           & 0.512 \\
+     8 & 62.02           & \textbf{51.07}  & 82.3   & 44.63          & \textbf{26.47}  & 59.4            & 0.362 \\
+     9 & 167.34          & \textbf{102.38} & 61.6   & 107.72         & 51.92           & \textbf{48.2}   & 0.254 \\
+     A & 412.7           & \textbf{202.41} & 49.0   & 247.37         & \textbf{104.78} & 42.4            & 0.191 \\
+     B & 953.86          & \textbf{406.2}  & 42.6   &                &                 &                 & 0.155 \\
+\hline
+
+  \end{tabular}
+  \caption{Runtimes in seconds for the Dna dataset, the runtime of our implementation compared to the reference implementation (in percentages) in both environments, compression. The fastest runtimes for each environment are bolded.}
+  \label{runtimes-dna}
+  \end{table}
+\end{center}
 
 
 
+\begin{center}
+  \begin{table}
+  \begin{tabular} {|l|r r r r r r|}
+    \hline
+     \textbf{File} & \textbf{15\_128} & ~~~~\textbf{15\_254} & \textbf{25\_254}  &~~~~\textbf{50\_254} & ~~~~\textbf{50\_512} & \textbf{75\_512} \\
+     \hline
 
+     cere            & 2,730,732  & 2,135,129  & 1,574,261  & 1,233,553  & 816,328  & 686,684 \\
+     coreutils       & 3,348,186  & 3,052,924  & 1,677,551  & 641,487    & 511,471  & 289,703 \\
+     einstein.de.txt & 300,857    & 168,361    & 163,409    & 154,105    & 83,080   & 85,206  \\
+     einstein.en.txt & 1,546,254  & 780,202    & 779,287    & 844,213    & 418,429  & 403,249 \\
+     influenza       & 1,443,648  & 1,169,337  & 964,633    & 740,696    & 580,713  & 467,416 \\
+     kernel          & 948,673    & 736,718    & 391,851    & 235,094    & 168,852  & 131,755 \\
+     para            & 3,829,215  & 3,205,234  & 2,080,952  & 1,220,678  & 961,559  & 700,598 \\
 
+     \hline
 
+     cere            & 10,986,309  & 6,900,933  & 5,264,601  & 3,930,879  & 2,148,565	& 1,904,918 \\
+     coreutils       & 6,591,442   & 5,580,636  & 4,525,247  & 3,548,432  & 2,812,876  & 2,387,512  \\
+     einstein.de.txt & 1,456,740   & 800,626    & 737,333    & 683,388    & 379,491    & 361,252    \\
+     einstein.en.txt & 5,191,299   & 3,443,373  & 2,949,429  & 2,592,922  & 1,557,116  & 1,445,208  \\
+     influenza       & 2,349,774   & 1,701,867  & 1,519,536  & 1,309,105  & 942,168    & 844,213    \\
+     kernel          & 8,001,635   & 6,478,714  & 5,708,406  & 4,938,226  & 3,530,819  & 3,217,852  \\
+     para            & 11,264,145  & 8,445,457  & 6,628,010  & 5,086,768  & 3,403,923  & 2,940,037  \\
+     
+     \hline
+
+  \end{tabular}
+  \caption{The number of factors in relative Lempel-Ziv compression. The upper numbers result when
+    the RLZ dictionary is a common superstring of the corresponding file. The lower numbers result
+    when the dictionary is a string obtained by concatenating random samples of the file with
+    parameters specified in the column title. Both dictionaries have the same length.}
+
+  \label{tbl-factors}
+  \end{table}
+\end{center}
 
 
 
