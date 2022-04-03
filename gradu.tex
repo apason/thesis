@@ -2185,7 +2185,7 @@ Table \ref{tbl-sys} describes the main features of both environments.
 \begin{tabular}{l|r|r}
   & \textbf{Haapa} & \textbf{Env2} \\
   \hline
-  Operating system & Ubuntu Linux 20.04 LTS & Gentoo Linux \\
+  Operating system & Ubuntu Linux 20.04 LTS & Gentoo Linux\footnote{Gentoo Linux is a so called rolling release distribution. That means it does not have any version numbers.} \\
   Linux kernel version & 5.11.0 & 5.4.80 \\
   GCC version & 9.4.0 & 10.2.0 \\
   Glibc version & 2.31 & 2.32 \\
@@ -2251,11 +2251,11 @@ of the program. Referring to Tables \ref{runtimes-15-128}, \ref{runtimes-15-254}
 to process any sampled \texttt{einstein.en.txt}
 file. Correspondingly the DIE version was the fastest one for any \texttt{cere} file. In Table
 \ref{table-duplicate-time}
-we show the time portion of our implementations (DIE for cere and RBD for \texttt{einstein.en.txt})
-that were
+we show the time portion of our implementations (DIE for \texttt{cere} and RBD for
+\texttt{einstein.en.txt}) that were
 used for the duplicate removal as a percentage of the total runtime. Since the used  implementation
 versions are the fastest ones for the particular instances, the time portions for the duplicate
-removals are maximal, i.e. Table \ref{table-duplicate-time} shows the worst case time percentages
+removals are maximal. Table \ref{table-duplicate-time} shows the worst case time percentages
 for the preprocessing phase.
 
 \begin{table}
@@ -2294,16 +2294,17 @@ significantly more than 5\%.
 \paragraph{Performance comparisons:}
 The performance of our implementation and the reference implementation was compared. The acquired
 time usages were measured using the GNU time software. For the PizzaChili dataset, all files with line
-lengths of 128 and 254 were investigated. This experiment was run in Haapa. For the Dna dataset,
+lengths of 128, 254 and 512 were investigated. This experiment was run in Haapa. For the Dna dataset,
 the comparisons were run for each file. This experiment was also run in Env2 for all but the
 biggest problem instance, since the memory of Env2 was not sufficient for that.
 
-The runtimes for the PizzaChili dataset are specified in Tables \ref{runtimes-15-128},
+The runtimes for the PizzaChili dataset files with line length $\leq$ 254 are specified in
+Tables \ref{runtimes-15-128},
 \ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254}. Each table shows the
-runtimes for the set of each 7 sampled with the same parameters. The File column is the
+runtimes for the set of each 7 files sampled with the same parameters. The File column is the
 prefix of the used filename. For examples the files in Table \ref{runtimes-15-128} are
-cere\_15\_128, coreutils\_15\_128 and so on. The column labeled Reference shows the runtimes
-with our reference implementation. Colums labeled with DIE, DID, RBE and RBD shows the
+\texttt{cere\_15\_128}, \texttt{coreutils\_15\_128} and so on. The column labeled Reference shows
+the runtimes with the reference implementation. Colums labeled with DIE, DID, RBE and RBD shows the
 runtimes of our implementation versions. The best runtimes for each input file are bolded.
 The last two columns are discussed later.
 
@@ -2430,7 +2431,35 @@ increases when the line length is increased from 128 to 254 while keeping the
 cut in 15 percent. With the reference implementation, the time usage grows only
 with the einstein files. Moreover, the growth is relatively smaller than the growth with
 our implementation. By this data, we assume that there are instances similarly sampled
-from PizzaChili data for which the reference implementation is faster. 
+from PizzaChili data for which the reference implementation is faster.
+
+Tables \ref{runtimes-50-512} and \ref{runtimes-75-512} show similar data for the PizzaChili
+dataset with line lengths 512. These results are consistent with the runtimes of the smaller instances.
+That is, our implementation compared to the reference implementation gets faster when the size of
+the instances grows while the keyword length remains constant. Also, the relative speed of our
+versus the reference implementation decreases while the input size remains constant and the
+line length increases. 
+
+\vspace{-1cm}
+\begin{center}
+  \begin{table}[h!]
+  \begin{tabular} {| l |r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
+    \hline
+    cere            & 707.99  & \textbf{436.36}  & 0.299  & 0.149   \\
+    coreutils       & 0.00    & \textbf{0.00}    & 0.000  & 0.000   \\
+    einstein.de.txt & 184.57  & \textbf{80.48}   & 0.0385 & 0.0192  \\
+    einstein.en.txt & 1147.92 & \textbf{392.66}  & 0.0181 & 0.00903 \\
+    influenza       & 185.32  & \textbf{147.45}  & 0.457  & 0.228   \\
+    kernel          & 567.09  & \textbf{281.81}  & 0.123  & 0.0613  \\
+    para            & 616.93  & \textbf{417.35}  & 0.296  & 0.148   \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.50 and keyword length 512, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-50-512}
+  \end{table}
+\end{center}
 
 %\afterpage{%
 %\thispagestyle{empty}
@@ -2789,9 +2818,29 @@ from PizzaChili data for which the reference implementation is faster.
 \end{table}%
 %}
 
-  
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
+    \hline
+    cere            & 1162.88 & \textbf{665.73} & 0.237  & 0.178 \\
+    coreutils       & 0.00    & \textbf{0.00}   & 0.256  & 0.192 \\
+    einstein.de.txt & 303.83  & \textbf{126.08} & 0.0277 & 0.021 \\
+    einstein.en.txt & 1744.57 & \textbf{560.52} & 0.0146 & 0.011 \\
+    influenza       & 324.12  & \textbf{221.69} & 0.399  & 0.299 \\
+    kernel          & 946.69  & \textbf{432.82} & 0.0881 & 0.066 \\
+    para            & 1033.05 & \textbf{634.22} & 0.237  & 0.178 \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.75 and keyword length 512, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-75-512}
+  \end{table}
+\end{center}
+
+
 % esitellään vastaavat tulokset dna datalle. Todedaan että lineaarisuus on hyvin näkyvissä
-% TODO: data puuttuu
   Let us now examine the runtime benchmarks for the Dna dataset. This experiment was run in both
   environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
   labeled with \# defines the prefix of the filename. E.g the row starting with 5 corresponds the
@@ -2810,20 +2859,11 @@ from PizzaChili data for which the reference implementation is faster.
 
   From the data, we can observe that the runtimes are significantly higher in Haapa. This result is
   expected, since Haapa has an older CPU with lower clock speed. The memory speed in Haapa is
-  also lesser. With the smaller instances, the reference implementation has a lower runtimes.
+  also lower. With the smaller instances, the reference implementation has a lower runtimes.
   In Haapa, the reference implementation is faster with instance sizes $\leq$ 200,000 lines.
   In Env2 this treshold is 100,000 lines. The corresponding instance sizes in mebibytes are
   20 and 10, respectively. After that, the performance of our implementation
   overcomes the performance of the reference implementation.
-
-  By the comparison of the runtimes with the PizzaChili and the Dna datasets we can conclude that
-  our solution implements the greedy heuristic faster:
-
-  \begin{enumerate}
-  \item When the instance size is big enough,
-  \item Especially with shorter input keywords and
-  \item With smaller alphabet sizes.
-  \end{enumerate}
 
 \begin{center}
   \begin{table}
@@ -2831,7 +2871,7 @@ from PizzaChili data for which the reference implementation is faster.
   \begin{tabular} {|l|r r r|r r r|l|}
     \hline
      & \multicolumn{3}{c}{Haapa} & \multicolumn{3}{c}{Env2} & \\
-     \textbf{\text{\#}} & \textbf{Reference} & ~~~~\textbf{DIE} & \textbf{Percentage}  &~~~~\textbf{Reference} & ~~~~\textbf{DIE} & \textbf{Percentage} & ~~~~\textbf{-Comp.} \\
+     \textbf{\text{\#}} & \textbf{Reference} & \textbf{DIE} & \textbf{Percentage}  & \textbf{Reference} & \textbf{DIE} & \textbf{Percentage} & \textbf{Comp.} \\
      \hline
      1 & 0.24            & \textbf{0.21}   & 87.5   & \textbf{0.09}  & \textbf{0.09}   & 100.0           & 0.927 \\
      2 & \textbf{0.45}   & \textbf{0.45}   & 100.0  & \textbf{0.19}  & 0.21            & 110.5           & 0.909 \\
@@ -2852,15 +2892,124 @@ from PizzaChili data for which the reference implementation is faster.
   \end{table}
 \end{center}
 
+To illustrate the runtimes of our and the reference implementations we also sampled a set of
+instances with linearly increasing size from 100,000 lines to 2,000,000 lines with 100,000 line
+interval. This set was then run in Env2. Every instance was run only once and no precise values
+are shown. The results are shown in Figure \ref{fig-dna}. The image description is same
+with the images in Table \ref{tbl-graphs}. Since this image has a linear scale, the time complexities
+of the implementations can be seen. 
+
+\hspace{-1cm}
+\begin{tikzpicture}
+  \begin{axis}[
+      width=16cm,
+      height=8cm,
+		ylabel=Runtime (Sec),
+		xlabel=Instance size,
+          ]
+
+        \addplot[color=black,mark=x] coordinates {
+          (100, 6.22)
+          (200, 12.95)
+          (300, 19.43)
+          (400, 26.54)
+          (500, 32.36)
+          (600, 38.22)
+          (700, 45.01)
+          (800, 50.81)
+          (900, 57.06)
+          (1000, 63.69)
+          (1100, 69.82)
+          (1200, 76.12)
+          (1300, 82.41)
+          (1400, 89.03)
+          (1500, 95.01)
+          (1600, 101.38)
+          (1700, 104.32)
+          (1800, 110.25)
+          (1900, 115.74)
+          (2000, 121.28)
+	};
+        
+        \addplot[color=blue,mark=*] coordinates {
+          (100, 5.37)
+          (200, 15.58)
+          (300, 28.28)
+          (400, 42.04)
+          (500, 57.36)
+          (600, 72.97)
+          (700, 89.07)
+          (800, 105.87)
+          (900, 122.77)
+          (1000, 141.08)
+          (1100, 157.61)
+          (1200, 175.02)
+          (1300, 193.45)
+          (1400, 209.05)
+          (1500, 227.13)
+          (1600, 245.64)
+          (1700, 262.94)
+          (1800, 280.43)
+          (1900, 295.97)
+          (2000, 315.56)
+        };
+	\end{axis}
+  \begin{axis}[
+      width=16cm,
+      height=8cm,
+            xlabel=,
+            ylabel=Runtime (\%),
+            xtick={5, 50, 95},
+            xticklabels={,,},
+            xtick style={draw=none},
+            ylabel near ticks, yticklabel pos=right
+          ]
+
+          \addplot[color=orange, mark=triangle] coordinates {
+            (100, 115.83)
+            (200, 83.12)
+            (300, 68.71)
+            (400, 63.13)
+            (500, 56.42)
+            (600, 52.38)
+            (700, 50.53)
+            (800, 47.99)
+            (900, 46.48)
+            (1000, 45.14)
+            (1100, 44.30)
+            (1200, 43.49)
+            (1300, 42.60)
+            (1400, 42.59)
+            (1500, 41.83)
+            (1600, 41.27)
+            (1700, 39.67)
+            (1800, 39.31)
+            (1900, 39.11)
+            (2000, 38.43)
+          };
+        \end{axis}
+  \caption{Comparison of the runtimes between our and reference implementation with DNA data consisting of keywords of length 100. The x axis specifies the size of the instance in thousands of lines. }
+  \label{fig-dna}
+\end{tikzpicture}
+
 
 \paragraph{RLZ factorization}
+% joo katotaan nyt näit ärlz hommia
+
+% ajettiin tämmönen testi mistä saatiin tämmönen tauluko
+% -> selkeesti vähemmän factoreita kun käytetään superstringiä.
+
+% palataan takasin pizzachili taulukoihin. Näissä näytetään kompressio sekä rzsise. Kerrotaan mitä nää on.
+% Nyt todetaan että pakkauksen koko on huomattavasti pienempi SCS:llä.
+
+% Näytetään muutama esimerkki.
 
 
 \begin{center}
   \begin{table}
   \begin{tabular} {|l|r r r r r r|}
     \hline
-     \textbf{File} & \textbf{15\_128} & ~~~~\textbf{15\_254} & \textbf{25\_254}  &~~~~\textbf{50\_254} & ~~~~\textbf{50\_512} & \textbf{75\_512} \\
+     \textbf{File} & \textbf{15\_128} & \textbf{15\_254} & \textbf{25\_254}  &\textbf{50\_254} & \textbf{50\_512} & \textbf{75\_512} \\
      \hline
 
      cere            & 2,730,732  & 2,135,129  & 1,574,261  & 1,233,553  & 816,328  & 686,684 \\
@@ -2869,7 +3018,6 @@ from PizzaChili data for which the reference implementation is faster.
      einstein.en.txt & 1,546,254  & 780,202    & 779,287    & 844,213    & 418,429  & 403,249 \\
      influenza       & 1,443,648  & 1,169,337  & 964,633    & 740,696    & 580,713  & 467,416 \\
      kernel          & 948,673    & 736,718    & 391,851    & 235,094    & 168,852  & 131,755 \\
-
      para            & 3,829,215  & 3,205,234  & 2,080,952  & 1,220,678  & 961,559  & 700,598 \\
 
      \hline
@@ -2898,6 +3046,15 @@ from PizzaChili data for which the reference implementation is faster.
 
 
 \section{Discussion}
+  
+  By the comparison of the runtimes with the PizzaChili and the Dna datasets we can conclude that
+  our solution implements the greedy heuristic faster:
+
+  \begin{enumerate}
+  \item When the instance size is big enough,
+  \item Especially with shorter input keywords and
+  \item With smaller alphabet sizes.
+  \end{enumerate}
 
 %
 \chapter{Conclusions}
