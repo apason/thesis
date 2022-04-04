@@ -2843,7 +2843,7 @@ line length increases.
 % esitellään vastaavat tulokset dna datalle. Todedaan että lineaarisuus on hyvin näkyvissä
   Let us now examine the runtime benchmarks for the Dna dataset. This experiment was run in both
   environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
-  labeled with \# defines the prefix of the filename. E.g the row starting with 5 corresponds the
+  labeled with \# defines the prefix of the filename. E.g. the row starting with 5 corresponds the
   file \texttt{5\_dna\_5k.acgt}, which consists of 5000 lines of DNA sequences, 100 bases in each
   line.
   
@@ -2899,7 +2899,7 @@ are shown. The results are shown in Figure \ref{fig-dna}. The image description 
 with the images in Table \ref{tbl-graphs}. Since this image has a linear scale, the time complexities
 of the implementations can be seen. 
 
-\hspace{-1cm}
+\begin{figure}[h!]
 \begin{tikzpicture}
   \begin{axis}[
       width=16cm,
@@ -2988,22 +2988,60 @@ of the implementations can be seen.
             (2000, 38.43)
           };
         \end{axis}
+\end{tikzpicture}
   \caption{Comparison of the runtimes between our and reference implementation with DNA data consisting of keywords of length 100. The x axis specifies the size of the instance in thousands of lines. }
   \label{fig-dna}
-\end{tikzpicture}
+\end{figure}
 
+  By the comparison of the runtimes with the PizzaChili and the Dna datasets we can conclude that
+  our solution implements the greedy heuristic faster:
 
+  \begin{enumerate}
+  \item When the instance size is big enough,
+  \item Especially with shorter input keywords and
+  \item With smaller alphabet sizes.
+  \end{enumerate}
+
+% Tästä tekstistä menee ehkä osa discussioniin ? 
 \paragraph{RLZ factorization}
-% joo katotaan nyt näit ärlz hommia
+As discussed in Chapter \ref{chp-rlz} the size of the RLZ compressed file is the size of the reference
+string used as a dictionary plus the size of the factors referencing to this dictionary. Let us now
+discuss the compression of the RLZ algorithm with two different methods for generating the dictionary.
+The first method that we use for the dictionay construction is a well known method of
+sampling substrings from a
+random position of the file that is to be compressed. The samples are then concatenated and the
+LZ factorization is run against that dictionary. The second approach has not been studied before. The
+idea is to sample a number of substrings, similarly with the first approach but instead of
+concatenation, the SCS approximation algorithm is run and the result is used as a reference
+dictionary.
 
-% ajettiin tämmönen testi mistä saatiin tämmönen tauluko
-% -> selkeesti vähemmän factoreita kun käytetään superstringiä.
+The PizzaChili dataset sampled with line lengths from 128 to 512 and cut parameters from 15\% to
+75\% were used. The Compression column in Tables \ref{runtimes-15-128}, \ref{runtimes-15-254},
+\ref{runtimes-25-254}, \ref{runtimes-50-254}, \ref{runtimes-50-512} and \ref{runtimes-75-512} show the
+size of the generated superstring relative to the instance size. This compression value depends
+on the size of the instance (The cut parameter). The Rsize value is calculated from the superstring
+compression value to get the size of the superstring relative to the original file. In other words,
+when the common superstring is used as a dictionary in the RLZ compression the Rsize value multiplied
+with the size of the original file, that is to be compressed, is the size of the dictionary. As we
+see, the compressions are better with bigger instances. However, increasing the keyword length while
+keeping the instance size constant, the compression ratio gets worse. 
 
-% palataan takasin pizzachili taulukoihin. Näissä näytetään kompressio sekä rzsise. Kerrotaan mitä nää on.
-% Nyt todetaan että pakkauksen koko on huomattavasti pienempi SCS:llä.
+We ran the RLZ factorization for every PizzaChili file using the common superstrings from the instances
+sampled with various parameters as a dictionary. The upper part of Table \ref{tbl-factors} shows the
+number of factors needed to compress the original files using the approximate SCS as a dictionary.
+For reference, the lower part of the table shows the number of factors when the dictionary
+is sampled by concatenating the samples so that the lengths of the dictionaries are the same. We see
+that the SCS method for the dictionary construction results significantly smaller number of factors.
+The number of factors with the SCS method ranges from 63.5\% (\texttt{influenza\_25\_254}) to
+4.1\% (\texttt{kernel\_75\_512}) compared to the numbers with conventional RLZ compression.
 
-% Näytetään muutama esimerkki.
-
+This suggests that the acquired RLZ compression is significantly better when the SCS approach is
+used. However, the number of factors is only a part of the compression. The final compression ratio
+also depens on the size of the dictionaries, which are same in both cases. Let us assume that each
+factor in the compressed file consists of two 4-byte integers. Note that in practice, the factors
+could be saved with less space. For example, in many cases the generated superstring is shorter than
+24Mi symbols. Therefore 3 byte encodings could be used for factor length and position index.
+For simplicity, we now use 4 byte integers.
 
 \begin{center}
   \begin{table}
@@ -3022,7 +3060,7 @@ of the implementations can be seen.
 
      \hline
 
-     cere            & 10,986,309  & 6,900,933  & 5,264,601  & 3,930,879  & 2,148,565	& 1,904,918 \\
+     cere            & 10,986,309  & 6,900,933  & 5,264,601  & 3,930,879  & 2,148,565  & 1,904,918  \\
      coreutils       & 6,591,442   & 5,580,636  & 4,525,247  & 3,548,432  & 2,812,876  & 2,387,512  \\
      einstein.de.txt & 1,456,740   & 800,626    & 737,333    & 683,388    & 379,491    & 361,252    \\
      einstein.en.txt & 5,191,299   & 3,443,373  & 2,949,429  & 2,592,922  & 1,557,116  & 1,445,208  \\
@@ -3034,29 +3072,101 @@ of the implementations can be seen.
 
   \end{tabular}
   \caption{The number of factors in relative Lempel-Ziv compression. The upper numbers result when
-    the RLZ dictionary is a common superstring of the corresponding file. The lower numbers result
-    when the dictionary is a string obtained by concatenating random samples of the file with
-    parameters specified in the column title. Both dictionaries have the same length.}
+    the RLZ dictionary is a common superstring of the corresponding file. The common superstring
+    is generated from the files randomly sampled with parameters specified in the column title.
+    The lower numbers result
+    when the dictionary is a string obtained by concatenating random samples together such that both
+    dictionaries have the same length.}
 
   \label{tbl-factors}
   \end{table}
 \end{center}
 
+Table \ref{tbl-total-sizes} shows
+the final sizes of the RLZ compressions for these two methods. The value in each cell is a sum of
+the corresponding dictionary and the number of factors presented in Table \ref{tbl-factors} multiplied
+with 8 bytes. The dictionary size can be calculated by multiplying the corresponding Rsize value with
+the size of the original file.
+
+For example, Let us consider the RLZ compression of the file \texttt{para} with dictionary
+generated with sample
+parameters cut $= 0.50$ and line length $= 254$.
+By Table \ref{runtimes-50-254} the compression ratio of the
+file \texttt{para\_50\_254} is 0.237. That means the size of the superstring compared to the
+original file is $50\% \cdot 0.237 = 0.119$, which is the corresponding Rsize value. The absolute
+size of the dictionary is therefore 410Mib $\cdot 0.119 = $ 48.79Mib. The absolute size of the
+factors is $1,220,678\cdot 8$ bytes $= 9.31$ MiB. The total size of the compressed \texttt{para}
+file is therefore $48.79 + 9.31 = 58.10$ mebibytes.
+
+With conventionally generated dictionary of the same size, the number of factors was 5,086,768,
+with the size of $5,086,768\cdot 8$ bytes $= 38.8$ mebibytes. The total size of the compressed
+files is therefore $37.80 + 48.79 = 87.59$ MiB.
+
+Table \ref{tbl-total-sizes} shows the total compressed sizes for each PizzaChili files with different
+cut and line length parameters. Note that the values presented in Tables \ref{runtimes-15-128},
+\ref{runtimes-15-254}, \ref{runtimes-25-254}, \ref{runtimes-50-254}, \ref{runtimes-50-512} and
+\ref{runtimes-75-512} are rounded. The values presented in Table \ref{tbl-total-sizes} are
+calculated with more precision causing a small difference compared to values calculated from the
+earlier presented data. For the same reason the 75/512 version of the \texttt{einstein.de.tx}
+in the lower section of the table is bolded. The compression with more precise values is better
+in this case. 
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {|l|r r r r r r|}
+    \hline
+     \textbf{File} & \textbf{15\_128} & \textbf{15\_254} & \textbf{25\_254}  &\textbf{50\_254} & \textbf{50\_512} & \textbf{75\_512} \\
+     \hline
+
+     cere            & \textbf{41.86} & 43.31          & 46.78          & 56.26          & 72.01          & 83.45 \\
+     coreutils       & 39.16          & 38.80          & 33.66          & \textbf{33.22} & 0.00           & 39.84 \\
+     einstein.de.txt & 2.91           & \textbf{2.16}  & 2.23           & 2.31           & 2.35           & 2.50  \\
+     einstein.en.txt & 13.59          & 7.75           & 8.28           & 9.95           & \textbf{7.23}  & 7.96  \\
+     influenza       & \textbf{18.51} & 19.21          & 22.53          & 30.41          & 38.25          & 47.86 \\
+     kernel          & 16.28          & 15.57          & \textbf{14.23} & 14.60          & 16.48          & 17.33 \\
+     para            & 52.99          & 51.83          & \textbf{51.54} & 57.93          & 68.02          & 78.22 \\
+
+     \hline
+
+     cere            & 104.84 & 79.67          & \textbf{74.94} & 76.84 & 82.17          & 92.74          \\
+     coreutils       & 63.90  & 58.08          & \textbf{55.39} & 55.40 & 0.00           & 55.85          \\
+     einstein.de.txt & 11.73  & 6.98           & 6.61           & 6.35  & 4.61           & \textbf{4.61}  \\
+     einstein.en.txt & 41.40  & 28.06          & 24.84          & 23.29 & 15.92          & \textbf{15.91} \\
+     influenza       & 25.43  & \textbf{23.27} & 26.77          & 34.74 & 41.01          & 50.73          \\
+     kernel          & 70.09  & 59.38          & 54.79          & 50.48 & 42.13          & \textbf{40.87} \\
+     para            & 109.71 & 91.81          & \textbf{86.23} & 87.43 & 86.65          & 95.31          \\
+     
+     \hline
+
+  \end{tabular}
+  \caption{RLZ Compression sizes in mebibytes of the original PizzaChili files with different dictionaries.
+  The best compressions are bolded.}
+  \label{tbl-total-sizes}
+  \end{table}
+\end{center}
+
+Comparing the values in Tables \ref{tbl-factors} and \ref{tbl-total-sizes} we see the significance
+of the dictionary size with the compression. The bigger the dictionary is, the less significant the
+number of RLZ factors becomes. We also see that the numbers of factors tends to decrease faster
+with the conventional dictionary construction when the dictionary size or the line length parameter
+is increased. This may be explained with the fact that the probability to find a long substring from
+the dictionary is lower than to find a short substring. If the sampled substrings are large enough,
+there is no significant benefit from using the SCS approach.
+
+Regardless of the decrease in the number of factors, the resulting compression is not necessarily
+better with larger lesser number of factors. This is because the size of the dictionary tends to grow more
+rapidly than the number of factors decreases. This is especially true with the SCS dictionary
+construction, when no compression with the parameters 75\%, 512, resulted the best compression.
+Contrarily, with these parameters the conventional dictionary construction resulted the best
+performance with three files.
+
+Investigating Table \ref{tbl-total-sizes} even more, we can observe that for most of the lines
+in both sections of the table, the compressions behaves similarly. That is, the compression
+increases to some point which after it starts to decrease. In other words, it seems like
+there is (a local) minimum for the compressio with different sampling parameters.
+It would be very significant if the optimal parameters could be predicted before the full compression.
 
 
-
-\section{Discussion}
-  
-  By the comparison of the runtimes with the PizzaChili and the Dna datasets we can conclude that
-  our solution implements the greedy heuristic faster:
-
-  \begin{enumerate}
-  \item When the instance size is big enough,
-  \item Especially with shorter input keywords and
-  \item With smaller alphabet sizes.
-  \end{enumerate}
-
-%
 \chapter{Conclusions}
   
 
