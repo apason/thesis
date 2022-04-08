@@ -340,6 +340,8 @@
 \chapter{Introduction}~\label{chp-intro}
 %  vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
 
+% tänne vois katella rlz papereista introja ja miettiä jos saisi hyviä lainauksia tai viitteitä
+
 \section{Motivation}
   %% - scs yleisesti datan pakkaamiseen
   %% - molekyylibiologia sekvensointi vaikeaa pitkälle pätkälle
@@ -1766,10 +1768,167 @@ binary trees with $O(log(n))$ time complexity. This conclusion leads us to the f
 
 \chapter{Relative Lempel-Ziv}~\label{chp-rlz}
 
-%  Lempel-Ziv dictionary construction.
+Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
+Using the structure and repetitiveness of the input, longer input sequences are encoded as a shorter
+tokens. This reduces the space needed to save the original input data. In this approach a so called
+dictionary is maintained. The dictionary may be static or it can be updated during the (en)compression.
+The tokens (also called phrases) contain a pointers to the dictionary such that each token
+unambigiously corresponds to a sequence of symbols. \citep{Pu05} 
 
-%  subsections?
+In this chapter we discuss the Lempel-Ziv family \citep{Ziv77}, \citep{Ziv78}, \citep{Welch84}
+ of dictionary compression methods.
+first we discuss Lempel-Ziv77 (LZ77 for short) algorithm
+\citep{Ziv77} as an introduction to the relatively new  algorithm called
+Relative Lempel-Ziv \citep{Kurppu10} (RLZ for short). We show few examples of these algorithms and
+discuss the possible improvement for RLZ dictionary construction with use of a shortest common
+superstring approximation algorithms.
 
+\section{Lempel-Ziv77}
+
+Lempel-Ziv77 is an adaptive dictionay compression method. By adaptive, we mean that during the
+encompression the dictionary is updated depending on the input. At first, the dictionary is empty. 
+The original LZ77 algorithm uses a part of the input, called a sliding window, as a dictionary.
+However, we introduce a version of LZ77 that has an unbounded windows size, allowing the phrases
+to point any position of the input that is already processed. I.e. the dictionary consists of the
+already processed part of the input.
+
+Each phrase in LZ77 are either 
+\begin{enumerate}
+\item a literal phrase or
+\item a repeat phrase.
+\end{enumerate}
+
+Literal phrases are used when the current symbol in the input file is first encountered. The repeat
+phrases consists of a pointer and a length, where the pointer defines the point in the already
+processed text where the repeating sequence of symbols starts. To use a repeat phrase, the text up
+to the pointer must be already tokenized.
+The length encodes the size of the original text
+corresponding to the repeat phrase. The more repetitive the input text is the bigger the length
+values in a repeat phrases are. That means a single phrase encodes a longer portion of the original
+text, resulting a better compression. On the other hand, if the length parameter is small enough,
+to save a single repeat phrase we need more space than saving the original text as is. For example,
+if the repeat phrase is encoded using a two 4-byte integers and the input symbols are encoded in a
+single byte, the repeat phrase with a length parameter less than 8 would actually increase the
+space requirement of the compression relative to the original text.
+
+\begin{example}
+  Let us simulate the LZ77 algorithm for a text string $T=$ ``abbabaabbaba''. We denote literal phrases
+  with $[\sigma]$, where $\sigma$ is the symbol of the phrase. Repeate phrases are denoted
+  with (pos,len). The processing starts
+  at the first symbol of $T$. Since the symbol ``a'' is encountered first time we create a
+  literal phrase $[$``a''$]$. Same thing happens with the next symbol ``b''. The third symbol ``b'' is
+  encoded with a repat phrase $(2,1)$ which means that the phrase encodes a string of length 1 starting
+  at position 2. The next repeat phase $(1,2)$ encodes the string ``ab''. At this point we have encoded
+  the string ``abbab''. The next phrase encodes the following ``a'' with a phrase $(1,1)$. Since
+  the text string encoded to this point contains a string ``abbab'' the last phrase is a pointer
+  to the start of this string with a length of 6. The final LZ77 factorization is therefore
+  $[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.
+\end{example}
+
+% decompression O(n)
+To decompress the LZ77 parse we process the phrases from beginning to the end. For each
+phrase, using the already decompressed data, we augment the dictionary with the text corresponging
+to the phrase. After the decompression, the generated dictionary is same as the dictionary used with the
+compression. In other words, the resulting decompression dictionary is the same sequence of symbols
+as the original uncompressed data. 
+
+\section{Relative Lempel-Ziv}
+
+Relative Lempel-Ziv is a simple and efficient \citep{Deorowicz11} general purpose \citep{Hoobin11}
+compression method. It combines a static dictionary with a LZ77 parsing providing a semi random
+access to the compressed data. It was developed to compress a set of genomes, however, further
+research has shown that RLZ scales well with any repetitive data providing
+one of the best (de)compression time and compression ratio \citep{Gagie16}.
+
+To compress a collection of genomes of a same species, RLZ works as follows. One genome is selected to a
+base sequence. This genome acts as a static dictionary. Further, LZ77 parse of every other sequence
+is generated relative to the base. The LZ77 parses of the other sequences are restricted to have
+references only to the base sequence acting as a dictionary. As opposed to the adaptive dictionary
+of the LZ77 algorithm, where the dictionary is constructed during the (de)compression, RLZ uses
+a static dictionary, providing a random access for any phrase whether or not the decompression
+of the previous part of the data are already performed. Definition \ref{def-rlz} formalizes the
+Relative Lempel-Ziv parsing (or factorization).
+
+%alemmat setit orkkis paperista
+%- kehitetty ratkaisemaan ongelman jossa kollektiosta dna sekvenssejä saadaan random accessilla
+%nopeasti dataa purettua.
+
+%- menetelmässä käytetään yhtä sekvenssiä ``base sequence'' staattisena dictionarynä muiden sekvenssien
+%pakkaamiseen.
+%- muut sekvenssit pakataan LZ77 parsena tätä basea vastaan siten että phraset saavat osoittaa vain
+%tähän sekvenssiin.
+
+%random access tulee siitä että toisin kuin muissa lz varianteissa dictionary on staattinen ja
+%kokoajan saatavilla. ei ole tarvetta purkaa koko tiedostoa että pääsee haluttuun kohtaan.
+
+%% todo: kysy puglisilta mikä on w_0 idea?
+\begin{definition}~\label{def-rlz}
+  Let $T$ and $R$ be strings. Relative Lempel-Ziv factorization of $T$ relative to $R$, denoted by
+  RLZ$(T|R)$ is a factoriszation $T=w_0w_1w_2\cdots w_n$. The first factor $w_0$ is an empty string
+  and for each $1\leq i \leq n$, $w_i$ is either
+  \begin{enumerate}
+  \item a symbol $\sigma$ that does not occur in $R$, or
+  \item the longest prefix of $T[j...|T|]$, where $j = |w_0\cdots w_{i-1}|$ that is a substring of $R$.
+  \end{enumerate}
+  Each factor $w_i$ is encoded as a pair $(p_i,l_i)$ where $p_i$ is the index of $R$ where $w_i$
+  starts from and $l_i$ is the length of $w_i$.
+\end{definition}
+
+\begin{example}
+  ~\\
+  \vspace{-1cm}
+  \begin{center}
+  \begin{tabular}[H]{r c c c c c c c}
+    &1&2&3&4&5&6&7 \\
+    $R=$&a&b&b&a&b&a&a \\
+  \end{tabular}
+  \end{center}
+  Let $T=$ ``abbababaaaaabbabaa'' and $R=$``abbabaa'' be strings. The RLZ factorization of $T$
+  relative to $R$ is RLZ$(T|R)=w_0(1,6)(5,3)(6,2)(1,7)$.
+\end{example}
+
+As discussed before, the RLZ can be used as a general purpose compressor. With a collection of
+genomes of a same specie, one genome is a natural choice for a dictionary that other genomes are
+factorized against to. Choosing the dictionary for arbitrary data (not necessarily a collection of the
+same kind), is however more difficult since there is no natural reference. As the number of factors
+highly depends on the dictionary, the decision what to use as a reference must be examined. 
+
+% alemmat setit sebastian deorowich
+- yksittäisen dna sekvenssin uskottu olevan lähes pakkaamaton.
+%- rlz on simple and efficient
+
+% hoobin
+- jopa 0.1 prosentin dictionary tuottaa hyvän kompression ja purkuajan.
+
+%- myöhemmin sovellettu myös ``general data:n'' pakkaamiseen. täss
+
+- merkittävä tekijä rlz:ssa on se mitä dictionaryä käyttää. 
+
+- hoobin et al näyttää että hyvä dictionary voidaan saatuvvaa keinotekoisesti konkatenoimalla random
+sämplejä datasta.
+
+% gagie
+
+-rlz on suosittu pakkausmenetelmä
+
+- voidaan käyttää vaikka ei olisikaan luonnollista referenssiä
+
+%- scales well
+
+%- pidetään yhenä parhaista general purpose pakkauksista.
+
+- näytetään teoriassa miksi keinotekoinen dictionary toimii
+
+% puglisi and zhukova
+- voidaan käyttää tehokkaasti suffix arrayn pakkaamiseen
+
+- pohditaan miten scs voisi parantaa tätä paskaa. ts. sama määrä tokeneita mutta pienemmällä
+dictionaryllä. 
+
+
+% random access
+% can not be better than LZ77 full window.
+% what does it mean that the original text is GREEDILY factored ? 
 %%
 \chapter{Empirical Evaluation}
 
@@ -3093,7 +3252,10 @@ generated with sample
 parameters cut $= 0.50$ and line length $= 254$.
 By Table \ref{runtimes-50-254} the compression ratio of the
 file \texttt{para\_50\_254} is 0.237. That means the size of the superstring compared to the
-original file is $50\% \cdot 0.237 = 0.119$, which is the corresponding Rsize value. The absolute
+original file is $50\% \cdot 0.237 = 0.119$, which is the corresponding Rsize value.
+Let us also assume that the dictionary is encoded using a naive approach where each symbol is
+encoded in one byte.
+The absolute
 size of the dictionary is therefore 410Mib $\cdot 0.119 = $ 48.79Mib. The absolute size of the
 factors is $1,220,678\cdot 8$ bytes $= 9.31$ MiB. The total size of the compressed \texttt{para}
 file is therefore $48.79 + 9.31 = 58.10$ mebibytes.
@@ -3109,7 +3271,11 @@ cut and line length parameters. Note that the values presented in Tables \ref{ru
 calculated with more precision causing a small difference compared to values calculated from the
 earlier presented data. For the same reason the 75/512 version of the \texttt{einstein.de.tx}
 in the lower section of the table is bolded. The compression with more precise values is better
-in this case. 
+in this case. Note that in real applications, the dictionaries could be encoded using a
+$log_2(\Sigma)$ bit encodings. Also, the factors could be encoded in less space. The values
+presented in table \ref{tbl-total-sizes} are examples with sizes of 8 byte factors and a single
+byte encoding with the dictionary.
+
 
 \begin{center}
   \begin{table}
