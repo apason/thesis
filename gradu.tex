@@ -395,7 +395,7 @@ Regardless of the alphabet a string is simply a finite sequence of symbols. The 
   
   For an alphabet $\Sigma$ a string $S$ is a finite sequence of symbols  ${s_1\cdots s_n}$ where each symbol $s_i \in \Sigma$.
   The length of the string $S$ denoted by $|S| = n$ is the number of symbols in the string.
-  An empty string denoted by $\epsilon$ contains zero symbols.
+  An empty string denoted by $\varepsilon$ contains zero symbols.
   
 \end{definition}
 
@@ -1766,7 +1766,7 @@ binary trees with $O(log(n))$ time complexity. This conclusion leads us to the f
   %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
   %Kommentoitu sanoin ERRATA:
 
-\chapter{Relative Lempel-Ziv}~\label{chp-rlz}
+\chapter{Dictionary Compression: The LZ-Family}~\label{chp-rlz}
 
 Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
 Using the structure and repetitiveness of the input, longer input sequences are encoded as a shorter
@@ -1865,7 +1865,7 @@ Relative Lempel-Ziv parsing (or factorization).
 \begin{definition}~\label{def-rlz}
   Let $T$ and $R$ be strings. Relative Lempel-Ziv factorization of $T$ relative to $R$, denoted by
   RLZ$(T|R)$ is a factoriszation $T=w_0w_1w_2\cdots w_n$. The first factor $w_0$ is an empty string
-  and for each $1\leq i \leq n$, $w_i$ is either
+  $\varepsilon$ and for each $1\leq i \leq n$, $w_i$ is either
   \begin{enumerate}
   \item a symbol $\sigma$ that does not occur in $R$, or
   \item the longest prefix of $T[j...|T|]$, where $j = |w_0\cdots w_{i-1}|$ that is a substring of $R$.
@@ -1884,46 +1884,68 @@ Relative Lempel-Ziv parsing (or factorization).
   \end{tabular}
   \end{center}
   Let $T=$ ``abbababaaaaabbabaa'' and $R=$``abbabaa'' be strings. The RLZ factorization of $T$
-  relative to $R$ is RLZ$(T|R)=w_0(1,6)(5,3)(6,2)(1,7)$.
+  relative to $R$ is RLZ$(T|R)=\varepsilon(1,6)(5,3)(6,2)(1,7)$.
 \end{example}
 
 As discussed before, the RLZ can be used as a general purpose compressor. With a collection of
 genomes of a same specie, one genome is a natural choice for a dictionary that other genomes are
 factorized against to. Choosing the dictionary for arbitrary data (not necessarily a collection of the
 same kind), is however more difficult since there is no natural reference. As the number of factors
-highly depends on the dictionary, the decision what to use as a reference must be examined. 
+highly depends on the dictionary, this decision is however essential. Fortunately, it has been shown
+that even with a lack of the natural reference, effective artificial one can be easily constructed.
+\citep{Hoobin11} has shown that by taking random samples of the data and concatenating them togeter,
+an efficient  artificial reference can be constructed. The achieved compression ratios are surprisingly
+good with dictionaries as small as 0.1\% of the original input size. Further \citep{Gagie16} have
+given the theoretical analysis of why this method works so well.
+
+Our hypothesis is that the RLZ compression with a general data can be further improved using the
+sampling method described in \citep{Hoobin11}. The idea is to eliminate redundancy in the
+artificially constructed dictionary. One simple way of achieving this is to use a shortest common
+superstring approximation to compress the dictionary. In principle, depending on the repetitiveness
+of the data, this method should decrease the dictionary size while the number of factors being
+roughly the same, thus improving the compression. Another possibility is to use a compressed
+dictionary that is the same size as the conventionally constructed dictionary. Theoretically, the
+RLZ factorization against this kind of dictionary should result a decreased number of factors,
+hence improving the compression.
+
+This hypothesis has been tested and verified in this thesis. The results presented in Section
+\ref{sec-results} show that the number of factors is drastically decreased when the dictionary
+for a several highly repetitive corpuses are constructed using the common superstring approach.
+Also, runtimes for the dictionary construction remains low when a linear time approximation
+algorithm for the SCS problem is used.
+
 
 % alemmat setit sebastian deorowich
-- yksittäisen dna sekvenssin uskottu olevan lähes pakkaamaton.
+%- yksittäisen dna sekvenssin uskottu olevan lähes pakkaamaton.
 %- rlz on simple and efficient
 
 % hoobin
-- jopa 0.1 prosentin dictionary tuottaa hyvän kompression ja purkuajan.
+%- jopa 0.1 prosentin dictionary tuottaa hyvän kompression ja purkuajan.
 
 %- myöhemmin sovellettu myös ``general data:n'' pakkaamiseen. täss
 
-- merkittävä tekijä rlz:ssa on se mitä dictionaryä käyttää. 
+%- merkittävä tekijä rlz:ssa on se mitä dictionaryä käyttää. 
 
-- hoobin et al näyttää että hyvä dictionary voidaan saatuvvaa keinotekoisesti konkatenoimalla random
-sämplejä datasta.
+%- hoobin et al näyttää että hyvä dictionary voidaan saatuvvaa keinotekoisesti konkatenoimalla random
+%sämplejä datasta.
 
 % gagie
 
--rlz on suosittu pakkausmenetelmä
+%-rlz on suosittu pakkausmenetelmä
 
-- voidaan käyttää vaikka ei olisikaan luonnollista referenssiä
+%- voidaan käyttää vaikka ei olisikaan luonnollista referenssiä
 
 %- scales well
 
 %- pidetään yhenä parhaista general purpose pakkauksista.
 
-- näytetään teoriassa miksi keinotekoinen dictionary toimii
+%- näytetään teoriassa miksi keinotekoinen dictionary toimii
 
 % puglisi and zhukova
-- voidaan käyttää tehokkaasti suffix arrayn pakkaamiseen
+%- voidaan käyttää tehokkaasti suffix arrayn pakkaamiseen
 
-- pohditaan miten scs voisi parantaa tätä paskaa. ts. sama määrä tokeneita mutta pienemmällä
-dictionaryllä. 
+% - pohditaan miten scs voisi parantaa tätä paskaa. ts. sama määrä tokeneita mutta pienemmällä
+% dictionaryllä. 
 
 
 % random access
