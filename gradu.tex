@@ -340,7 +340,6 @@
 %  vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
 
 % tänne vois katella rlz papereista introja ja miettiä jos saisi hyviä lainauksia tai viitteitä
-\section{Motivation}
 
 %% Jewels of stringology
 % general
@@ -349,111 +348,46 @@
 %be written down as a long sequence of characters. Such linear a sequence
 %is called a text.
 
-%Text algorithms occur in many areas of science and
-%information processing. Many text editors and programming languages have
-facilities for processing texts. In biology, text algorithms arise in the study
-of molecular sequences. The complexity of text algorithms is also one of the
-central and most studied problems in theoretical computer science.
+%% UNCOMMENT  puolalainen juutalainen
+%% Rapid development in DNA sequencing technologies led to drastic
+%% growth of data publicly available in sequence databases,
+%% DNA sequences within the same species are both large and
+%% highly repetitive.
+%% This poses
+%% interesting challenges for efficient storage and fast access to those
+%% data. Most classic data compression techniques fail to recognize
+%% this tremendous redundancy
 
-The basic textual problem in stringology is called pattern matching.
--string matching
--data compression
--finding regularities
--approximation problems
+% UNCOMMENT gusfield
+%% \citep{Gusfield92} $O(m+k^2)$ for all pairs suffix prefix problem
+%% -using a variant of well known kmp \citep{Knuth77} can be used in O(km)
+%% - sequencing and mapping DNA
+%% - sekvensointi tarkottaa täydellisen lineaarisen nukleotidilistauksen rakentamista
+%% - mapping on finding the linear order or exact positions of certain significant features in the string
+%% - sekvensointi on extreme special case mäppängistä.
+%% - jokatapauksessa pitkä dna pitää ensin pilkkoa (säteily, vibraatio, entsyymit)  koska vain lyhkäsiä pätkiä voidaan sekvensoida.
+%% - palaset on random permutaatiossa joten ongelmaksi muodostuu näiden palasten järjestäminen oikeaksi
+%% - tämä ratkaistaan ylessnäs kopioimalla dna moneen kertaan ja leikkaamalla eri paikoista jolloin
+%% syntyy pätkiä jotka overläppää keskenään.
+%% - sitten pätkät mäpätään jotta saadaan oikea sekvenssi. tätä voidaan mallintaa SCS:llä.
+%% - all pair prefix-suffix on ensimmäinen vaihe näissä algoritmeissa (MINIMUM length hampath). esim \citep{Blum94}
 
-One of the basic problems in storing a large amount of textual information
-is the text compression problem. Text compression means reducing the
-representation of a text. It is assumed that the original text can be recovered
-from its compressed from. No loss of information is allowed.
-
-% data compression
-data compression is important in
-several domains related to natural language analysis. Text compression is
-also useful for telecommunications. It actually reduces the time to transmit
-documents via telephone network, for example.
-General compression methods often adapt themselves to the data.
-The compression is very successful if there are redundancies and regularities
-in the information message. The analysis of data is related to the problem of
-detecting regularities in texts.
-
-% molecular biology
-DNA = STRING
-amino = string
-In a first approach all these molecules can be viewed as texts.
-The
-discovery twenty years ago of powerful sequencing techniques has led to a rapid
-accumulation of sequence data. Prom the collection of sequences up to their
-analysis many algorithms on texts are implied. Moreover, only fast algorithms
-are often feasible because of the huge amount of data involved.
-
-typical two di-
-mensional pattern-matching problem in two dimensions. The reconstruc-
-tion of a whole sequence from small segments, used for instance in the shotgun
-sequencing method, is another example of a problem that occurs during this
-step. This problem is called the shortest common superstring problem:
-construction of the shortest text containing several given smaller texts.
-
-The result is know
-as an alignment of the set of nucleotides. Alignment of two sequences is the
-edit distance problem: compute the minimal number of edit operations to
-transform one string into another.
-
-The problem of the longest common subsequence is a variation of the
-alignment of sequences. A tool, called agrep, developed at the University
-of Arizona, is devoted to these questions, related to approximate string
-matching.
-
-%% puolalainen juutalainen
-Rapid development in DNA sequencing technologies led to drastic
-growth of data publicly available in sequence databases,
-DNA sequences within the same species are both large and
-highly repetitive.
-This poses
-interesting challenges for efficient storage and fast access to those
-data. Most classic data compression techniques fail to recognize
-this tremendous redundancy
-
-% gusfield
-\citep{Gusfield92} $O(m+k^2)$ for all pairs suffix prefix problem
--using a variant of well known kmp \citep{Knuth77} can be used in O(km)
-- sequencing and mapping DNA
-- sekvensointi tarkottaa täydellisen lineaarisen nukleotidilistauksen rakentamista
-- mapping on finding the linear order or exact positions of certain significant features in the string
-- sekvensointi on extreme special case mäppängistä.
-- jokatapauksessa pitkä dna pitää ensin pilkkoa (säteily, vibraatio, entsyymit)  koska vain lyhkäsiä pätkiä voidaan sekvensoida.
-- palaset on random permutaatiossa joten ongelmaksi muodostuu näiden palasten järjestäminen oikeaksi
-- tämä ratkaistaan ylessnäs kopioimalla dna moneen kertaan ja leikkaamalla eri paikoista jolloin
-syntyy pätkiä jotka overläppää keskenään.
-- sitten pätkät mäpätään jotta saadaan oikea sekvenssi. tätä voidaan mallintaa SCS:llä.
-- all pair prefix-suffix on ensimmäinen vaihe näissä algoritmeissa (MINIMUM length hampath). esim \citep{Blum94}
-
-% lim
-\citep{Lim17} 
-- definition of apsp probelm
-- ASPS tärkeä osa dna sekvenssiassemblyä, jossa se vie eniten aikaa.
-- overlap minimum parametri sekvensoinnille
-- bioinformatics
-- monia viitteitä APSF ongelmaan.
+% UNCOMMENT lim
+%% \citep{Lim17} 
+%% - definition of apsp probelm
+%% - ASPS tärkeä osa dna sekvenssiassemblyä, jossa se vie eniten aikaa.
+%% - overlap minimum parametri sekvensoinnille
+%% - bioinformatics
+%% - monia viitteitä APSF ongelmaan.
 
 % tarhio, ukkonen
-- selittää miten dna sekvensointi toimii ja miksi scs käytetään siinä.
-
-% Aho corasick
-- in many information retrieval and text-editing applications it is necessary to
-be able to locate quickly some or all occurrences of user specified patterns or
-words and phrases in text.
-
-% ukkonen90
-DNA sequencing leads to a fragment assembyl problem whose natural abstract formulation comes
-close to SCS problem \citep{Peltola83}, \citep{Peltola83}
+%- selittää miten dna sekvensointi toimii ja miksi scs käytetään siinä.
 
 % salmela
 %multi pattern matching solutions: \citep{Navarro00}, \citep{Karp87}, \citep{CommentzWalter79}
 
 
 %%% ALKAA
-
-\newpage
 
 % Intron intro
 Textually represented data -- text -- is one of the most common type of preserved information.
@@ -508,18 +442,33 @@ minimum length that contains all input keywords.
 %motivation of SCS
 %compression
 One obvious application of the SCS is data compression. Since the SCS is usually shorter
-than the input keywords, it can be seen as a packed form of the input. 
+than the input keywords, it can be seen as a packed form of the input. To compress a set of keywords,
+one can compute the SCS and address the keywords as a pair of position and length, thus decreasing
+the redundancy of the saved data, for example. The same kind of idea is hypothesized to be useful
+with Relative Lempel-Ziv dictionary construction. As the SCS of the artificially created dictionary
+contains virtually every symbol sequence that appears in the conventionally constructed dictionary,
+the overall compression could be increased while the dictionary size decreases.
 
-thus decreasing the redundancy
+%molecular biology % lähteet!!??!?
+Another application of the SCS problem is DNA sequencing. That means a construction of a complete
+model of nucleotides of some biological unit e.g. a single gene, chromosome or a genome. 
+The straightforward DNA sequencing methods can only be applied for a small nucleotide sequences,
+which complicates the process for a larger units. First a number of copies of the long DNA strand are
+replicated. The multiple strands of the same sequence are then split from several semi random
+places, yelding a set of different subsequencencies that overlap each other. These shorter nukleotide
+strands are then sequenced and modeled as a set of strings. The remaining problem is the mapping of
+those randomly permutated sequences in order to find their correct natural order.
+This fragment assembly problem can be simplified to the \textsc{Shortest Common Superstring}
+problem \citep{Peltola83}.
 
-%molecular biology
-
-
-As its decision version is \textsc{NP}-complete \citep{Gallant80}, several heuristics have been
+% introduction to heuristics. viitataan aiempiin ongelmiin ja todetaan että ei tarvi parasta
+As the decision version of the SCS problem is \textsc{NP}-complete \citep{Gallant80},
+several heuristics have been
 developed to solve an approximation of the problem.
 A quality of these heuristics
 can be defined in terms of compression, that is, a number of symbols the common superstring
-is shorter compared to the lengths of the input keywords combined. For the greedy heuristic, first
+is shorter compared to the lengths of the input keywords combined. For the greedy heuristic,
+that works by repeatedly merging the two strings with a maximal overlap together, first
 described in \cite{Gallant82}, the compression is proved to be at least half of the optimal
 \citep{Tarhio88}. Another measure for the approximation is the length of the
 obtained superstring. It is proved in \cite{Blum94} that the approximation ratio is at least 4.
@@ -530,7 +479,17 @@ ratios, in practice. The theoretical explanation of why that is, is discussed in
 For other heuristics,
 the best proven approximation ratio is $2 + \frac{11}{30}$ \citep{Paluch14}.
 
+For the recently discussed data compression and DNA sequencing related problems,
+the approximate solutions of the SCS problem can be used. There is no inevitable requirement
+to get the actual shortest common superstring. For the data compression problems the length of
+the superstrgin is only a matter efficiency. A good approximation simply enough. 
+
+
 % implementations aka related work, APSF?
+todo: implementations aka related work
+
+% Our contribution
+todo: our contribution
 
 The structure of the thesis is as follows. In Chapter \ref{chp-intro} we introduce the reader to the
 topic, background and motivation. In Chapter \ref{chp-preli} we quickly discuss the
@@ -538,22 +497,21 @@ preliminaries needed to understand the rest of the thesis. Chapter \ref{chp-ukko
 description of the Ukkonen's algorithm for the \textsc{Shortest Common Superstring} problem.
 Besides the pseudocode, that is discussed in four parts, Chapter \ref{chp-ukkonen} includes the
 formal definition of the greedy heuristic as well as discussion of the Aho-Corasick machine,
-which is used to implement the heuristic. In addition we prove the validity of Ukkonen's algorithm
-and discuss the time complexities of all of its sections. The concept of dictionary compression is
+which is used to implement that. In addition we prove the validity of Ukkonen's algorithm
+and discuss the time complexities of all of the sections. The concept of dictionary compression is
 introduced in Chapter \ref{chp-rlz}. We discuss the Lempel-Ziv family of compression algorithms. The
 Relative Lempel-Ziv is also defined. In Chapter \ref{chp-results} we discuss our contribution for
 the topic. Section \ref{sec-our} comes as a documentation of our implementation of the Ukkonen's
-algorithm. 
-
-
-
+algorithm. The datasets and experiment environments are described in Sections \ref{data} and
+\ref{sec-env}, respectively. Finally, the results are discussed in Section \ref{sec-results}.
+We also give a conclusion of the thesis in Chapter \ref{chp-conc}.
 
 \newpage
 
-- Stringology eli tekstin tutkiminen sisältää mm. (multiple) pattern matching, data compression (lossless), finding regularities etc. 
+%- Stringology eli tekstin tutkiminen sisältää mm. (multiple) pattern matching, data compression (lossless), finding regularities etc. 
 
 
-- Mikä on SCS-ongelma? Mitä ominaisuuksia sillä on? Mitä sovelluskohteita? Mitä ratkaisutapaa täs katsotaan? Täällä kerrotaan mm. RLZ:sta jne
+%- Mikä on SCS-ongelma? Mitä ominaisuuksia sillä on? Mitä sovelluskohteita? Mitä ratkaisutapaa täs katsotaan? Täällä kerrotaan mm. RLZ:sta jne
 
 
   %% - scs yleisesti datan pakkaamiseen
@@ -567,25 +525,33 @@ algorithm.
   
   %% alanko or someone mentionet thet it would be interesting to see an implementation
 
-\citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
-\citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
-\citep{Alanko17} describes approx scs algorithm for compact space.
+
+
+
+
+
+% UNCOMMENT
+%\citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
+%\citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
+%\citep{Alanko17} describes approx scs algorithm for compact space.
 
 %\citep{Gallant80} proves scs decision version to be NPC
 
 % - \citep{Gallant82} mentions greedy heuristic first [30]. assumed 1.5 ratio
-- \citep{Turner89} showd this is false.
+% UNCOMMENT - \citep{Turner89} showd this is false.
 %- \citep{Tarhio89} greedy conjencture ratio = 2. still open
 %- \citep{Blum94} proved ratio 4
 %- \citep{Kaplan05} proved ratio 3.5 - still best
 %- for other heuristics \citep{Paluch14} proved 2 + 11/30
 %- \citep{Ma08} offered explanation of goor practical performance
-- \citep{SDLS} used in alankos implementation
-Alanko väittää että ukkosen algoritmi poistaa myös
-duplikaatit. tarkista.
 
+% UNCOMMENT
+%- \citep{SDLS} used in alankos implementation
+%Alanko väittää että ukkosen algoritmi poistaa myös
+%duplikaatit. tarkista.
 
-\citep{Alanko20}: Further work could also include benchmarking different superstring algorithms against our algorithm. At the very least, it would be interesting to see how a well-engineered implementation our algorithm matches against a similarly carefully crafted implementation of ukkonen's superstring algorithm.
+% UNCOIMMENT
+%\citep{Alanko20}: Further work could also include benchmarking different superstring algorithms against our algorithm. At the very least, it would be interesting to see how a well-engineered implementation our algorithm matches against a similarly carefully crafted implementation of ukkonen's superstring algorithm.
 
   %% O(nm) based algorithm based on KnuthMorrisPratt \citep{Knuth77} \citep{Tarhio88}
   %% perustuu kaikkien overlap parien laskemiseen kmp:llä.
@@ -2571,7 +2537,7 @@ The first character in the file name is a hexadecimal digit of the number of the
 For example, the third file was named to \texttt{3\_dna\_12500.acgt}, the fourth file was named
 to \texttt{4\_dna\_25k.acgt} and the last file was named to \texttt{B\_dna\_3200k.acgt}
 
-\section{Benchmark Setups}
+\section{Benchmark Setups}~\label{sec-env}
 
 The experiments were done in two different environments. In this section we describe the relevant
 aspects of the used software and hardware for both of them. We also name the environments so they
@@ -3580,7 +3546,7 @@ there is (a local) minimum for the compressio with different sampling parameters
 It would be very significant if the optimal parameters could be predicted before the full compression.
 
 
-\chapter{Conclusions}
+\chapter{Conclusions}~\label{chp-conc}
   
 
   \begin{enumerate}
