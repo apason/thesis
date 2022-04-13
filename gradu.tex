@@ -14,6 +14,7 @@
 % lz kompressiosta 5 sivua
 % number in a ball ?
 % sigma ac:n määritelmään
+% reduced aka. factor free.
 
 % The implementation is n log sigma. We refer n log n everywhere!
 
@@ -335,15 +336,226 @@
 %% - Experiments section saattaa paisua aika paljon. Voisi mahdollisesti jakaa useaan kappaleeseen. Esim implementation kohtaa voisi laittaa myös ukkonen kappaleeseen.
 
 %% Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
-
-%% ei kappalejakoa introon. sectionit pois.
 \chapter{Introduction}~\label{chp-intro}
 %  vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
 
 % tänne vois katella rlz papereista introja ja miettiä jos saisi hyviä lainauksia tai viitteitä
-
-
 \section{Motivation}
+
+%% Jewels of stringology
+% general
+%One of the simplest and natural types of information representation is by means
+%of written texts. This type of dat a is characterized by the fact tha t it can
+%be written down as a long sequence of characters. Such linear a sequence
+%is called a text.
+
+%Text algorithms occur in many areas of science and
+%information processing. Many text editors and programming languages have
+facilities for processing texts. In biology, text algorithms arise in the study
+of molecular sequences. The complexity of text algorithms is also one of the
+central and most studied problems in theoretical computer science.
+
+The basic textual problem in stringology is called pattern matching.
+-string matching
+-data compression
+-finding regularities
+-approximation problems
+
+One of the basic problems in storing a large amount of textual information
+is the text compression problem. Text compression means reducing the
+representation of a text. It is assumed that the original text can be recovered
+from its compressed from. No loss of information is allowed.
+
+% data compression
+data compression is important in
+several domains related to natural language analysis. Text compression is
+also useful for telecommunications. It actually reduces the time to transmit
+documents via telephone network, for example.
+General compression methods often adapt themselves to the data.
+The compression is very successful if there are redundancies and regularities
+in the information message. The analysis of data is related to the problem of
+detecting regularities in texts.
+
+% molecular biology
+DNA = STRING
+amino = string
+In a first approach all these molecules can be viewed as texts.
+The
+discovery twenty years ago of powerful sequencing techniques has led to a rapid
+accumulation of sequence data. Prom the collection of sequences up to their
+analysis many algorithms on texts are implied. Moreover, only fast algorithms
+are often feasible because of the huge amount of data involved.
+
+typical two di-
+mensional pattern-matching problem in two dimensions. The reconstruc-
+tion of a whole sequence from small segments, used for instance in the shotgun
+sequencing method, is another example of a problem that occurs during this
+step. This problem is called the shortest common superstring problem:
+construction of the shortest text containing several given smaller texts.
+
+The result is know
+as an alignment of the set of nucleotides. Alignment of two sequences is the
+edit distance problem: compute the minimal number of edit operations to
+transform one string into another.
+
+The problem of the longest common subsequence is a variation of the
+alignment of sequences. A tool, called agrep, developed at the University
+of Arizona, is devoted to these questions, related to approximate string
+matching.
+
+%% puolalainen juutalainen
+Rapid development in DNA sequencing technologies led to drastic
+growth of data publicly available in sequence databases,
+DNA sequences within the same species are both large and
+highly repetitive.
+This poses
+interesting challenges for efficient storage and fast access to those
+data. Most classic data compression techniques fail to recognize
+this tremendous redundancy
+
+% gusfield
+\citep{Gusfield92} $O(m+k^2)$ for all pairs suffix prefix problem
+-using a variant of well known kmp \citep{Knuth77} can be used in O(km)
+- sequencing and mapping DNA
+- sekvensointi tarkottaa täydellisen lineaarisen nukleotidilistauksen rakentamista
+- mapping on finding the linear order or exact positions of certain significant features in the string
+- sekvensointi on extreme special case mäppängistä.
+- jokatapauksessa pitkä dna pitää ensin pilkkoa (säteily, vibraatio, entsyymit)  koska vain lyhkäsiä pätkiä voidaan sekvensoida.
+- palaset on random permutaatiossa joten ongelmaksi muodostuu näiden palasten järjestäminen oikeaksi
+- tämä ratkaistaan ylessnäs kopioimalla dna moneen kertaan ja leikkaamalla eri paikoista jolloin
+syntyy pätkiä jotka overläppää keskenään.
+- sitten pätkät mäpätään jotta saadaan oikea sekvenssi. tätä voidaan mallintaa SCS:llä.
+- all pair prefix-suffix on ensimmäinen vaihe näissä algoritmeissa (MINIMUM length hampath). esim \citep{Blum94}
+
+% lim
+\citep{Lim17} 
+- definition of apsp probelm
+- ASPS tärkeä osa dna sekvenssiassemblyä, jossa se vie eniten aikaa.
+- overlap minimum parametri sekvensoinnille
+- bioinformatics
+- monia viitteitä APSF ongelmaan.
+
+% tarhio, ukkonen
+- selittää miten dna sekvensointi toimii ja miksi scs käytetään siinä.
+
+% Aho corasick
+- in many information retrieval and text-editing applications it is necessary to
+be able to locate quickly some or all occurrences of user specified patterns or
+words and phrases in text.
+
+% ukkonen90
+DNA sequencing leads to a fragment assembyl problem whose natural abstract formulation comes
+close to SCS problem \citep{Peltola83}, \citep{Peltola83}
+
+% salmela
+%multi pattern matching solutions: \citep{Navarro00}, \citep{Karp87}, \citep{CommentzWalter79}
+
+
+%%% ALKAA
+
+\newpage
+
+% Intron intro
+Textually represented data -- text -- is one of the most common type of preserved information.
+In stringology, a field of computer science that studies text processing and manipulation,
+this kind of data are modeled as a finite sequences of symbols called strings. Stringology covers
+many types of problems as string processing algorithms and textual data occur in many forms.
+For example, programming and editing text documents, as well as more comprehensive areas such as
+bioinformatics and certain kind of data compression, all involve some degree of string processing.
+Stringology is also a one of the most studied fields in computer science \citep{Crochemore03}.
+
+% (multiple) String matching
+One of the most fundamental and common problems for textual data is the \textsc{String Matching} problem
+(also known as string searching). 
+That is, given a text string $T$ and a pattern $P$ the objective is to output every location of
+$T$ that contains $P$ as a substring \citep{Gusfield97}. The generalized version of the string
+matching problem is a \textsc{Multiple String Matching} problem where the pattern is replaced with a set of
+patterns, while the objective is to report the locations for all of them. As the (multiple) string
+matching is so common, it is fortunate that these problems can be solved efficiently.
+For example, Knuth-Morris-Pratt \citep{Knuth77}, and two-way \citep{Crochemore91}
+algorithms solve the string matching problem in linear time. Many other polynomial-time algorithms
+also exist \citep{Karp87}, \citep{Horspool80}.
+The multiple string matching problem can be effectively solved for example with algorithms
+presended in \citep{Aho75}, \citep{Navarro00}, \citep{Karp87}, \citep{CommentzWalter79}.
+
+% jos tarvii lisää lähteitä niin laittaa näihin perään.
+Stringology also covers many intractably-assumed problems, e.g. 
+\textsc{Closest String},
+%closest substring,
+\textsc{Longest Common Subsequence},
+%shortest common subsequence,
+%Multiple sequence alignment,
+%String reversal distance,
+%minimum common string partition,
+\textsc{Maximal Strip Recovery},
+and
+\textsc{Shortest Common Superstring},
+to name a few \citep{Bulteau14}.
+Although there are many tractable special cases of these problems, they are still \textsc{NP}-hard,
+i.e. infeasible to solve in general. This means that it must be settled for suboptimal decisions
+or to accept the infeasibility.
+For many applications, the optimal solution is however not always required. In many cases it is
+sufficient to find a good enough solution which can be obtained with approximation algorithms.
+Depending on the problem, there are efficient heuristics to be used. For example, the
+greedy heuristic for the \textsc{Shortest Common Superstring} problem produces very good
+results, in practice. 
+
+%In \textsc{Shortest Common Superstring} (SCS) problem, given a set of keywords $R$,
+%the objective is to find a shortest possible string that is a superstring of every keyword in $R$.
+
+The objective of the \textsc{Shortest Common Superstring} (SCS) problem is to find a string of
+minimum length that contains all input keywords.
+%motivation of SCS
+%compression
+One obvious application of the SCS is data compression. Since the SCS is usually shorter
+than the input keywords, it can be seen as a packed form of the input. 
+
+thus decreasing the redundancy
+
+%molecular biology
+
+
+As its decision version is \textsc{NP}-complete \citep{Gallant80}, several heuristics have been
+developed to solve an approximation of the problem.
+A quality of these heuristics
+can be defined in terms of compression, that is, a number of symbols the common superstring
+is shorter compared to the lengths of the input keywords combined. For the greedy heuristic, first
+described in \cite{Gallant82}, the compression is proved to be at least half of the optimal
+\citep{Tarhio88}. Another measure for the approximation is the length of the
+obtained superstring. It is proved in \cite{Blum94} that the approximation ratio is at least 4.
+Later on, more tight upper bound, 3.5, have been proven \citep{Kaplan05}. There is also an
+unresolved conjencture \cite{Tarhio88} that claims the approximation ratio to be 2. Although
+the conjencture is not proven, the greedy heuristic is observed to result very good approximation
+ratios, in practice. The theoretical explanation of why that is, is discussed in \citep{Ma08}.
+For other heuristics,
+the best proven approximation ratio is $2 + \frac{11}{30}$ \citep{Paluch14}.
+
+% implementations aka related work, APSF?
+
+The structure of the thesis is as follows. In Chapter \ref{chp-intro} we introduce the reader to the
+topic, background and motivation. In Chapter \ref{chp-preli} we quickly discuss the
+preliminaries needed to understand the rest of the thesis. Chapter \ref{chp-ukkonen} gives the detailed
+description of the Ukkonen's algorithm for the \textsc{Shortest Common Superstring} problem.
+Besides the pseudocode, that is discussed in four parts, Chapter \ref{chp-ukkonen} includes the
+formal definition of the greedy heuristic as well as discussion of the Aho-Corasick machine,
+which is used to implement the heuristic. In addition we prove the validity of Ukkonen's algorithm
+and discuss the time complexities of all of its sections. The concept of dictionary compression is
+introduced in Chapter \ref{chp-rlz}. We discuss the Lempel-Ziv family of compression algorithms. The
+Relative Lempel-Ziv is also defined. In Chapter \ref{chp-results} we discuss our contribution for
+the topic. Section \ref{sec-our} comes as a documentation of our implementation of the Ukkonen's
+algorithm. 
+
+
+
+
+\newpage
+
+- Stringology eli tekstin tutkiminen sisältää mm. (multiple) pattern matching, data compression (lossless), finding regularities etc. 
+
+
+- Mikä on SCS-ongelma? Mitä ominaisuuksia sillä on? Mitä sovelluskohteita? Mitä ratkaisutapaa täs katsotaan? Täällä kerrotaan mm. RLZ:sta jne
+
+
   %% - scs yleisesti datan pakkaamiseen
   %% - molekyylibiologia sekvensointi vaikeaa pitkälle pätkälle
   %%   - molekyylin pilkkominen random paloiksi, sekvensointi ja superstringin ottaminen.
@@ -355,16 +567,28 @@
   
   %% alanko or someone mentionet thet it would be interesting to see an implementation
 
-  \section{Related Work}
+\citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
+\citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
+\citep{Alanko17} describes approx scs algorithm for compact space.
+
+%\citep{Gallant80} proves scs decision version to be NPC
+
+% - \citep{Gallant82} mentions greedy heuristic first [30]. assumed 1.5 ratio
+- \citep{Turner89} showd this is false.
+%- \citep{Tarhio89} greedy conjencture ratio = 2. still open
+%- \citep{Blum94} proved ratio 4
+%- \citep{Kaplan05} proved ratio 3.5 - still best
+%- for other heuristics \citep{Paluch14} proved 2 + 11/30
+%- \citep{Ma08} offered explanation of goor practical performance
+- \citep{SDLS} used in alankos implementation
+Alanko väittää että ukkosen algoritmi poistaa myös
+duplikaatit. tarkista.
+
+
+\citep{Alanko20}: Further work could also include benchmarking different superstring algorithms against our algorithm. At the very least, it would be interesting to see how a well-engineered implementation our algorithm matches against a similarly carefully crafted implementation of ukkonen's superstring algorithm.
 
   %% O(nm) based algorithm based on KnuthMorrisPratt \citep{Knuth77} \citep{Tarhio88}
   %% perustuu kaikkien overlap parien laskemiseen kmp:llä.
-
-  %% hae jostain tietokannasta approx scs algoja !
-
-  %% related workista oma kappale jos muita vertailuja kuin alanko ja norri. muuten ehkä introon.
-  
-  \section{Structure of the Thesis}
 
 %%
 \chapter {Shortest Common Superstring (preli)}~\label{chp-preli}
@@ -1953,7 +2177,7 @@ algorithm for the SCS problem is used.
 % can not be better than LZ77 full window.
 % what does it mean that the original text is GREEDILY factored ? 
 %%
-\chapter{Empirical Evaluation}
+\chapter{Empirical Evaluation}~\label{chp-results}
 
 % todo: This section.
 In this chapter we introduce and describe an open-source implementation of Ukkonen's shortest
@@ -2079,7 +2303,7 @@ There are also two compile-time options that affects the execution. If the macro
 is not defined,
 the program only executes Algorithms \ref{ac-goto} and \ref{ac-fail} creating a plain AC-machine
 for the input keywords. This option was added in order to compare to the construction of the
-AC-machine with another similar implementation \citep{Salmela}. When using the program for approximate
+AC-machine with another similar implementation \citep{Salmela06}. When using the program for approximate
 shortest common superstring calculation, the \texttt{SCS} macro must always be defined. The last
 compile-time option is the INFO macro. When \texttt{INFO} is defined, additional information
 of the calculation
@@ -2263,7 +2487,7 @@ makefile software.
 
 %% - Differences !!!!
 
-\section{Benchmark Data}
+\section{Benchmark Data}~\label{data}
 Here we describe the two datasets that are use in Section \ref{sec-results}. We discuss the origin
 of both of those datasets and inspect their basic properties. Since the data is slightly manipulated
 to fit our experiments we also describe the preprocessing that had been done.
@@ -3362,10 +3586,8 @@ It would be very significant if the optimal parameters could be predicted before
   \begin{enumerate}
   \item \citep{Aho75} describes the Aho-Corasick machine for the first time. It gives the pseudocode to creation and search.
   \item alanko dissertation, no bibtex yet. Discusses some things related to this topic.
-  \item \citep{Alanko17} describes approx scs algorithm for compact space.
   \item statistics.pdf desccribes the dataset pizzachili.
-  \item \citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
-  \item \citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
+
   \end{enumerate}
 
 
