@@ -240,7 +240,7 @@
 % Prof. 
 % Dr. or in Finnish toht. or tri or FT, TkT, Ph.D. or in Swedish... 
 \supervisors{Assoc Prof.~Simon Puglisi}
-\examiners{Prof.~Dunno yet}
+\examiners{Prof.~Leena Salmela}
 
 
 \keywords{Implementation, Shortest Common Superstring}
@@ -304,22 +304,27 @@
 
 \begin{abstract}
 
-  % OUR contribution..
-  For a set of strings a \textsc{Shortest Common Superstring} is a string
-  for which each member of the set is a substring of.
-  Since the optimization problem of finding a \textsc{Shortest Common Superstring}
-  is \textsc{NP}-hard, a few heuristics are developed to solve the approximation version of
-  this problem.
+  The objective of the \textsc{Shortest Common Superstring} problem is to find a string of
+  minimum length that contains all keywords in the given input.
   \textsc{Shortest Common Superstrings} have many applications in the fields of
-  data compression and bioinformatics.
+  data compression and bioinformatics. For example, a common superstring can be seen as a
+  compressed form of the keywords it is generated from. A fragment assembly problem,
+  that is to map short overlapping strands of DNA to their natural order, can be modeled
+  as a \textsc{Shortest Common Superstring} problem.
   
-  We provide an implementation of the Ukkonen's linear time alogorithm for the
-  greedy heuristic. The practical performance of this implementation is measured by
-  comparing it to another implementation of the same heuristic. The potentiality
-  of the usage of the \textsc{Shortest Common Superstring} approximation with
-  Relative Lempel-Ziv compression algorithm is also verified.
-  
+  Since the \textsc{Shortest Common Superstring} problem is \textsc{NP}-hard,
+  we focus on the approximation algorithms that implement a so-called greedy
+  heuristic. It turns out that the actual \textsc{Shortest Common Superstring}
+  is not always needed. It is often enough to find an
+  approximate solution of sufficient quality. 
 
+  We provide an implementation of the Ukkonen's linear time algorithm for the
+  greedy heuristic. The practical performance of this implementation is measured by
+  comparing it to another implementation of the same heuristic.
+  We also hypothesize that Shortest Common Superstrings can be potentially used
+  to improve the compression ratio of the Relative Lempel-Ziv data compression algorithm.
+  This hypothesis is examined and shown to be valid.
+  
 \end{abstract}
 
 % Place ToC
