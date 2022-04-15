@@ -304,7 +304,21 @@
 
 \begin{abstract}
 
-  Abstract here. Last thing to write
+  % OUR contribution..
+  For a set of strings a \textsc{Shortest Common Superstring} is a string
+  for which each member of the set is a substring of.
+  Since the optimization problem of finding a \textsc{Shortest Common Superstring}
+  is \textsc{NP}-hard, a few heuristics are developed to solve the approximation version of
+  this problem.
+  \textsc{Shortest Common Superstrings} have many applications in the fields of
+  data compression and bioinformatics.
+  
+  We provide an implementation of the Ukkonen's linear time alogorithm for the
+  greedy heuristic. The practical performance of this implementation is measured by
+  comparing it to another implementation of the same heuristic. The potentiality
+  of the usage of the \textsc{Shortest Common Superstring} approximation with
+  Relative Lempel-Ziv compression algorithm is also verified.
+  
 
 \end{abstract}
 
@@ -336,83 +350,39 @@
 
 %% Intro ja Conclusions luonnollisella kielellä. Muualla teknistä kamaa.
 \chapter{Introduction}~\label{chp-intro}
-%  vitusti viitteitä ja pelkkää LUONNOLLISTA kieltä. Ei esim määritelmiä!
-
-% tänne vois katella rlz papereista introja ja miettiä jos saisi hyviä lainauksia tai viitteitä
-
-%% Jewels of stringology
-% general
-%One of the simplest and natural types of information representation is by means
-%of written texts. This type of dat a is characterized by the fact tha t it can
-%be written down as a long sequence of characters. Such linear a sequence
-%is called a text.
-
-%% UNCOMMENT  puolalainen juutalainen
-%% Rapid development in DNA sequencing technologies led to drastic
-%% growth of data publicly available in sequence databases,
-%% DNA sequences within the same species are both large and
-%% highly repetitive.
-%% This poses
-%% interesting challenges for efficient storage and fast access to those
-%% data. Most classic data compression techniques fail to recognize
-%% this tremendous redundancy
-
-% UNCOMMENT gusfield
-%% \citep{Gusfield92} $O(m+k^2)$ for all pairs suffix prefix problem
-%% -using a variant of well known kmp \citep{Knuth77} can be used in O(km)
-%% - sequencing and mapping DNA
-%% - sekvensointi tarkottaa täydellisen lineaarisen nukleotidilistauksen rakentamista
-%% - mapping on finding the linear order or exact positions of certain significant features in the string
-%% - sekvensointi on extreme special case mäppängistä.
-%% - jokatapauksessa pitkä dna pitää ensin pilkkoa (säteily, vibraatio, entsyymit)  koska vain lyhkäsiä pätkiä voidaan sekvensoida.
-%% - palaset on random permutaatiossa joten ongelmaksi muodostuu näiden palasten järjestäminen oikeaksi
-%% - tämä ratkaistaan ylessnäs kopioimalla dna moneen kertaan ja leikkaamalla eri paikoista jolloin
-%% syntyy pätkiä jotka overläppää keskenään.
-%% - sitten pätkät mäpätään jotta saadaan oikea sekvenssi. tätä voidaan mallintaa SCS:llä.
-%% - all pair prefix-suffix on ensimmäinen vaihe näissä algoritmeissa (MINIMUM length hampath). esim \citep{Blum94}
-
-% UNCOMMENT lim
-%% \citep{Lim17} 
-%% - definition of apsp probelm
-%% - ASPS tärkeä osa dna sekvenssiassemblyä, jossa se vie eniten aikaa.
-%% - overlap minimum parametri sekvensoinnille
-%% - bioinformatics
-%% - monia viitteitä APSF ongelmaan.
-
-% tarhio, ukkonen
-%- selittää miten dna sekvensointi toimii ja miksi scs käytetään siinä.
-
-% salmela
-%multi pattern matching solutions: \citep{Navarro00}, \citep{Karp87}, \citep{CommentzWalter79}
-
 
 %%% ALKAA
 
 % Intron intro
 Textually represented data -- text -- is one of the most common types of preserved information.
+It occrurs in many forms, e.g. source code, markup languages and plain text.
+Also, DNA and amino acid sequences are often modeled as text.
 In stringology, a field of computer science that studies text processing and manipulation,
-this kind of data is modeled as a finite sequence of symbols called a string. Stringology covers
-many types of problems as string processing algorithms and textual data occur in many forms.
+this kind of data is modeled as finite sequences of symbols called strings.
+Due to the large variety of applications, stringology cover many types of problems.
 For example, programming and editing text documents, as well as more comprehensive areas such as
-bioinformatics and certain kind of data compression, all involve some degree of string processing.
-Stringology is also a one of the most studied fields in computer science \citep{Crochemore03}.
+bioinformatics and data compression, involve some degree of string processing.
+Stringology is also one of the most studied fields in computer science \citep{Crochemore03}.
 
 % (multiple) String matching
 One of the most fundamental and common problems for textual data is the \textsc{String Matching} problem
 (also known as string searching). 
-That is, given a text string $T$ and a pattern $P$ the objective is to output every location of
-$T$ that contains $P$ as a substring \citep{Gusfield97}. The generalized version of the string
-matching problem is a \textsc{Multiple String Matching} problem where the pattern is replaced with a set of
-patterns, while the objective is to report the locations for all of them. As the (multiple) string
-matching is so common, it is fortunate that these problems can be solved efficiently.
-For example, Knuth-Morris-Pratt \citep{Knuth77}, and two-way \citep{Crochemore91}
+That is, given a text string and a pattern the objective is to output every location of
+the text string that contains the pattern as a substring \citep{Gusfield97}.
+The generalized version of the string
+matching problem is the \textsc{Multiple String Matching} problem where the pattern is replaced
+with a set of
+patterns, while the objective is to report the locations for all of them.
+Since many practical applications require solving string matching problems,
+it is fortunate that these problems can be solved efficiently.
+For example, Knuth-Morris-Pratt \citep{Knuth77} and Two-Way \citep{Crochemore91}
 algorithms solve the string matching problem in linear time. Many other polynomial-time algorithms
-also exist \citep{Karp87}, \citep{Horspool80}.
-The multiple string matching problem can be effectively solved for example with algorithms
-presended in \citep{Aho75}, \citep{Navarro00}, \citep{Karp87}, \citep{CommentzWalter79}.
+also exist, see e.g. \citep{Karp87} and \citep{Horspool80}.
+The multiple string matching problem can be efficiently solved for example with algorithms
+presented in \citep{Aho75}, \citep{Navarro00}, \citep{Karp87} and \citep{CommentzWalter79}.
 
 % jos tarvii lisää lähteitä niin laittaa näihin perään.
-Stringology also covers many intractably-assumed problems, e.g. 
+Stringology also covers many optimization problems assumed to be intractable, e.g. 
 \textsc{Closest String},
 %closest substring,
 \textsc{Longest Common Subsequence},
@@ -424,139 +394,126 @@ Stringology also covers many intractably-assumed problems, e.g.
 and
 \textsc{Shortest Common Superstring},
 to name a few \citep{Bulteau14}.
-Although there are many tractable special cases of these problems, they are still \textsc{NP}-hard,
-i.e. infeasible to solve in general. This means that it must be settled for suboptimal decisions
-or to accept the infeasibility.
-For many applications, the optimal solution is however not always required. In many cases it is
-sufficient to find a good enough solution which can be obtained with approximation algorithms.
+Although there are many tractable special cases of these problems, they are nevertheless
+\textsc{NP}-hard, i.e. there is no efficient algorithms known to solve these
+problems for arbitrary inputs.
+This means that often it must be settled for suboptimal decisions
+or to accept the intractability.
+For many applications, an optimal solution is however not always required. In many cases it is
+enough to find a solution of sufficient quality.
+That can be obtained with so-called approximation algorithms.
 Depending on the problem, there are efficient heuristics to be used. For example, the
-greedy heuristic for the \textsc{Shortest Common Superstring} problem produces very good
-results, in practice. 
-
-%In \textsc{Shortest Common Superstring} (SCS) problem, given a set of keywords $R$,
-%the objective is to find a shortest possible string that is a superstring of every keyword in $R$.
+greedy heuristic for the \textsc{Shortest Common Superstring} problem, for which we focus on this
+thesis, produces very good results in practice \citep{Romero04}. 
 
 The objective of the \textsc{Shortest Common Superstring} (SCS) problem is to find a string of
-minimum length that contains all input keywords.
+minimum length that contains all keywords in the given input.
 %motivation of SCS
 %compression
 One obvious application of the SCS is data compression. Since the SCS is usually shorter
 than the input keywords, it can be seen as a packed form of the input. To compress a set of keywords,
-one can compute the SCS and address the keywords as a pair of position and length, thus decreasing
-the redundancy of the saved data, for example. The same kind of idea is hypothesized to be useful
-with Relative Lempel-Ziv dictionary construction. As the SCS of the artificially created dictionary
-contains virtually every symbol sequence that appears in the conventionally constructed dictionary,
-the overall compression could be increased while the dictionary size decreases.
+one can compute an SCS and address the keywords as a pair of position and length, thus decreasing
+the redundancy of the saved data, for example.
 
-%molecular biology % lähteet!!??!?
-Another application of the SCS problem is DNA sequencing. That means a construction of a complete
-model of nucleotides of some biological unit e.g. a single gene, chromosome or a genome. 
-The straightforward DNA sequencing methods can only be applied for a small nucleotide sequences,
-which complicates the process for a larger units. First a number of copies of the long DNA strand are
-replicated. The multiple strands of the same sequence are then split from several semi random
-places, yelding a set of different subsequencencies that overlap each other. These shorter nukleotide
-strands are then sequenced and modeled as a set of strings. The remaining problem is the mapping of
+%molecular biology % lähteet!!??!? fragment assemblyyn lähteitä gusfieldin apsp paperista.
+Another application of the SCS problem is DNA sequencing, i.e. the construction of a complete
+model of nucleotides of some biological unit, e.g. a single gene, chromosome or a genome. 
+Direct DNA sequencing (sequencing a whole strand as single piece) methods can only be applied for
+small nucleotide sequences,
+while the process is infeasible for larger units. To sequence a longer strand of DNA,
+a number of its copies are
+first replicated. The multiple strands of the same sequence are then split from several semi-random
+places, yelding a set of different subsequencences that overlap each other. These shorter nucleotide
+strands are then sequenced and modeled as a set of strings. What remains is to map
 those randomly permutated sequences in order to find their correct natural order.
 This fragment assembly problem can be simplified to the \textsc{Shortest Common Superstring}
 problem \citep{Peltola83}.
 
-% introduction to heuristics. viitataan aiempiin ongelmiin ja todetaan että ei tarvi parasta
+% introduction to heuristics of scs. viitataan aiempiin ongelmiin ja todetaan että ei tarvi parasta
 As the decision version of the SCS problem is \textsc{NP}-complete \citep{Gallant80},
 several heuristics have been
-developed to solve an approximation of the problem.
-A quality of these heuristics
-can be defined in terms of compression, that is, a number of symbols the common superstring
+developed to compute the approximate solution.
+The quality of these heuristics
+can be defined in terms of compression, that is, the number of symbols the common superstring
 is shorter compared to the lengths of the input keywords combined. For the greedy heuristic,
-that works by repeatedly merging the two strings with a maximal overlap together, first
-described in \cite{Gallant82}, the compression is proved to be at least half of the optimal
+which works by repeatedly merging the two strings with a maximal overlap together, first
+described in \citep{Gallant82}, the compression has been shown to be at least half of the optimal
 \citep{Tarhio88}. Another measure for the approximation is the length of the
-obtained superstring. It is proved in \cite{Blum94} that the approximation ratio is at least 4.
-Later on, more tight upper bound, 3.5, have been proven \citep{Kaplan05}. There is also an
-unresolved conjencture \cite{Tarhio88} that claims the approximation ratio to be 2. Although
-the conjencture is not proven, the greedy heuristic is observed to result very good approximation
-ratios, in practice. The theoretical explanation of why that is, is discussed in \citep{Ma08}.
+obtained superstring. \cite{Blum94} has shown that the approximation ratio is at least 4.
+Later on, a more tight upper bound, 3.5, has been proven \citep{Kaplan05}.
+A conjencture \citep{Tarhio88} claiming the approximation ratio to be 2 remains unresolved.
+Despite this,
+the greedy heuristic is observed to result in very good approximation
+ratios, in practice. A theoretical explanation of why that is, is discussed in \citep{Ma08}.
 For other heuristics,
 the best proven approximation ratio is $2 + \frac{11}{30}$ \citep{Paluch14}.
 
-For the recently discussed data compression and DNA sequencing related problems,
-the approximate solutions of the SCS problem can be used. There is no inevitable requirement
-to get the actual shortest common superstring. For the data compression problems the length of
-the superstrgin is only a matter efficiency. A good approximation simply enough. 
+For the aforementioned data compression and DNA sequencing related problems,
+approximate solutions of the SCS problem can be used. There is no inevitable requirement
+to get an actual shortest common superstring. For the data compression problems the length of
+the superstring is only a matter of efficiency. A good approximation is simply enough. 
 
+% implementations aka related work, APSF
+One alternative to implement the greedy heuristic for the \textsc{Shortest Common Superstring}
+problem is to solve the 
+\textsc{All-Pair Suffix-Prefix} (APSP) problem \citep{Lim17} for the input keywords and construct the
+common superstring repeatedly selecting a pair of strings with a maximal overlap.
+\citep{Tarhio88} Describes an algorithm that works in this manner. The APSP problem is solved
+using a Knut-Morris-Pratt algorithm, giving a time complexity of $O(mn)$, where $m$ is the
+number of input keywords and $n$ is the total length of the input. This also dominates the time
+complexity of the whole algorithm. To the best of our knowledge, no publicly available
+implementation of this algorithm exists. After the publication of \citep{Tarhio88}, more efficient
+algorithms for APSP problem has been developed \citep{Gusfield92}. Theoretically, these could be
+combined with the book keeping of \citep{Tarhio88} to implement the greedy heuristic in time
+$O(n+m^2)$.
 
-% implementations aka related work, APSF?
-todo: implementations aka related work
+There are also algorithms that compute the greedy heuristic without calculating the APSP problem.
+For example, \citep{Ukkonen90} uses so-called Aho-Corasick machine to find the overlaps. In this way,
+at most $2n$ overlaps are needed to be examined. This significantly decreases the time complexity of
+the computation. In fact, depending on the chosen datastructures, Ukkonen's algorithm can be implement
+to run in linear time.
+Another algorithm of this kind is described in \citep{Alanko17}.
+The time complexity of this
+algorithm is $O(n\cdot log(|\Sigma|))$, where $\Sigma$ is the alphabet.
+This algorithm is implemented using a SDLS library  \citep{SDLS}. The publication also has some
+theoretical comparisons of the latter two algorithms. No practical comparisons were made since at the
+time of writing of \citep{Alanko17}, there were no publicly available implementation of
+\citep{Ukkonen90}. It has been stated in \citep{Alanko17} that
+it would be interesting to compare these two algorithms in practice.
 
 % Our contribution
-todo: our contribution
+Motivated by the above discussion, in this thesis, Ukkonen's linear time approximation algorithm
+for the greedy heuristic of the \textsc{Shortest Common Superstring} problem is further studied.
+We provide an implementation of the algorithm to examine its practical capabilities.
+We compare the runtimes of our implementation to the implementation of \citep{Alanko17}.
+We also hypothesize that the shortest common superstring approximation can be used to
+improve the quality of the Relative Lempel-Ziv data compression algorithm. As the dictionaries
+for general-purpose data are conventionally
+constructed by concatenating the random samples of the input, in theory,
+depending on the repetitiveness of the input, the dictionary could be highly compressed.
+Using this feature, the overall compression could be increased while the dictionary size
+decreases. This hypothesis is tested and validated in this thesis. 
 
-The structure of the thesis is as follows. In Chapter \ref{chp-intro} we introduce the reader to the
-topic, background and motivation. In Chapter \ref{chp-preli} we quickly discuss the
+The structure of the thesis is as follows. In Chapter \ref{chp-preli} we briefly discuss the
 preliminaries needed to understand the rest of the thesis. Chapter \ref{chp-ukkonen} gives the detailed
-description of the Ukkonen's algorithm for the \textsc{Shortest Common Superstring} problem.
-Besides the pseudocode, that is discussed in four parts, Chapter \ref{chp-ukkonen} includes the
+description of Ukkonen's algorithm for the \textsc{Shortest Common Superstring} problem.
+Besides the pseudocode, which is discussed in four parts, Chapter \ref{chp-ukkonen} includes the
 formal definition of the greedy heuristic as well as discussion of the Aho-Corasick machine,
-which is used to implement that. In addition we prove the validity of Ukkonen's algorithm
+which is used to implement the heuristic. In addition we prove the correctness of Ukkonen's algorithm
 and discuss the time complexities of all of the sections. The concept of dictionary compression is
 introduced in Chapter \ref{chp-rlz}. We discuss the Lempel-Ziv family of compression algorithms. The
-Relative Lempel-Ziv is also defined. In Chapter \ref{chp-results} we discuss our contribution for
-the topic. Section \ref{sec-our} comes as a documentation of our implementation of the Ukkonen's
+Relative Lempel-Ziv is also defined. In Chapter \ref{chp-results} we detail our contribution for
+the topic. Section \ref{sec-our} comes as a documentation of our implementation of Ukkonen's
 algorithm. The datasets and experiment environments are described in Sections \ref{data} and
-\ref{sec-env}, respectively. Finally, the results are discussed in Section \ref{sec-results}.
-We also give a conclusion of the thesis in Chapter \ref{chp-conc}.
-
-\newpage
-
-%- Stringology eli tekstin tutkiminen sisältää mm. (multiple) pattern matching, data compression (lossless), finding regularities etc. 
-
-
-%- Mikä on SCS-ongelma? Mitä ominaisuuksia sillä on? Mitä sovelluskohteita? Mitä ratkaisutapaa täs katsotaan? Täällä kerrotaan mm. RLZ:sta jne
-
-
-  %% - scs yleisesti datan pakkaamiseen
-  %% - molekyylibiologia sekvensointi vaikeaa pitkälle pätkälle
-  %%   - molekyylin pilkkominen random paloiksi, sekvensointi ja superstringin ottaminen.
-  %%     saadaan approksimaatio alkuperäisestä pitkästä sekvenssistä
-  %%   - toimii käutännössä hyvin \citep{Peltola83}
-  
-
-  %% introssa motivaatiossa rlz mainittu mutta myöhemmin teknisesti
-  
-  %% alanko or someone mentionet thet it would be interesting to see an implementation
-
-
-
-
-
+\ref{sec-env}, respectively. The results are discussed in Section \ref{sec-results}.
+Finally we give a conclusion of the thesis in Chapter \ref{chp-conc}.
 
 % UNCOMMENT
-%\citep{Ukkonen90} is the most important reference in this thesis. Describes the main scs algorithm.
-%\citep{Tarhio88} Describes the same algorithm as ukkonen 90 but not in linear time.
-%\citep{Alanko17} describes approx scs algorithm for compact space.
-
-%\citep{Gallant80} proves scs decision version to be NPC
-
-% - \citep{Gallant82} mentions greedy heuristic first [30]. assumed 1.5 ratio
-% UNCOMMENT - \citep{Turner89} showd this is false.
-%- \citep{Tarhio89} greedy conjencture ratio = 2. still open
-%- \citep{Blum94} proved ratio 4
-%- \citep{Kaplan05} proved ratio 3.5 - still best
-%- for other heuristics \citep{Paluch14} proved 2 + 11/30
-%- \citep{Ma08} offered explanation of goor practical performance
-
-% UNCOMMENT
-%- \citep{SDLS} used in alankos implementation
 %Alanko väittää että ukkosen algoritmi poistaa myös
 %duplikaatit. tarkista.
 
-% UNCOIMMENT
-%\citep{Alanko20}: Further work could also include benchmarking different superstring algorithms against our algorithm. At the very least, it would be interesting to see how a well-engineered implementation our algorithm matches against a similarly carefully crafted implementation of ukkonen's superstring algorithm.
+\chapter{Definitions and Notations}~\label{chp-preli}
 
-  %% O(nm) based algorithm based on KnuthMorrisPratt \citep{Knuth77} \citep{Tarhio88}
-  %% perustuu kaikkien overlap parien laskemiseen kmp:llä.
-
-%%
-\chapter {Shortest Common Superstring (preli)}~\label{chp-preli}
 
 
 %% preliminaries including syntax
@@ -2579,7 +2536,7 @@ Table \ref{tbl-sys} describes the main features of both environments.
 % sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
 \section{Results}~\label{sec-results}
 In this section we examine the performance of our implementation. As a reference we use another
-implementation of the same greedy heuristic of the approximate shortest common superstring problem.
+implementation of the same greedy heuristic for the approximate shortest common superstring problem.
 The reference implementation \citep{Alanko19} performs the computation in a space efficient way using
 only $O(n \cdot log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation
 is also $O(n \cdot log(|\Sigma|))$. In contrast, our implementation of Ukkonen's algorithm
