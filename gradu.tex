@@ -1,3 +1,21 @@
+%% PRELIIN:
+stringin indeksöinti
+cdots as concatenation notation
+heuristic?
+approximation algorithm?
+
+prefix ? suffix ?
+overlap, maximal overlap
+
+longest hamiltonian path problem!
+graph
+digraph
+weighted graph (weight function)
+
+reduced set of strings.
+
+
+
 
 %% TODO: todo todo todo
 
@@ -655,7 +673,7 @@ common superstring.
   \item Add the new string back to the set $R$ and repeat until there is only one string left.
 \end{enumerate}
 
-It turns out that the \textsc{Shortest Common Superstring} problem for a reduced set or strings is
+It turns out that the \textsc{Shortest Common Superstring} problem for a reduced set of strings is
 analogous with a special case of
 the \textsc{Longest Hamiltonian Path} problem, that is, every instance of the SCS problem can be encoded
 as an instance of a longesta Hamiltonian path problem. The encoding works by creating a weighted
@@ -693,7 +711,7 @@ w((x,y)) =
 %- graafin kaarten painot maksimaalisia overlappeja
 
 Since the subgraph consisting of vertices $v_i, i=1,...,m$ is a complete graph, there certainly exists a
-Hamiltonian path(s).\citep{asd} Given any
+Hamiltonian path(s). Given any
 of the Hamiltonian paths $H$ from the graph $G_R$, we can construct a common superstring of $R$ by
 overlapping the strings representing the nodes in the same order they appear on the path in the
 following way.
@@ -794,7 +812,7 @@ The compositions of $p(H)$ and a shortest common superstring $z$ for a reduced s
   Let there be a reduced set of strings $R=\{r_1,r_2,...,r_m\}$ and
   a shortest common superstring $z$ for $R$. The indices of the strings $r_1$ to $r_m$ are in the same
   order they appear in $z$. Let $y_i$ be the longest suffix of $r_i$ such that it is also a prefix
-  of $r_{i+1}$, i.e there is an overlap $y_i$ between $r_i$ and $R_{i+1}$. Additionally, let us
+  of $r_{i+1}$, i.e there is an overlap $y_i$ between $r_i$ and $r_{i+1}$. Additionally, let us
   define $x_i$ to be the prefix of $r_i$ that does not overlap with $y_i$. By this construction we
   see that the composition of any SCS for any reduced set of strings is equivalent with the composition
   of the superstring acquired via the projection from the Hamiltonian path.
