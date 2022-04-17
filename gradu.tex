@@ -3508,35 +3508,78 @@ It would be very significant if the optimal parameters could be predicted before
 
 
 \chapter{Conclusions}~\label{chp-conc}
-https://gradcoach.com/dissertation-conclusion-chapter/
+%-brief introduction. what is in this chapter and in what order?
+%In this chapter we recap the contents of this thesis.
 
--brief introduction. what is in this chapter and in what order?
+% What have done ?
+In this thesis, we investigated the \textsc{Shortest Common Superstring} problem
+in detail. We focused on the greedy heuristic that provides an computationally
+easy-to-solve yet practically efficient approximate solution to the problem.
+The greedy heuristic and Ukkonen's algorithm, that solves this heuristic,
+were profoundly discussed. The correctness and time complexity were also proved.
+We provided an implementation of Ukkonen's algorithm with performance
+comparisons to another algorithm for the same heuristic.
 
-Summarise the key findings of the study
-- what have done ? 
+We briefly discussed the LZ family of dictionary compression algorithms.
+A more detailed introduction to the Relative Lempel-Ziv was given.
+We hypothesized that the RLZ compression method could be improved for a
+general-purpose data by using an approximate shortest common
+superstring of the random samples of the input as a dictionary. 
 
-Explicitly answer the research question(s) and address the research aims
-- scs can be implemented relatively quickly
-- scs does decrease the sizes of the rlz dictionaries
+% explicitely answer the research questions
+The aim of the comparison of the two implementations of the
+greedy heuristic were to examine the practical performance
+of our implementation and Ukkonen's algorithm in general.
+The results of these comparisons show that our implementation
+of Ukkonen's algorithm is very competitive method to solve
+the greedy heuristic of the shortest common superstring
+problem. Regardless of the alphabet size of the problem instance,
+and therefore the time complexity of our implementation
+(linear for small alphabets, $O(n\cdot log(|\Sigma|)$ for
+alphabets larger than 12), our implementation was faster with
+sufficiently large inputs. This indicates that the approximate
+SCS problem can be quickly solved even for a large inputs.
+
+The hypothesis of the compression ratios of the RLZ was also
+answered. The results indicates that for highly repetitive
+corpuses, the number of RLZ factors in the compressed data
+is significantly reduced when using the SCS approach to
+construct the dictionaries.
+
+% Limitations
+The results of this thesis implicates that a speedy implementation of the greedy heuristic of
+the shortest common superstring can be crafted.
+However the comparisons of the implementations lacked the
+measurement of the used memory. As the memory usage is also
+a significant aspect of the computation, it would be
+interesting to study this matter further. As a future
+work, our implementation of Ukkonen's algorithm could
+be further developed. The version used in this thesis
+gave a sufficient insight of the magnitudes of the
+time and memory usages. However, we assume that those
+values could be improved if our implementation were
+further developed.
+
+The datasets used in this thesis were all highly repetitive
+corpuses of real ogin. Although the number of RLZ factors was
+significantly decreased with the SCS approach, a further research
+with more broad datasets would be interesting. Also, the proportion
+of the time usage of Ukkonen's algorithm compared to the total time
+of the RLZ factorization was not measured. Performing this kind of
+study would be a natural continuation of this thesis.
 
 
-Inform the reader of the study’s main contributions
-- open source implementation of Ukkonen's algorithm
-- answer to the rlz hypothesis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage                          %fixes the position of bibliography in bookmarks
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}  % This lines adds the bibliography to the ToC
+\printbibliography
 
-Discuss any limitations or weaknesses of the study
-- insufficient memory comparison on measurements.
-- high memory consumption 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
 
-Present recommendations for future research
-- runtime and memory measurements with full rlz compression with / without scs
-- 
-
-    In many cases, readers will jump from the introduction chapter directly to the conclusions chapter to get a quick overview of the study’s purpose and key findings. Therefore, when you write up your conclusion chapter, it’s useful to assume that the reader hasn’t consumed the inner chapters of your dissertation or thesis. In other words, craft your conclusion chapter such that there’s a strong connection and smooth flow between the introduction and conclusion chapters,
-
-k
 %
-%
+% TARVIINKO APPENDICES??
 
 \begin{appendices}
 
