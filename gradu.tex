@@ -1031,15 +1031,13 @@ Figure \ref{fig-ac} illustrates an example of the AC-machine constructed from th
 keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$. The solid lines describe the goto function
 and the dashed lines describe the failure function, for example, $g(8, a) = 9$ and $f(4)=11$.
 
-%  Can produce "aababaa" (scs with compression 14-7=7) or "baababab" with compression 14-8 = 6.
-
 \begin{algorithm}[h!]
   
   \caption{Construction of the goto function} \label{ac-goto}
-  % TODO: Kirjoita omin sanoin input, output, method.
   \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{s_1,s_2...,s_k\}$.\\
   \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$ that is initially undefined for all states\\
-  \hspace*{\algorithmicindent} \textbf{Method:} The index of the root node is 1. The procedure \textit{insert($s$)} inserts into the goto graph a path that spells out $s$ or does nothing if there already exists such a path.
+  \hspace*{\algorithmicindent} \textbf{Preconditions:} Initially $g(s,\sigma)$ is undefined for each state and symbol.
+%  \hspace*{\algorithmicindent} \textbf{Method:} The index of the root node is 1. The procedure \textit{insert($s$)} inserts into the goto graph a path that spells out $s$ or does nothing if there already exists such a path.
   
       \begin{algorithmic}[1]
 
@@ -1072,18 +1070,18 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
       
   \end{algorithm}
 
-  Algorithm 1 creates a goto function. It begins by creating the root node on line 2.
+  Algorithm 1 creates a goto function. It begins by setting the start state on line 2.
   The algorithm continues by looping over the set of keywords and inserting them to the
-  goto function on lines 3 to 5. At the end of the main function on lines 7 to 8
+  goto function on lines 3 to 4. At the end of the main function on lines 5 to 6
   the goto function is defined for all $g(1,\sigma)$ that were undefined creating a loop within
-  the root node. This ensures that the failure function of the root node is never used when the
+  the start state. This ensures that the failure function of the start state is never used when the
   AC-machine is used for searching strings.
 
-  The procedure \textsc{INSERT} inserts a single keyword to the goto graph. The idea in the lines
-  13 to 16 is to skip the prefix of $s$ that already exists in the trie. The variable $j$ initialized
-  in the line 12 keeps track of this prefix. After the first symbol not already represented in the
+  The procedure \textsc{INSERT} inserts a single keyword to the goto function. The idea in the lines
+  10 to 12 is to skip the prefix of $s$ that already exists in the trie. The variable $j$ initialized
+  in the line 9 keeps track of this prefix. After the first symbol not already represented in the
   trie is found the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
-  at lines 17-20.
+  at lines 13-16.
 
   \begin{example}[]~\label{exmp-goto}
   Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
@@ -1164,7 +1162,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   For the last keyword the branching of the goto graph happens again
   similarly with the second keyword. At this point the goto function is a trie of the
   input keywords. After the first for loop in the main function is executed
-  the second loop on lines 6 to 8 creates an edge from root to root for every symbol in the
+  the second loop on lines 5 to 6 creates an edge from root to root for every symbol in the
   alphabet such that $g(1,\sigma)$ is not defined. With this example, we already have an edge from the
   root for both of the symbols in the binary alphabet, hence no edges are created in this step.
   However, the corresponding edge is drawn to the image for clarity. This completes 
@@ -1390,14 +1388,14 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
 
     \begin{algorithmic}[1]
-      \Function{calculateFailureFunction}{$g : \mathbb{N} \rightarrow \mathbb{N}$}
+      \Function{calculateFailureFunction}{$g$}
         \State $queue\gets \textit{empty}$
         \For {each $a$ s.t. $g(1,a) = s \neq 1$}
           \State $queue\gets queue \cup \{s\}$
           \State $f(s)\gets 1$
         \EndFor
         \While{$queue \neq empty$}\\
-          \hspace*{\algorithmicindent}let $r$ be the next state in $queue$
+          \hspace*{1.2cm plus \algorithmicindent}let $r$ be the next state in $queue$
           \State $queue\gets queue \backslash \{r\}$
           \For{each $a$ s.t. $g(r,a) = s$ is defined}
             \State $queue\gets queue \cup \{s\}$
@@ -1419,18 +1417,18 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   we go through the goto path using a breadth-first search. This is provided by the queue that is
   appended in every non-leaf state, i.e. the children of the currently processed state are put into the
   queue and the next state to be processed is popped. The queue is initialized to be empty in the first
-  line of the algorithm. The for loop on lines 3 to 6 adds all the children of the root to the queue.
+  line of the algorithm. The for loop on lines 3 to 5 adds all the children of the root to the queue.
   Because the start state is special as it contains goto transitions to itself the additional constraint
   on line 3 is added to prevent infinite looping. In the same for loop, we define the
-  $f(s)=1$ for all states with depth 1. The while loop from line 7 to 18 implements the instructions
+  $f(s)=1$ for all states with depth 1. The while loop from line 6 to 14 implements the instructions
   in Listing \ref{lst-failure-calculation}. Since the AC-machine does not save parent information
   this is done a bit differently, although the result is exactly the same as Listing
-  \ref{lst-failure-calculation} describes. On line 8 and 9 we pop a
+  \ref{lst-failure-calculation} describes. On line 7 and 8 we pop a
   state from the queue. At this point the failure function for that state is already defined. Then we
-  process each child of the state separately on lines 10 to 17 by \circled{1} adding the child to the
-  queue  on line 11  \circled{2} travelling the failure function of the parent as long as we get a state
+  process each child of the state separately on lines 9 to 14 by \circled{1} adding the child to the
+  queue  on line 10  \circled{2} travelling the failure function of the parent as long as we get a state
   that have goto   transition with the same symbol that appears between the parent and the currently
-  processed child on lines 12 to 15 and  \circled{3} set the failure function for the child on line 16.
+  processed child on lines 12 to 13 and  \circled{3} set the failure function for the child on line 14.
   The execution of the function halts when the BFS of the  AC-machine is ready and the queue is
   finally empty.
 
@@ -1460,7 +1458,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \item $g(r_n, x_d) = q$.
   \end{enumerate}
 
-  Since Algorithm \ref{ac-fail} encodes the above rules on lines 13 to 16 the state $q$ is defined
+  Since Algorithm \ref{ac-fail} encodes the above rules on lines 12 to 14 the state $q$ is defined
   for $f(p)$. Let the strings $u_1,...,u_n$ represent the states $r_1,...,r_n$ respectively.
   According to the induction hypothesis $u_1$ is a longest proper suffix of $x_1x_2\cdots x_{d-1}$
   that is also a prefix of some keyword. Also, $u_2$ is a longest proper suffix of $u_1$ that is also
@@ -1496,18 +1494,18 @@ elements, the time complexity of this approach is $O(log(|\Sigma|)$.
 The main function of Algorithm \ref{ac-goto} consists of two for loops.
 The first loop calls a procedure once for each keyword of the input. The function calls are
 executed in a constant time so the time complexity of the first for loop is linear with respect
-to the number of input keywords. The second for loop starting on line 6 is used to search all
+to the number of input keywords. The second for loop starting on line 5 is used to search all
 children of the start state. Since the start state has only $|\Sigma|$ goto transitions the loop
 is executed at most $|\Sigma|$ times. In the worst case every symbol
 in every input keyword is different. In that case $|\Sigma| = n$, where $n$ is the sum of the input
 symbols. Therefore the second for loop is executed at most $n$ times resulting in the time complexity of
 the main function to be linear with respect to the size of the input.
 
-Let us next examine the insert function. The first two lines 11 and 12 can clearly be executed in
+Let us next examine the insert function. The first two lines 8 and 9 can clearly be executed in
 constant time. The first while loop is used to find the symbol of the string that is not yet defined
 in the goto function. Let $s=vu$ such that $v$ is the part of $s$ that is already represented in the
 goto function. The index variable $j$ is used so it contains the value of the first symbol of $u$ after
-the while loop is executed. The for loop continues from $j$ so the lines 18 to 20 are executed
+the while loop is executed. The for loop continues from $j$ so the lines 13 to 16 are executed
 only for $u$. In the other words the \textit{insert} function behaves in a way that every symbol of
 the input keyword is processed either in one of the two loops but not both. Since the time complexities
 of the loop bodies depend on the implementation of $g$, the the total time complexity of the function
@@ -1524,7 +1522,7 @@ goto function can be used in constant or logarithmic time respectively.
 In the discussion of Theorem
 \ref{thm-time-goto} we reasoned that finding all children of the state can be done in
 linear time. In the failure calculation we have the same kind of instruction in the for loop
-on line 10. Since this loop is executed for every state of the machine this kind of approach leads
+on line 9. Since this loop is executed for every state of the machine this kind of approach leads
 us to $O(n|\Sigma|)$ time complexity for finding every child of every state. Instead of scanning
 the goto function for each symbol in the alphabet we can use an auxiliary data structure to
 explicitly save the children of each state. One possibility is to use a linked list ($O(1)$ time
@@ -1534,10 +1532,10 @@ is executed $O(n)$ times so the total time complexity is not changed. This allow
 children of a state in linear time with respect to the number of the children (and not the number of
 symbols in the alphabet). Since every state
 has at most one parent the body of the for loop is executed $O(n)$ times total nevertheless it
-is nested with another while loop (line 7). Thus the while loop on line 7 as well as the for loop in
-line 10 are executed once for every state, that is $O(n)$ times. The lines 11 and 12 are clearly constant
-time operations and the time complexity of line 16 depends on the goto function implementation and
-can also be a constant time operation. Lastly, let us examine the inner while loop on line 13.
+is nested with another while loop (line 6). Thus the while loop on line 6 as well as the for loop in
+line 9 are executed once for every state, that is $O(n)$ times. The lines 10 and 11 are clearly constant
+time operations and the time complexity of line 14 depends on the goto function implementation and
+can also be a constant time operation. Lastly, let us examine the inner while loop on line 12.
 The idea is to travel the failure path until a state is found such that the goto function
 for that state is defined with the same symbol as the goto transition is defined for state we are
 defining the failure function for. According to the definition of the failure function the state
@@ -1797,22 +1795,21 @@ of some other keyword. (lines 11, 12).
 The second part of this algorithm calculates the reversed breadth-first ordering $b$ for the
 AC-machine and set the depths for every state. In addition, substring keywords other than
 prefixes are removed. This part is basically a BFS travel through the machine. We create a queue
-and initialize it with the start state $1$ on line 17 and set the depth of the start state to
-zero (line 18). The variable $B$ initialized on line 19 contains the value of the latest state
+and initialize it with the start state $1$ on line 13 and set the depth of the start state to
+zero (line 14). The variable $B$ initialized on line 15 contains the value of the latest state
 that is already processed, thus at the end of the algorithm the variable $B$ contains the last state
 in the BFS ordering (which is the first state in the reversed BFS ordering). The actual BFS starts
-on lines 20 to 22 when we start to process the states in the queue. When all states are processed
-the while loop ends and the function terminates. In the for loop starting at line 23 we add the
-children of the current state to the queue as the BFS requires. On line 25 we set the depth
+on lines 16 to 18 when we start to process the states in the queue. When all states are processed
+the while loop ends and the function terminates. In the for loop starting at line 19 we add the
+children of the current state to the queue as the BFS requires. On line 21 we set the depth
 of the current state to be one greater than its parent state. We also update the $B$ variable
-as discussed before. Finally the line 27 sets $F(i) = 1$ for each keyword index $i$ such that
+as discussed before. Finally the line 23 sets $F(i) = 1$ for each keyword index $i$ such that
 the state represented by $s_i$ has an incoming failure transition from any other state.
 
-The lines 12 together with line 27 ensure that for all keywords $i$ such that $s_i$ is a substring
+The lines 12 together with line 23 ensure that for all keywords $i$ such that $s_i$ is a substring
 of some other keyword, the value of $F(i)=1$, i.e., the set of keywords $\{s_j : F(j) \neq 1\}$ is
 reduced.
 
-% flags indicating leaves ?
 \begin{theorem}[]~\label{thm-time-pre}
   The time complexity of Algorithm \ref{ukk-pre} is the same as time complexity of
   Algorithm \ref{ac-goto}.
@@ -1826,15 +1823,18 @@ inner for loop we iterate over each symbol in the keyword so the total number of
 in the inner loop equals the total number of symbols in all the keywords combined. On line 7
 we add an element to a set of items $L(s)$. Since this set does not need to be ordered it can be
 implemented for example as a linked list so the time complexity for adding an item is $O(1)$.
-Also the statements on lines 8 to 12 can clearly be performed in constant time. This means that
+Assuming, each state has a flag indicating whether it is a leaf, also the statements on
+lines 8 to 12 can be performed in constant time. This kind of flag can be easily
+added in Algorithm \ref{ac-goto}.
+This means that
 the time complexity of the outer for loop is $O(n\cdot t(x))$ where $n$ is the total number of
 symbols in the input and $t(x)$ is the time complexity of querying the goto function.
 
-The lines 17 to 19 can clearly be executed in constant time. The while loop starting at line 20
+The lines 13 to 15 can clearly be executed in constant time. The while loop starting at line 16
 does the breadth first search for the AC-machine. Since the number of states in the machine is
 $O(n)$, the execution time for the BFS is also $O(n)$. Here we assume that the queue is also
 implemented using a structure that enables insertions and deletions in a constant time (e.g.
-a linked list). The lines 25 to 27 that are not related to the BFS search itself can also clearly
+a linked list). The lines 21 to 23 that are not related to the BFS search itself can also clearly
 be executed at constant time. This results in the total time complexity of algorithm \ref{ukk-pre} to be
 $O(n\cdot t(x))$. For example, if the goto function is implemented using a direct indexing, the
 reading and writing of $g$ is performed at constant time, thus the time complexity is $O(n)$.
@@ -1954,30 +1954,30 @@ to $i$, indicating there is no edges yet selected. The else clause on lines 7 to
 to ensure that there will be no incoming edges to the keywords that are substrings of other
 keywords. (Note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
 the prevention of outcoming edges from those strings.) After the initialization is done the
-first state to process is set on line 11. Note that setting $s=B$ would cause one more unnecessary
+first state to be processed is set on line 9. Note that setting $s=B$ would cause one more unnecessary
 iteration of the following while loop since the last state in the BFS ordering can not have
 incoming failure transitions, hence the first state is set to the second last node in that
 ordering.
 
-The while loop starting at line 12 implements the actual selection of the edges. Since
+The while loop starting at line 10 implements the actual selection of the edges. Since
 deepest states are processed first and nonemptiness of $P(s)$ and $L(s)$ indicates an existing
 overlap of depth $d(s)$ the maximal overlaps are selected first, if allowed by the constraints.
-On line 13 we ensure that $P(s)$ is not empty since otherwise there are no allowed overlaps.
-After that each keyword index in $L(s)$ that is not forbidden are processed (line 14). Each
+On line 11 we ensure that $P(s)$ is not empty since otherwise there are no allowed overlaps.
+After that each keyword index in $L(s)$ that is not forbidden are processed (line 12). Each
 iteration (except the last one if no allowed edge is found) of that for loop decreases the
-size of $P(s)$ and $\{i\in L(s) : forbidden(i) = false\}$. On lines 15 to 17 we check that
-the set $P(s)$ to ensure there is at least one possible startpoint to the new edge. after line 18
+size of $P(s)$ and $\{i\in L(s) : forbidden(i) = false\}$. On lines 13 to 14 we check that
+the set $P(s)$ to ensure there is at least one possible startpoint to the new edge. After line 15
 there is a potential new edge that needs to be verified against the cyclicality constraint
-(n line 19). If the edge $(s_i,s_j)$ would create a cycle we check on line 20 if there exists
+(on line 16). If the edge $(s_i,s_j)$ would create a cycle we check on line 17 if there exists
 another index in $P(s)$ and if so, the edge is created. Otherwise the execution is jumped to the
 next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle then no other edge $(s',s_j)$
 will for any $s'$. Therefore it is only needed to query $P(s)$ at most twice with each iteration.
 
-On line 26 the edge is selected. The lines 27 ensures the definition for $forbidden$ function
-remains valid and lines 29 and 30 updates the $FIRST$ and $LAST$ functions accordinly. On line
-28 the selected keyword index is removed from $P(s)$. After all possible edges starting from
-$s_{P(s)}$ are examined the process can move on to the next state in the $b$ link chain (line 34).
-Before that on line 32 the $P(s)$ is concatenated to $P(f(s))$ so the possibly remaining unused
+On line 21 the edge is selected. The line 22 ensures the definition for $forbidden$ function
+remains valid and lines 24 and 25 updates the $FIRST$ and $LAST$ functions accordinly. On line
+23 the selected keyword index is removed from $P(s)$. After all possible edges starting from
+$s_{P(s)}$ are examined the process can move on to the next state in the $b$ link chain (line 27).
+Before that on line 26 the $P(s)$ is concatenated to $P(f(s))$ so the possibly remaining unused
 keyword indices are passed to the less deep states.
 
 
@@ -1993,10 +1993,10 @@ As with $L$ in Algorithm \ref{ukk-pre}
 we assume that the set returned by function $P$ is implemented using a linked list, allowing a constant
 time insertions, deletions, and concatenations. The first for loop starting at line 2 can clearly be
 executed in linear time since all the statements take constant time and $m \leq n $. The while loop
-starting at line 12 iterates once for each state that is $O(n)$ times. However, the for loop starting
-at line 14 is also executed at most $m = O(n)$ times.
+starting at line 10 iterates once for each state that is $O(n)$ times. However, the for loop starting
+at line 12 is also executed at most $m = O(n)$ times.
 
-How is that condition on line 14 resolved in linear time ????
+How is that condition on line 12 resolved in linear time ????
 
 \end{proof}
 
@@ -2020,7 +2020,7 @@ binary trees with $O(log(|\Sigma|))$ time complexity. This conclusion leads us t
   %Kommentoitu sanoin ERRATA:
 
 %\chapter{Dictionary Compression: The~LZ~Family}~\label{chp-rlz}
-\chapter[Dictionary Compression: The LZ Family]{\texorpdfstring{Dictionary Compression: \\ The LZ Family}{Dictionary Compression: The LZ Family}}
+\chapter[Dictionary Compression: The LZ Family]{\texorpdfstring{Dictionary Compression: \\ The LZ Family}{Dictionary Compression: The LZ Family}}~\label{chp-rlz}
 
 Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
 Using the structure and repetitiveness of the input, longer input sequences are encoded as shorter
@@ -2316,6 +2316,7 @@ When a keyword longer than 255 is used, the data type for the codomain of the de
 must be larger. By defining the compile-time macro \texttt{LONG\_KEYS} the depth function
 uses a 16-bit datatype instead. This allows the maximum keyword length to be $2^{16}-1$ which
 should be enough for the RLZ dictionary construction. \ref{joku}
+todo: Reference for that?
 
 The underlying data type that encodes the numbers of states defaults to a 4-byte unsigned integer. That
 means the maximum number of states that the AC-machine can encode is $2^{32}$ which is approximately
@@ -2583,8 +2584,10 @@ named \texttt{s\_c\_l}. For example the file \texttt{cere\_50\_128} has size 220
 (plus the number of newlines) and contains unique keywords of length 128.
 
 \paragraph{The Dna dataset:}
-The second dataset is called the Dna dataset. The origin of this dataset is xxxx xxxx xxxx.
-It contains xxxx lines of 100 xxxxx. The alphabet $\Sigma=\{A,C,G,T,N\}$ size of the original file is 5.
+The second dataset is called the Dna dataset. The origin of this data is the Sequence Read Archive
+of National Library of Medicine. The data consists of 3.8 million reads of escherichia coli,
+100 symbols of each.
+ The alphabet $\Sigma=\{A,C,G,T,N\}$ size of the original file is 5.
 The 'N' characters were relatively rare in this file (3506 / 3849544 lines).
 Since the PizzaChili dataset does not have a
 file with alphabet size less than 5, the Dna dataset was modified by removing all lines containing
