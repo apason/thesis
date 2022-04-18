@@ -1,23 +1,20 @@
 %% PRELIIN:
-stringin indeksöinti
-cdots as concatenation notation
-heuristic?
-approximation algorithm?
 
-prefix ? suffix ?
-overlap, maximal overlap
-
-longest hamiltonian path problem!
-graph
-digraph
-weighted graph (weight function)
-
-reduced set of strings.
+%- weighted directed graph ?
+%- hampath
+%- longest hampath
+%- longest hampath problem
 
 
+%% longest hamiltonian path problem!
+%% graph
+%% digraph
+%% weighted graph (weight function)
 
 
 %% TODO: todo todo todo
+
+% label sekä tyhjä rivi välissä example, def, lemma .... vaikuttaa rivivaihtoon? konsistenssi?
 
 % texttt for every "special" word like filenames, types etc
 % Should AC-machine be AC machine without the hyphen?
@@ -246,7 +243,7 @@ reduced set of strings.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set up personal information for the title page and the abstract form.
 %% Replace parameters with your information.
-\title{Implementation and benchmarking of Ukkonen 1990 -algorithm}
+\title{What is a good title?}
 
 % TM: Contributors to template editors now listed in the beginning of the file in comments
 \author{Arttu Kilpinen}
@@ -322,24 +319,26 @@ reduced set of strings.
 
 \begin{abstract}
 
-  The objective of the \textsc{Shortest Common Superstring} problem is to find a string of
+  The objective of the shortest common superstring problem is to find a string of
   minimum length that contains all keywords in the given input.
-  \textsc{Shortest Common Superstrings} have many applications in the fields of
+  Shortest common superstrings have many applications in the fields of
   data compression and bioinformatics. For example, a common superstring can be seen as a
-  compressed form of the keywords it is generated from. A fragment assembly problem,
-  that is to map short overlapping strands of DNA to their natural order, can be modeled
-  as a \textsc{Shortest Common Superstring} problem.
+  compressed form of the keywords it is generated from.
+
+  %A fragment assembly problem,
+  %that is to map short overlapping strands of DNA to their natural order, can be modeled
+  %as a shortest common superstring problem.
   
-  Since the \textsc{Shortest Common Superstring} problem is \textsc{NP}-hard,
+  Since the shortest common superstring problem is NP-hard,
   we focus on the approximation algorithms that implement a so-called greedy
-  heuristic. It turns out that the actual \textsc{Shortest Common Superstring}
+  heuristic. It turns out that the actual shortest common superstring
   is not always needed. Instead, it is often enough to find an
   approximate solution of sufficient quality. 
 
   We provide an implementation of the Ukkonen's linear time algorithm for the
   greedy heuristic. The practical performance of this implementation is measured by
   comparing it to another implementation of the same heuristic.
-  We also hypothesize that Shortest Common Superstrings can be potentially used
+  We also hypothesize that shortest common superstrings can be potentially used
   to improve the compression ratio of the Relative Lempel-Ziv data compression algorithm.
   This hypothesis is examined and shown to be valid.
   
@@ -535,92 +534,177 @@ Finally we give a conclusion of the thesis in Chapter \ref{chp-conc}.
 %Alanko väittää että ukkosen algoritmi poistaa myös
 %duplikaatit. tarkista.
 
-\chapter{Definitions and Notations}~\label{chp-preli}
+\chapter{Terminology and Problem Definitions}~\label{chp-preli}
 
+Since the \textsc{Shortest Common Superstring} problem is an essential part of this thesis, we
+first define the notations and terminology of strings in order to formally define the problem.
+The \textsc{Shortest Common Superstring} problem is solved as a \textsc{Longest Hamiltonian Path}
+problem. Therefore that problem and its related concepts are also recalled.
+To make the contents of this chapter more readable,
+each definition is preceded with a corresponding explanation in natural language.
 
+Regardless of the alphabet a string is simply a finite sequence of symbols.
+The length of the string equals the number of symbols it contains. Sequences of symbols
+(as well as other types of elements) are denoted by writing the elements adjacently.
+A dot symbol $\cdot$ is also used to emphasise the concatenation of two symbols or strings.
 
-%% preliminaries including syntax
-
-%% what is an approximation algorithm
-
-%% Maininta aakkostosta?
-
-%% Tätä voi ehkä jakaa sectioneihin?
-
-%% The algorithm described in this thesis \\[1in]
-
-
-TODO:
-In this chapter we define the concepts used in the thesis. These include the concepts related to
-strings as well as the concept of approximation algorithms and state automata. The definition of
-linear time complexity is also recalled. This chapter contains the explanations in natural
-languages following a corresponding formal definitions. First we define the concepts related
-to strings followed by ...  \\[1in]
-
-
-
-Regardless of the alphabet a string is simply a finite sequence of symbols. The length of the string equals the number of symbols it contains. 
-
-\begin{definition}[\textsc{String}]~\label{def-string}
-  
+\begin{definition}[\textsc{String}]~\label{def-string}\\
   For an alphabet $\Sigma$ a string $S$ is a finite sequence of symbols  ${s_1\cdots s_n}$ where each symbol $s_i \in \Sigma$.
-  The length of the string $S$ denoted by $|S| = n$ is the number of symbols in the string.
-  An empty string denoted by $\varepsilon$ contains zero symbols.
-  
+  The length of the string $S$ denoted by $|S|$ is the number of symbols in the string.
+  An empty string denoted by $\varepsilon$ contains zero symbols. An $i$th symbol of a string
+  is denoted by $S[i]$.
 \end{definition}
 
-If a string $S$ contains another string $S'$ we say that the string $S'$ is a substring of a string $S$ and string $S$ is a superstring of $S'$.
+In the theoretical discussion of Chapter \ref{chp-ukkonen} we assume an integer alphabet
+where any symbol can be stored in $log (|\Sigma|)$ bits, where $|\Sigma|$ is the size of the alphabet.
+
+For a pair of strings we define the concepts of substring, superstring, prefix, suffix and overlap
+as follows.
+
+A concepts of a prefix and a suffix is used to define an overlap. 
+A string $S_p$ is a prefix of string $S$ if the first $|S_p|$ symbols of $S$ spells out $S_p$.
+Similarly, a string $S_s$ is a suffix of string $S$ if the last $|S_s|$ symbols of $S$ spells out $S_s$.
+Note that the prefix and the suffix may also be empty.
+
+\begin{definition}[\textsc{Prefix}]~\label{def-prefix}\\
+  Let $S$ and $S_p$ be strings. The string $S_p$ is a prefix of $S$ if and only if
+  $S = S_p\cdot S'$ for some string $S'$.
+\end{definition}
+
+\newpage
+
+\begin{definition}[\textsc{Suffix}]~\label{def-suffix}\\
+  Let $S$ and $S_s$ be strings. The string $S_s$ is a suffix of $S$ if and only if
+  $S = S'\cdot S_s$ for some string $S'$. 
+\end{definition}
+
+Now we define the overlap of two strings to be a string that is a prefix of the first string
+and a suffix of the other. Note the antisymmetry of the definition. The overlap between the first
+and the second string is not necessarily the same as the overlap between the second and the first
+string. Trivially, any two strings have an empty overlap.
+
+\begin{definition}[\textsc{Overlap and Maximal Overlap}]~\label{def-overlap}\\
+  Let $S$ and $T$ be strings. A string $U$ is an overlap between $S$ and $T$
+  if and only if $U$ is a prefix of $S$ and a suffix of $R$.
+  If $U$ is a longest such string, it is said to be maximal overlap.
+\end{definition}
+
+If a string $S$ contains another string $S'$ we say that the string $S'$ is a substring of a
+string $S$ and string $S$ is a superstring of $S'$. 
 By containing a string we mean that there is a sequence of symbols in $S$ that spells out $S'$
 
-\begin{definition}[\textsc{Substring and Superstring}]~\label{def-sub-super}
+\begin{definition}[\textsc{Substring and Superstring}]~\label{def-sub-super}\\
   Let there be two strings $S$ and $S'$.
-  $S'$ is a substring of $S$ if and only if $S$ can be written as $RS'T$ where $R$ and $T$ are strings. $R$ and $T$ may be empty.
+  The string $S'$ is a substring of $S$ if and only if $S$ can be written as $R\cdot S'\cdot T$,
+  where $R$ and $T$ are strings. $R$ and $T$ may be empty.
   If $R$ and $T$ are both empty then $S = S'$ which is a substring of itself.
-  An empty string is trivially a substring of every other string.\\
-
-  If $S'$ if a substring of $S$ then $S$ is a superstring of $S'$
+  An empty string is trivially a substring of every other string.
+  The string $S'$ is a substring of $S$ if and only if $S$ is a superstring of $S'$.
+  A substring of $S$ with length $k$ starting at index $i$ is denoted
+  as $S[i...k+i-1]$.
 \end{definition}
 
-If a string contains (I.e. is a superstring) a set of strings, it is said to be a common superstring of the set.
+Note that by Definition \ref{def-sub-super}, prefixes and suffices are also substrings.
 
-\begin{definition}[\textsc{Common superstring}]~\label{def-cs}
+Let us now define a common superstring and a shortest common superstring for a set of strings
+using the previous definitions.
+If a string contains (I.e. is a superstring) each string in a set of strings, it is said to be
+a common superstring of the set.
 
-  Let $R = \{S1,...,Sn\}$ be a set of strings and $T$ be a string.
-  $T$ is a common superstring of $R$ if and only if $T$ is a superstring for each $Si$ such that $i\in 1,...,n$.
-  
+\begin{definition}[\textsc{Common superstring}]~\label{def-cs}\\
+  Let $R = \{S_1,...,S_n\}$ be a set of strings and $T$ be a string.
+  $T$ is a common superstring of $R$ if and only if $T$ is a superstring
+  for each $S_i$ such that $i\in 1,...,n$.
 \end{definition}
 
-Trivially a common superstring of a set of strings can be constructed by catenating all of the strings of the set together.
+Trivially a common superstring of a set of strings can be constructed by concatenating all of
+the strings of the set together.
 This kind of string has a length that equals the lengths of all the substrings added together.
 
-In many cases there exists one or more common superstrings that are shorter than the common superstring produced by this naive methot.
+\begin{example}~\label{exml-cs}\\
+  Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
+  A string ``baababaababaab'' is a common superstring of the set $R$.
+\end{example}
 
-(if there is no overlaps then the naive method yields the csc ... ref ??)
+In many cases there exists one or more common superstrings that are shorter than the common
+superstring produced by this naive method.
+If a common superstring is a shortest possible it is said to be a shortest common superstring (SCS).
 
-If a common superstring is a shortest possible it is said to be a shortest common superstring. Finding a shortest common superstring is
-an \textsc{NP}-hard problem. 
+\begin{example}~\label{exml-scs}\\
+  Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
+  A string ``aababaa'' is an shortest common superstring of the set $R$.
+\end{example}
 
-\begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}
-
-  Let string $T$ be a common superstring of a set of strings $K$.
-  $T$ is a shortest common superstring of $K$ if and only if there does not exist a common superstring of $K$ which is shorter than $T$.
-  
+\begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}\\
+  Let string $T$ be a common superstring of a set of strings $R$.
+  The string $T$ is a shortest common superstring of $R$ if and only if there does not exist
+  a common superstring of $R$ which is shorter than $T$.
 \end{definition}
 
-% Tarhio88
-%Since the decision version of this problem is NP-complete... \citep{Garey79}
+A reduced set of strings is a set of strings such that no string in the set is a substring
+of another string in that set. This property is important since the later discussion of the
+reduction between the \textsc{Shortest Common Superstring} and \textsc{Longest Hamiltonian Path}
+problems only works for a reduced sets of strings. The SCS of the reduced set of strings
+is same as the SCS of the same set of strings that is not reduced. 
 
+\begin{definition}[\textsc{Reduced Set of Strings}]~\label{def-reduced}\\
+  Let $R=\{S_1, S_2,...,S_n\}$ be a set of strings. The set $R$ is called reduced
+  if and only if $S_i$ is not a substring of $S_j$ for all $i,j = 1,...,n, i\neq j$.
+\end{definition}
 
-%-Lemma: Jos x on y:n substring s.t. y kuuluu R niin scs(R) == scs(Rux)
-%todistus ???
+\begin{lemma}~\label{lem-reduced}
+  Let $R$ be a set of strings such that $S,S'\in R$ and $S'$ is a substring of $S$.
+  The shortest common superstrings of $R$ and $R\backslash\{S'\}$ are the same.
+\end{lemma}
 
-%definition: reduced set of strings = joukko stringejä joissa mikään string ei ole toisen substring.
+\begin{proof}
+  Let $S_{scs}$ be a shortest common superstring of a set $R\backslash\{S'\}$.
+  Since, $S\in R\backslash\{S'\}$ and $S'$ is a substring of $S$, the string
+  $S_{scs}$ is a superstring of $S'$. Adding a string to a set can not
+  decrease the length of its corresponding shortest common superstring.
+  Therefore $S_{scs}$ is also a shortest common superstring of a set
+  $R$.
+\end{proof}
 
-%definition: overlap note this is not symmetric!
-%maximal overlap.
+Now we have defined the necessary string-related concepts. Next the
+\textsc{Shortest Common Superstring} problem is defined as follows
 
+\begin{definition}[\textsc{Shortest Common Superstring Problem}]~\label{def-scs-problem}\\
+  Given a set of strings $R$, a shortest common superstring problem
+  asks to find a shortest common superstring of a set $R$. If there
+  are multiple such strings, any of them can be returned.
+\end{definition}
 
-%%
+The algorithm presented in Chapter \ref{chp-ukkonen} solves the approximation of the
+\textsc{Shortest Common Superstring} problem by reducing it to a \textsc{Longest Hamiltonian Path}
+problem in a weighted digraph. For this reason, we will also define a necessary terminology
+to understand the latter problem. The proof of the reducibility is given in Chapter \ref{chp-ukkonen}.
+
+Regardless of the type of a graph, a Hamiltonian path in a graph is a path (sequence of connected nodes)
+that contains every node in the graph exactly once. Formally,
+
+\begin{definition}[Hamiltonian Path]~\label{def-hampath}\\
+  Let $G=(V,E)$ be a graph. A hamiltonian path in $G$ is a $|V|$ sized sequence of nodes
+  that contains each node in $V$ exactly once and for each consecutive nodes $v_i$ and
+  $v_j$ there is an edge $(v_i,v_j)\in E$.
+\end{definition}
+
+For a weighted graph a longest Hamiltonian path is a Hamiltonian path of a maximum length.
+I.e, the sum of the weights of the edges is maximal.
+
+\begin{definition}[Longest Hamiltonian Path]~\label{def-longest-hampath}\\
+  Let $G=(V,E,w())$ be a weighted graph. A longest Hamiltonian path in $G$ is a Hamiltonian
+  path $v_1\cdots v_{|V|}$ such that $w((v_1,v_2))+\cdots +w((v_{|V|-1},v_{|V|}))$ is maximized.
+\end{definition}
+
+Finally, we define a \textsc{Longest Hamiltonian Path} problem as follows
+
+\begin{definition}[\textsc{Longest Hamiltonian Path Problem}]~\label{def-longest-hampat-problem}\\
+  Given a weighted graph $G$, a longest Hamiltonian path problem asks to find a
+  longest hamiltonian path of $G$. If there are multiple such paths, any of them can
+  be returned.
+\end{definition}
+
 \chapter{Ukkonen's Algorithm}~\label{chp-ukkonen}
 
 In this chapter we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
@@ -818,6 +902,7 @@ The compositions of $p(H)$ and a shortest common superstring $z$ for a reduced s
   of the superstring acquired via the projection from the Hamiltonian path.
 
   Hence, there exists a
+
   Hamiltonian path and the corresponding projection for any SCS.
 \end{proof}
 
@@ -891,8 +976,6 @@ arbitrary string called a text string. The output of the program is a list of lo
 occurrence of every keyword in a text. The AC-machine data structure and the associated pattern
 matching program were first described in \citep{Aho75}.
 
-todo: similarity with kmp ?
-
 % Tulee fiilis etten tiedä mistä puhun. Kerro vähän enemmän tähän kappaleeseen  
 As the string searching part of \citep{Aho75} is not used in \citep{Ukkonen90} nor is it relevant in
 this thesis, we only discuss the AC-machine as a data structure and omit the string searching
@@ -910,7 +993,6 @@ This is needed only when the AC-machine is used for searching strings.} as follo
     \item $f : Q \rightarrow Q, f(s_s) = s_d$, is a function that defines a failure transition from state $s_s$ to state $s_d$,
   \end{enumerate}
 \end{definition}
-todo: should the following lines be included in the definition?
 
 If there is a goto transition from $s_s$ to $s_d$ in an AC-machine we say that the state $s_s$ is parent
 of the state $s_d$ and that the state $s_d$ is a child of the state $s_s$. A depth of a state $q$ is the
@@ -1401,8 +1483,8 @@ perform in a constant time. This of course results in very high memory usage sin
 sparsely used especially with large alphabets and long keywords. The goto function can also
 be implemented in many other ways. One solution which improves the memory efficiency is to save
 a balanced binary tree for each state in the AC-machine. With balanced binary trees the insert and read
-operations are performed in logarithmic time.
-
+operations are performed in logarithmic time. Since each such binary tree contains at most $|\Sigma|$
+elements, the time complexity of this approach is $O(log(|\Sigma|)$.
 
 
 \begin{theorem}[]~\label{thm-time-goto}
@@ -1429,8 +1511,8 @@ the while loop is executed. The for loop continues from $j$ so the lines 18 to 2
 only for $u$. In the other words the \textit{insert} function behaves in a way that every symbol of
 the input keyword is processed either in one of the two loops but not both. Since the time complexities
 of the loop bodies depend on the implementation of $g$, the the total time complexity of the function
-is $O(n)\cdot O(1) = O(n)$ or $O(n)\cdot O(log(n)) = O(n\cdot log(n))$ when the goto function
-can be used in linear or logarithmic time respectively.
+is $O(n)\cdot O(1) = O(n)$ or $O(n)\cdot O(log(|\Sigma|)) = O(n\cdot log(|\Sigma|))$ when the
+goto function can be used in constant or logarithmic time respectively.
 \end{proof}
 
 
@@ -1757,7 +1839,8 @@ be executed at constant time. This results in the total time complexity of algor
 $O(n\cdot t(x))$. For example, if the goto function is implemented using a direct indexing, the
 reading and writing of $g$ is performed at constant time, thus the time complexity is $O(n)$.
 On the other hand, if $g$ is implemented using for example balanced binary trees, then the access
-time of $g$ is $O(log (n))$ and the total time complexity of the algorithm is $O(n\cdot log(n))$.
+time of $g$ is $O(log (|\Sigma|))$ and the total time complexity of the algorithm
+is $O(n\cdot log(|\Sigma|))$.
 \end{proof}
 
 Let us now discuss the algorithm that implements the greedy selection of the edges in the
@@ -1923,7 +2006,7 @@ on the implementation of the goto function for the AC-machine. As discussed earl
 can be implemented to allow read and write queries in  $O(1)$ using direct indexing over a
 two-dimensional array. Another feasible possibility, especially for the larger alphabets,
 is to use balanced
-binary trees with $O(log(n))$ time complexity. This conclusion leads us to the following theorem.
+binary trees with $O(log(|\Sigma|))$ time complexity. This conclusion leads us to the following theorem.
 
 \begin{theorem}[]~\label{thm-overall-time}
   With Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} the greedy heuristic
@@ -1936,7 +2019,8 @@ binary trees with $O(log(n))$ time complexity. This conclusion leads us to the f
   %Tänne bugikorjaukset sähköpostista joka lähetetty 30.4
   %Kommentoitu sanoin ERRATA:
 
-\chapter{Dictionary Compression: The LZ Family}~\label{chp-rlz}
+%\chapter{Dictionary Compression: The~LZ~Family}~\label{chp-rlz}
+\chapter[Dictionary Compression: The LZ Family]{\texorpdfstring{Dictionary Compression: \\ The LZ Family}{Dictionary Compression: The LZ Family}}
 
 Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
 Using the structure and repetitiveness of the input, longer input sequences are encoded as shorter
@@ -1992,7 +2076,7 @@ space requirement of the compression relative to the original text.
   the string ``abbab''. The next phrase encodes the following ``a'' with a phrase $(1,1)$. Since
   the text string encoded to this point contains a string ``abbab'' the last phrase is a pointer
   to the start of this string with a length of 6. The final LZ77 factorization is therefore
-  $[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.
+  \hbox{$[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.}
 \end{example}
 
 % decompression O(n)
@@ -2155,15 +2239,15 @@ test scripts for building and testing the code.
 % Explaion array goto and rb tree goto
 As discussed earlier, the goto function of the AC-machine can be implemented in many different
 ways. In our implementation the underlying data structure for the goto function is defined at compile
-time to be either a two dimensional array or a red-black tree\ref{asd}. Hence, by Theorem \ref{thm-overall-time}
-the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or $O(n\cdot log(n))$,
-respectively.
+time to be either a two dimensional array or a red-black tree \citep{Cormen09}. Hence, by Theorem \ref{thm-overall-time}
+the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or
+$O(n\cdot log(|\Sigma|))$, respectively.
 
 % Explain string quicksort
 Since the definition of the input of the algorithm is a set of keywords, we have to guard against that
 constraint too. In practice, that means we need to examine the input keywords and remove any possible
 duplicate values. The duplicate removal is implemented by sorting the input keywords and removing any
-consecutive duplicate strings. The keywords are sorted using string quicksort \ref{asd}.
+consecutive duplicate strings. The keywords are sorted using string quicksort \citep{Bentley97}.
 Therefore the overall time complexity of our software is $O(n\cdot log(n))$. At the time of writing, the
 duplicates are forced to be searched. There is no command line parameter that would omit the 
 $O(n\cdot log(n))$ time string sorting. However, as we see later even with the $O(n)$ implementation
@@ -2438,7 +2522,7 @@ of both of those datasets and inspect their basic properties. Since the data is 
 to fit our experiments we also describe the preprocessing that had been done.
 
 \paragraph{PizzaChili datasets:}
-PizzaChili\ref{PizzaChili} is a deprecated project of University of Pisa and University of Chile,
+PizzaChili \citep{PizzaChili} is a deprecated project of University of Pisa and University of Chile,
 whose purpose is to
 share publicly available corpuses and related full-text indices for others to experiment with.
 The dataset defined here consists of some of the repetitive text collections from PizzaChili project.
@@ -2476,7 +2560,7 @@ actual alphabet sizes are exactly the same.
     para & 410 & 5 & 4.096\\
     \hline
   \end{tabular}
-  \caption{Basic information of the PizzaChili files. \ref{PizzaChili}}
+  \caption{Basic information of the PizzaChili files. \citep{PizzaChili}}
 \end{center}
 \end{figure}
 
@@ -2575,8 +2659,8 @@ our implementation, at total:
 \begin{enumerate}
 \item Direct indexing ($O(n)$) with links optimization enabled.
 \item Dicect indexing ($O(n)$) with links optimization disabled.
-\item Red-black tree ($O(n\cdot log(n))$) with links optimization enabled.
-\item Red-black tree ($O(n\cdot log(n))$) with links optimization disabled.
+\item Red-black tree ($O(n\cdot log(|\Sigma|))$) with links optimization enabled.
+\item Red-black tree ($O(n\cdot log(|\Sigma|))$) with links optimization disabled.
 \end{enumerate}
 
 For convinience we refer these versions as DIE, DID, RBE and RBD, respectively. All of the results,
@@ -3540,13 +3624,13 @@ comparisons to another algorithm for the same heuristic.
 
 We briefly discussed the LZ family of dictionary compression algorithms.
 A more detailed introduction to the Relative Lempel-Ziv was given.
-We hypothesized that the RLZ compression method could be improved for a
+We hypothesized that the RLZ compression method could be improved for
 general-purpose data by using an approximate shortest common
 superstring of the random samples of the input as a dictionary. 
 
 % explicitely answer the research questions
 The aim of the comparison of the two implementations of the
-greedy heuristic were to examine the practical performance
+greedy heuristic was to examine the practical performances
 of our implementation and Ukkonen's algorithm in general.
 The results of these comparisons show that our implementation
 of Ukkonen's algorithm is very competitive method to solve
@@ -3579,7 +3663,7 @@ values could be improved if our implementation were
 further developed.
 
 The datasets used in this thesis were all highly repetitive
-corpuses of real ogin. Although the number of RLZ factors was
+corpuses of real origin. Although the number of RLZ factors was
 significantly decreased with the SCS approach, a further research
 with more broad datasets would be interesting. Also, the proportion
 of the time usage of Ukkonen's algorithm compared to the total time
