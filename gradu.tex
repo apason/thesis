@@ -182,7 +182,7 @@
 \usepackage{tikz}            % For making vector graphics (hard to learn but powerful)
 \usepackage{wrapfig}        % For nice text-wrapping figures (use at own discretion)
 % Tikz stuff for apas graphs
-\usetikzlibrary{positioning,arrows,shapes,automata}
+\usetikzlibrary{positioning,arrows.meta,shapes,automata}
 \tikzstyle{gnode} = [circle,minimum size=1cm,fill=blue!20,draw]
 \tikzstyle{line} = [line width=0.5,draw]
 \tikzstyle{shaded} = [color=blue!30,line width=2mm,draw]
@@ -1102,7 +1102,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode] (1) at (0,0) {$1$};
     
   \end{tikzpicture}
-  \caption{A root node. TODO: bigger arrow heads.} \label{fig-ac-step1}
+  \caption{A root node.} \label{fig-ac-step1}
   \end{figure}
 
   \begin{figure}[h]
@@ -1116,13 +1116,13 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode, right = 2cm of 2] (3) {$3$};
     \node[gnode, right = 2cm of 3] (4) {$4$};
     
-    \path[->]
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]
     (1) edge node[above] {b} (2)
     (2) edge node[above] {a} (3)
     (3) edge node[above] {a} (4);
 
   \end{tikzpicture}
-  \caption{first key added. TODO: bigger arrow heads.} \label{fig-ac-step2}
+  \caption{first key added.} \label{fig-ac-step2}
 \end{figure}
 
   With the second round of the for loop we add the keyword ``baba''. In this case the \textit{insert}
@@ -1144,7 +1144,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode, right = 2cm of 3] (5) {$5$};
     \node[gnode, right = 2cm of 5] (6) {$6$};
 
-    \path[->]
+    %\path[->]
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]    
     (1) edge node[above] {b} (2)
     (2) edge node[above] {a} (3)
     (3) edge node[above] {a} (4)
@@ -1153,7 +1154,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (5) edge node[above] {a} (6);
 
   \end{tikzpicture}
-  \caption{second key added. TODO: bigger arrow heads.} \label{fig-ac-step3}
+  \caption{second key added.} \label{fig-ac-step3}
 \end{figure}
 
   In the same way, the rest of the keywords are added. For keyword ``baba'' the insertion
@@ -1191,7 +1192,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
     \node[gnode, right = 2cm of 11] (12) {$12$};
 
-    \path[->]
+    %\path[->]
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]    
     (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
     
     (1) edge node[above] {b} (2)
@@ -1210,7 +1212,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (11) edge node[above] {b} (12);
 
   \end{tikzpicture}
-  \caption{The complete goto graph. TODO: bigger arrow heads.} \label{fig-ac-goto}
+  \caption{The complete goto graph.} \label{fig-ac-goto}
 \end{figure}
   \end{example}
   
@@ -1270,7 +1272,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
     \node[gnode, right = 2cm of 11] (12) {$12$};
 
-    \path[->]
+    %\path[->]
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]    
     (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
     
     (1) edge[bend left=15] node[above] {b} (2)
@@ -1288,13 +1291,14 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (7) edge node[above] {a} (11)
     (11) edge node[above] {b} (12);
 
-    \path [->,dotted]
+    %\path [->,dotted]
+    \draw[-{Stealth[length=1.5mm,width=3mm]},dotted]    
 
     (2) edge[bend left=15] (1)
     (7) edge [bend right=15] (1);
     
   \end{tikzpicture}
-  \caption{The failure function construction when $f(s)$ is defined for all states $s$ with depth <= 1. TODO: bigger arrow heads.} \label{fig-ac-step5}
+  \caption{The failure function construction when $f(s)$ is defined for all states $s$ with depth <= 1.} \label{fig-ac-step5}
 \end{figure}
 
   Next we calculate the failure function for the states 3, 8 and 11, that is, the states with depth 2.
@@ -1329,7 +1333,8 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[tnode, above left = 2.725cm and 2.277cm of 1] (v1) {};
     \node[tnode, below left = 1cm and 2.277 of 1] (v2) {};
     
-    \path[->]
+    %\path[->]
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]    
     (1) edge[loop,in=110,out=190,distance=3cm] node[below right,align=center] {$\neg \{a,b\}$} (1)
     
     (1) edge[bend left=15] node[above] {b} (2)
@@ -1344,11 +1349,14 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (8) edge node[above] {a} (9)
     (9) edge node[above] {b} (10)
 
-    (7) edge[bend right=15] node[above] {a} (11)
+
     (11) edge node[above] {b} (12);
+    
+    \draw[-{Stealth[length=1.5mm,width=3mm]}]    
+    (7) edge[bend right=15] node[above] {a} (11);    
 
-    \path [->,dotted]
-
+    %\path [->,dotted]
+    \draw[-{Stealth[length=1.5mm,width=3mm]},dotted]
     (2) edge[bend left=15] (1)
     (7) edge [bend right=15] (1)
     
@@ -1364,14 +1372,15 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (6) edge (9)
     (10) edge (5);
 
-    \path[->,dotted,rounded corners, shorten <= 0.5cm, shorten >= 0.5cm] plot coordinates {(4) (v1) (v2) (11)};
+    %\path[->,dotted,rounded corners, shorten <= 0.5cm, shorten >= 0.5cm] plot coordinates {(4) (v1) (v2) (11)};
+    \draw[-{Stealth[length=1.5mm,width=3mm]},dotted,rounded corners, shorten <= 0.5cm, shorten >= 0.5cm] plot coordinates {(4) (v1) (v2) (11)};
     % repaint these nodes
     \node[gnode, above right = 1cm and 2.277cm of 3] (4) {$4$};
     \node[gnode, below right = 1cm and 2.277cm of 7] (11) {$11$};
     
 
   \end{tikzpicture}
-  \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$. TODO: bigger arrow heads.} \label{fig-ac}
+  \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$. TODO: arrow heads to node 1.} \label{fig-ac}
 \end{figure}
 
   \end{example}
