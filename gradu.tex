@@ -218,6 +218,8 @@
 %%\usepackage{subfigure}
 \usepackage{float}
 
+%\usepackage{footnote}
+%\makesavenoteenv{algorithm}
 
 \singlespacing               %line spacing options; normally use single
 
@@ -1374,7 +1376,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     
 
   \end{tikzpicture}
-  \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$. TODO: arrow heads to node 1.} \label{fig-ac}
+  \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$.} \label{fig-ac}
 \end{figure}
 
   \end{example}
@@ -1753,7 +1755,7 @@ by $s_i$ is not processed like it was a keyword.
           \For {$j = 0,...,k-1$}
             \State $s\gets g(s,a_j)$
             %% ERRATA: i = j.
-            \State $L(s)\gets L(s) \cdot \{i\}$
+            \State $L(s)\gets L(s) \cdot \{i\}$ \footnotemark[1]
             \If {$j = k-1$}
               \State $F(i)\gets s$
               \State $E(s)\gets i$
@@ -1770,7 +1772,7 @@ by $s_i$ is not processed like it was a keyword.
           \hspace*{1.1cm plus \algorithmicindent} let $r$ be the next state in queue
           \State $queue\gets queue \backslash \{r\}$
           %% ERRATA: Cyclic graph!          
-          \For {each $s$ that is a child of $r$ and $s\neq r$}
+          \For {each $s$ that is a child of $r$ and $s\neq r$} \footnotemark[2]
             \State $queue\gets queue\cdot s$
             \State $d(s)\gets d(r)+1$
             \State $b(s)\gets B$
@@ -1795,8 +1797,13 @@ way constructs the function $L$ as defined. At the end of every keyword (if line
 Further we set $F(i) = 1$ for those keyword indices that correspond to a keyword that is a prefix
 of some other keyword. (lines 11, 12).
 
+  
+  \footnotetext[1]{In the original algorithm this line was $L(s)\gets L(s) \cdot \{j\}$}
+  \footnotetext[2]{To prevent infinite recursion the inequality $s\neq r$ was added}
+
 The second part of this algorithm calculates the reversed breadth-first ordering $b$ for the
-AC-machine and set the depths for every state. In addition, substring keywords other than
+AC-machine and set the depths for every state.
+In addition, substring keywords other than
 prefixes are removed. This part is basically a BFS travel through the machine. We create a queue
 and initialize it with the start state $1$ on line 13 and set the depth of the start state to
 zero (line 14). The variable $B$ initialized on line 15 contains the value of the latest state
@@ -1922,7 +1929,7 @@ the edge in question must be discarded.
           \If {$P(s)$ is not empty}
             \For {each $j$ in $L(s)$ s.t. $forbidden(j) = false$}
               %% ERRATA: Check emptiness
-              \If {$P(s)$ is empty}
+              \If {$P(s)$ is empty} \footnotemark[1]
                 \State \textbf{break}
               \EndIf
               \State $i\gets$ the first element of $P(s)$
@@ -1947,6 +1954,7 @@ the edge in question must be discarded.
     \end{algorithmic}
   \end{algorithm}
 
+
 \paragraph{Explanation of Algorithm \ref{ukk-h}.}
 Algorithm \ref{ukk-h} starts by setting the initial values for the dynamic functions
 $P, FIRST, LAST$ and $forbidden$ in the for loop starting at lines 2. On lines 4 to 6 the algorithm
@@ -1966,6 +1974,7 @@ The while loop starting at line 10 implements the actual selection of the edges.
 deepest states are processed first and nonemptiness of $P(s)$ and $L(s)$ indicates an existing
 overlap of depth $d(s)$ the maximal overlaps are selected first, if allowed by the constraints.
 On line 11 we ensure that $P(s)$ is not empty since otherwise there are no allowed overlaps.
+\footnotetext[1]{This line is not present in the original algorithm}
 After that each keyword index in $L(s)$ that is not forbidden are processed (line 12). Each
 iteration (except the last one if no allowed edge is found) of that for loop decreases the
 size of $P(s)$ and $\{i\in L(s) : forbidden(i) = false\}$. On lines 13 to 14 we check that
@@ -2622,7 +2631,7 @@ Table \ref{tbl-sys} describes the main features of both environments.
 \begin{tabular}{l|r|r}
   & \textbf{Haapa} & \textbf{Env2} \\
   \hline
-  Operating system & Ubuntu Linux 20.04 LTS & Gentoo Linux\footnote{Gentoo Linux is a so called rolling release distribution. That means it does not have any version numbers.} \\
+  Operating system & Ubuntu Linux 20.04 LTS & Gentoo Linux \footnotemark \\
   Linux kernel version & 5.11.0 & 5.4.80 \\
   GCC version & 9.4.0 & 10.2.0 \\
   Glibc version & 2.31 & 2.32 \\
@@ -2637,6 +2646,7 @@ Table \ref{tbl-sys} describes the main features of both environments.
 \caption{Software and hardware specifications of the environments Haapa and Env2.}
 \label{tbl-sys}
 \end{table}
+
 
 
 %- gnu time
@@ -2657,6 +2667,9 @@ In addition, as discussed in Section
 \ref{sec-our}, our implementation has an additional compile-time parameter that defines the data
 structure used for the children list of the states. As it is, there are four different versions of
 our implementation, at total:
+
+\footnotetext{Gentoo Linux is a so called rolling release distribution. That means it does not have any version numbers.}
+
 
 \begin{enumerate}
 \item Direct indexing ($O(n)$) with links optimization enabled.
