@@ -1,16 +1,9 @@
 %% PRELIIN:
 
-%- weighted directed graph ?
-%- hampath
-%- longest hampath
-%- longest hampath problem
-
-
-%% longest hamiltonian path problem!
-%% graph
-%% digraph
-%% weighted graph (weight function)
-
+%
+% 0.50_512 time, 0.75_512 time,
+% Number of factors ok koska voidaan käyttää omee implee.
+%
 
 %% TODO: todo todo todo
 
@@ -2217,7 +2210,6 @@ algorithm for the SCS problem is used.
 %%
 \chapter{Empirical Evaluation}~\label{chp-results}
 
-% todo: This section.
 In this chapter we introduce and describe an open-source implementation of Ukkonen's shortest
 common superstring
 approximation algorithm discussed in Chapter \ref{chp-ukkonen}. We go through the most significant
@@ -2896,7 +2888,7 @@ line length increases.
     \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
     \hline
     cere            & 707.99  & \textbf{436.36}  & 0.299  & 0.149   \\
-    coreutils       & 0.00    & \textbf{0.00}    & 0.000  & 0.000   \\
+    coreutils       & 362.85  & \textbf{227.42}  & 0.332  & 0.166   \\
     einstein.de.txt & 184.57  & \textbf{80.48}   & 0.0385 & 0.0192  \\
     einstein.en.txt & 1147.92 & \textbf{392.66}  & 0.0181 & 0.00903 \\
     influenza       & 185.32  & \textbf{147.45}  & 0.457  & 0.228   \\
@@ -3275,7 +3267,7 @@ line length increases.
     \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
     \hline
     cere            & 1162.88 & \textbf{665.73} & 0.237  & 0.178 \\
-    coreutils       & 0.00    & \textbf{0.00}   & 0.256  & 0.192 \\
+    coreutils       & 637.61  & \textbf{335.40} & 0.256  & 0.192 \\
     einstein.de.txt & 303.83  & \textbf{126.08} & 0.0277 & 0.021 \\
     einstein.en.txt & 1744.57 & \textbf{560.52} & 0.0146 & 0.011 \\
     influenza       & 324.12  & \textbf{221.69} & 0.399  & 0.299 \\
