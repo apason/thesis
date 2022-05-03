@@ -243,7 +243,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set up personal information for the title page and the abstract form.
 %% Replace parameters with your information.
-\title{TODO: title}
+% TODO: still not happy with the title. Should have "implementation" and "approximation" in it. 
+\title{Efficient Computation of Shortest Superstrings with Application to Relative Lempel-Ziv Dictionary Construction}
 
 % TM: Contributors to template editors now listed in the beginning of the file in comments
 \author{Arttu Kilpinen}
@@ -320,7 +321,7 @@
 \begin{abstract}
 
   The objective of the shortest common superstring problem is to find a string of
-  minimum length that contains all keywords in the given input.
+  minimum length that contains all keywords in the given input as substrings.
   Shortest common superstrings have many applications in the fields of
   data compression and bioinformatics. For example, a common superstring can be seen as a
   compressed form of the keywords it is generated from.
@@ -381,7 +382,7 @@ It occrurs in many forms, e.g. source code, markup languages and plain text.
 Also, DNA and amino acid sequences are often modeled as text.
 In stringology, a field of computer science that studies text processing and manipulation,
 this kind of data is modeled as finite sequences of symbols called strings.
-Due to the large variety of applications, stringology cover many types of problems.
+Due to the large variety of applications, stringology covers many types of problems.
 For example, programming and editing text documents, as well as more comprehensive areas such as
 bioinformatics and data compression, involve some degree of string processing.
 Stringology is also one of the most studied fields in computer science \citep{Crochemore03}.
@@ -400,7 +401,7 @@ it is fortunate that these problems can be solved efficiently.
 For example, Knuth-Morris-Pratt \citep{Knuth77} and Two-Way \citep{Crochemore91}
 algorithms solve the string matching problem in linear time. Many other polynomial-time algorithms
 also exist, see e.g. \citep{Karp87} and \citep{Horspool80}.
-The multiple string matching problem can be efficiently solved for example with algorithms
+The multiple string matching problem can be efficiently solved, for example, with algorithms
 presented in \citep{Aho75}, \citep{Navarro00}, \citep{Karp87} and \citep{CommentzWalter79}.
 
 % jos tarvii lisää lähteitä niin laittaa näihin perään.
@@ -417,15 +418,14 @@ and
 \textsc{Shortest Common Superstring},
 to name a few \citep{Bulteau14}.
 Although there are many tractable special cases of these problems, they are nevertheless
-\textsc{NP}-hard, i.e. there is no efficient algorithms known to solve these
+\textsc{NP}-hard, i.e, there is no efficient algorithms known to solve these
 problems for arbitrary inputs.
-This means that often it must be settled for suboptimal decisions
-or to accept the intractability.
+This means that often suboptimal decisions must be settled for.
 For many applications, an optimal solution is however not always required. In many cases it is
 enough to find a solution of sufficient quality.
 That can be obtained with so-called approximation algorithms.
 Depending on the problem, there are efficient heuristics to be used. For example, the
-greedy heuristic for the \textsc{Shortest Common Superstring} problem, for which we focus on this
+greedy heuristic for the \textsc{Shortest Common Superstring} problem, which we focus on this
 thesis, produces very good results in practice \citep{Romero04}. 
 
 The objective of the \textsc{Shortest Common Superstring} (SCS) problem is to find a string of
@@ -439,7 +439,7 @@ the redundancy of the saved data, for example.
 
 %molecular biology % lähteet!!??!? fragment assemblyyn lähteitä gusfieldin apsp paperista.
 Another application of the SCS problem is DNA sequencing, i.e. the construction of a complete
-model of nucleotides of some biological unit, e.g. a single gene, chromosome or a genome. 
+model of nucleotides of some biological unit, e.g, a single gene, chromosome or a genome. 
 Direct DNA sequencing (sequencing a whole strand as single piece) methods can only be applied for
 small nucleotide sequences,
 while the process is infeasible for larger units. To sequence a longer strand of DNA,
@@ -456,31 +456,31 @@ As the decision version of the SCS problem is \textsc{NP}-complete \citep{Gallan
 several heuristics have been
 developed to compute the approximate solution.
 The quality of these heuristics
-can be defined in terms of compression, that is, the number of symbols the common superstring
-is shorter compared to the lengths of the input keywords combined. For the greedy heuristic,
+can be defined in terms of compression, that is, the number of symbols by which the common superstring
+is shorter than the input keywords combined. For the greedy heuristic,
 which works by repeatedly merging the two strings with a maximal overlap together, first
 described in \citep{Gallant82}, the compression has been shown to be at least half of the optimal
 \citep{Tarhio88}. Another measure for the approximation is the length of the
 obtained superstring. \cite{Blum94} has shown that the approximation ratio is at least 4.
-Later on, a more tight upper bound, 3.5, has been proven \citep{Kaplan05}.
+Later on, a tighter upper bound of 3.5, has been proven \citep{Kaplan05}.
 A conjencture \citep{Tarhio88} claiming the approximation ratio to be 2 remains unresolved.
 Despite this,
 the greedy heuristic is observed to result in very good approximation
-ratios, in practice. A theoretical explanation of why that is, is discussed in \citep{Ma08}.
+ratios, in practice. A theoretical explanation for this is discussed in \citep{Ma08}.
 For other heuristics,
 the best proven approximation ratio is $2 + \frac{11}{30}$ \citep{Paluch14}.
 
 For the aforementioned data compression and DNA sequencing related problems,
 approximate solutions of the SCS problem can be used. There is no inevitable requirement
-to get an actual shortest common superstring. For the data compression problems the length of
+to get an actual shortest common superstring. For data compression problems, the length of
 the superstring is only a matter of efficiency. A good approximation is simply enough. 
 
 % implementations aka related work, APSF
 One alternative to implement the greedy heuristic for the \textsc{Shortest Common Superstring}
 problem is to solve the 
-\textsc{All-Pair Suffix-Prefix} (APSP) problem \citep{Lim17} for the input keywords and construct the
+\textsc{All-Pairs Suffix-Prefix} (APSP) problem \citep{Lim17} for the input keywords and construct the
 common superstring repeatedly selecting a pair of strings with a maximal overlap.
-\citep{Tarhio88} Describes an algorithm that works in this manner. The APSP problem is solved
+Tarhio and Ukkonen (1988) describes an algorithm that works in this manner. The APSP problem is solved
 using a Knut-Morris-Pratt algorithm, giving a time complexity of $O(mn)$, where $m$ is the
 number of input keywords and $n$ is the total length of the input. This also dominates the time
 complexity of the whole algorithm. To the best of our knowledge, no publicly available
@@ -490,16 +490,16 @@ combined with the book keeping of \citep{Tarhio88} to implement the greedy heuri
 $O(n+m^2)$.
 
 There are also algorithms that compute the greedy heuristic without calculating the APSP problem.
-For example, \citep{Ukkonen90} uses so-called Aho-Corasick machine to find the overlaps. In this way,
-at most $2n$ overlaps are needed to be examined. This significantly decreases the time complexity of
-the computation. In fact, depending on the chosen datastructures, Ukkonen's algorithm can be implemented
+For example, \citep{Ukkonen90} uses the so-called Aho-Corasick machine to find the overlaps. In this way,
+at most $2n$ overlaps need to be examined. This significantly decreases the time complexity of
+the computation. In fact, depending on the chosen data structures, Ukkonen's algorithm can be implemented
 to run in linear time.
 Another algorithm of this kind is described in \citep{Alanko17}.
 The time complexity of this
-algorithm is $O(n\cdot log(|\Sigma|))$, where $\Sigma$ is the alphabet.
-This algorithm is implemented using a SDLS library  \citep{SDLS}. The publication also has some
+algorithm is $O(n\cdot\log(|\Sigma|))$, where $\Sigma$ is the alphabet.
+This algorithm is implemented using the SDLS library  \citep{SDLS}. The publication also has some
 theoretical comparisons of the latter two algorithms. No practical comparisons were made since at the
-time of writing of \citep{Alanko17}, there were no publicly available implementation of
+time of writing of \citep{Alanko17}, there was no publicly available implementation of
 \citep{Ukkonen90}. It has been stated in \citep{Alanko17} that
 it would be interesting to compare these two algorithms in practice.
 
@@ -509,7 +509,7 @@ for the greedy heuristic of the \textsc{Shortest Common Superstring} problem is 
 We provide an implementation of the algorithm to examine its practical capabilities.
 We compare the runtimes of our implementation to the implementation of \citep{Alanko17}.
 We also hypothesize that the shortest common superstring approximation can be used to
-improve the quality of the Relative Lempel-Ziv data compression algorithm. As the dictionaries
+improve the quality of the Relative Lempel-Ziv (RLZ) data compression algorithm. As RLZ dictionaries
 for general-purpose data are conventionally
 constructed by concatenating the random samples of the input, in theory,
 depending on the repetitiveness of the input, the dictionary could be highly compressed.
@@ -524,7 +524,7 @@ formal definition of the greedy heuristic as well as discussion of the Aho-Coras
 which is used to implement the heuristic. In addition we prove the correctness of Ukkonen's algorithm
 and discuss the time complexities of all of the sections. The concept of dictionary compression is
 introduced in Chapter \ref{chp-rlz}. We discuss the Lempel-Ziv family of compression algorithms. The
-Relative Lempel-Ziv is also defined. In Chapter \ref{chp-results} we detail our contribution for
+Relative Lempel-Ziv method is also defined. In Chapter \ref{chp-results} we detail our contribution for
 the topic. Section \ref{sec-our} comes as a documentation of our implementation of Ukkonen's
 algorithm. The datasets and experiment environments are described in Sections \ref{data} and
 \ref{sec-env}, respectively. The results are discussed in Section \ref{sec-results}.
@@ -549,19 +549,19 @@ The length of the string equals the number of symbols it contains. Sequences of 
 A dot symbol $\cdot$ is also used to emphasise the concatenation of two symbols or strings.
 
 \begin{definition}[\textsc{String}]~\label{def-string}\\
-  For an alphabet $\Sigma$ a string $S$ is a finite sequence of symbols  ${s_1\cdots s_n}$ where each symbol $s_i \in \Sigma$.
+  For an alphabet $\Sigma$, a string $S$ is a finite sequence of symbols  ${s_1\cdots s_n}$ where each symbol $s_i \in \Sigma$.
   The length of the string $S$ denoted by $|S|$ is the number of symbols in the string.
   An empty string denoted by $\varepsilon$ contains zero symbols. An $i$th symbol of a string
   is denoted by $S[i]$.
 \end{definition}
 
 In the theoretical discussion of Chapter \ref{chp-ukkonen} we assume an integer alphabet
-where any symbol can be stored in $log (|\Sigma|)$ bits, where $|\Sigma|$ is the size of the alphabet.
+where any symbol can be stored in $\log (|\Sigma|)$ bits, where $|\Sigma|$ is the size of the alphabet.
 
 For a pair of strings we define the concepts of substring, superstring, prefix, suffix and overlap
 as follows.
 
-A concepts of a prefix and a suffix is used to define an overlap. 
+A concepts of a prefix and a suffix are used to define an overlap. 
 A string $S_p$ is a prefix of string $S$ if the first $|S_p|$ symbols of $S$ spells out $S_p$.
 Similarly, a string $S_s$ is a suffix of string $S$ if the last $|S_s|$ symbols of $S$ spells out $S_s$.
 Note that the prefix and the suffix may also be empty.
@@ -586,7 +586,7 @@ string. Trivially, any two strings have an empty overlap.
 \begin{definition}[\textsc{Overlap and Maximal Overlap}]~\label{def-overlap}\\
   Let $S$ and $T$ be strings. A string $U$ is an overlap between $S$ and $T$
   if and only if $U$ is a prefix of $S$ and a suffix of $R$.
-  If $U$ is a longest such string, it is said to be maximal overlap.
+  If $U$ is the longest such string, it is said to be maximal overlap.
 \end{definition}
 
 If a string $S$ contains another string $S'$ we say that the string $S'$ is a substring of a
@@ -604,11 +604,11 @@ By containing a string we mean that there is a sequence of symbols in $S$ that s
   as $S[i...k+i-1]$.
 \end{definition}
 
-Note that by Definition \ref{def-sub-super}, prefixes and suffices are also substrings.
+Note that by Definition \ref{def-sub-super}, prefixes and suffixes are also substrings.
 
 Let us now define a common superstring and a shortest common superstring for a set of strings
 using the previous definitions.
-If a string contains (I.e. is a superstring) each string in a set of strings, it is said to be
+If a string contains (i.e. is a superstring of) each string in a set of strings, it is said to be
 a common superstring of the set.
 
 \begin{definition}[\textsc{Common superstring}]~\label{def-cs}\\
@@ -623,16 +623,16 @@ This kind of string has a length that equals the lengths of all the substrings a
 
 \begin{example}~\label{exml-cs}\\
   Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
-  A string ``baababaababaab'' is a common superstring of the set $R$.
+  The string ``baababaababaab'' is a common superstring of the set $R$.
 \end{example}
 
 In many cases there exists one or more common superstrings that are shorter than the common
 superstring produced by this naive method.
-If a common superstring is a shortest possible it is said to be a shortest common superstring (SCS).
+If a common superstring has the shortest length possible, it is said to be a shortest common superstring (SCS).
 
 \begin{example}~\label{exml-scs}\\
   Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
-  A string ``aababaa'' is an shortest common superstring of the set $R$.
+  A string ``aababaa'' is a shortest common superstring of the set $R$.
 \end{example}
 
 \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}\\
@@ -645,7 +645,7 @@ A reduced set of strings is a set of strings such that no string in the set is a
 of another string in that set. This property is important since the later discussion of the
 reduction between the \textsc{Shortest Common Superstring} and \textsc{Longest Hamiltonian Path}
 problems only works for a reduced sets of strings. The SCS of the reduced set of strings
-is same as the SCS of the same set of strings that is not reduced. 
+is the same as the SCS of the same set of strings that is not reduced. 
 
 \begin{definition}[\textsc{Reduced Set of Strings}]~\label{def-reduced}\\
   Let $R=\{S_1, S_2,...,S_n\}$ be a set of strings. The set $R$ is called reduced
@@ -677,11 +677,11 @@ Now we have defined the necessary string-related concepts. Next the
 
 The algorithm presented in Chapter \ref{chp-ukkonen} solves the approximation of the
 \textsc{Shortest Common Superstring} problem by reducing it to a \textsc{Longest Hamiltonian Path}
-problem in a weighted digraph. For this reason, we will also define a necessary terminology
+problem in a weighted digraph. For this reason, we will also define the necessary terminology
 to understand the latter problem. The proof of the reducibility is given in Chapter \ref{chp-ukkonen}.
 
-Regardless of the type of a graph, a Hamiltonian path in a graph is a path (sequence of connected nodes)
-that contains every node in the graph exactly once. Formally,
+For any given graph, a Hamiltonian path in a graph is a path (sequence of connected nodes)
+that contains every node in the graph exactly once.
 
 \begin{definition}[Hamiltonian Path]~\label{def-hampath}\\
   Let $G=(V,E)$ be a graph. A hamiltonian path in $G$ is a $|V|$ sized sequence of nodes
@@ -689,8 +689,8 @@ that contains every node in the graph exactly once. Formally,
   $v_j$ there is an edge $(v_i,v_j)\in E$.
 \end{definition}
 
-For a weighted graph a longest Hamiltonian path is a Hamiltonian path of a maximum length.
-I.e, the sum of the weights of the edges is maximal.
+For a weighted graph a longest Hamiltonian path is a Hamiltonian path of maximum length.
+i.e, the sum of the weights of the edges is maximal.
 
 \begin{definition}[Longest Hamiltonian Path]~\label{def-longest-hampath}\\
   Let $G=(V,E,w())$ be a weighted graph. A longest Hamiltonian path in $G$ is a Hamiltonian
@@ -700,11 +700,12 @@ I.e, the sum of the weights of the edges is maximal.
 Finally, we define a \textsc{Longest Hamiltonian Path} problem as follows
 
 \begin{definition}[\textsc{Longest Hamiltonian Path Problem}]~\label{def-longest-hampat-problem}\\
-  Given a weighted graph $G$, a longest Hamiltonian path problem asks to find a
+  Given a weighted graph $G$, the longest Hamiltonian path problem asks to find a
   longest hamiltonian path of $G$. If there are multiple such paths, any of them can
   be returned.
 \end{definition}
 
+% TODO. Simon's feedback.
 \chapter{Ukkonen's Algorithm}~\label{chp-ukkonen}
 
 In this chapter we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
@@ -2033,10 +2034,10 @@ binary trees with $O(log(|\Sigma|))$ time complexity. This conclusion leads us t
 
 Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
 Using the structure and repetitiveness of the input, longer input sequences are encoded as shorter
-tokens. This reduces the space needed to save the original input data. In this approach a so-called
-dictionary is maintained. The dictionary may be static or it can be updated during the (de)compression.
+tokens. This reduces the space needed to store the original input data. In this approach a so-called
+dictionary is maintained. The dictionary may be static or it can be updated during the (de)compression process.
 The tokens (also called phrases) contain pointers to the dictionary such that each token
-unambigiously corresponds to a sequence of symbols. \citep{Pu05} 
+unambigiously corresponds to a sequence of symbols \citep{Pu05}.
 
 In this chapter we discuss the Lempel-Ziv family \citep{Ziv77}, \citep{Ziv78}, \citep{Welch84}
  of dictionary compression methods.
@@ -2052,34 +2053,35 @@ Lempel-Ziv77 is an adaptive dictionary compression method. By adaptive, we mean 
 compression the dictionary is updated depending on the input. At first, the dictionary is empty. 
 The original LZ77 algorithm uses a part of the input, called a sliding window, as a dictionary.
 However, we introduce a version of LZ77 that has an unbounded window size, allowing the phrases
-to point to any position of the input that is already processed, i.e. the dictionary consists of the
+to point to any position of the input that is already processed, i.e, the dictionary consists of the
 already processed part of the input.
 
 Each phrase in LZ77 is either 
 \begin{enumerate}
-\item a literal phrase or
+\item a literal phrase, or
 \item a repeat phrase.
 \end{enumerate}
 
-Literal phrases are used when the current symbol in the input file is first encountered. The repeat
+Literal phrases are used when the current symbol in the input file has not been seen before in the file.
 phrases consist of a pointer and a length, where the pointer defines the point in the already
 processed text where the repeating sequence of symbols starts. To use a repeat phrase, the text up
 to the pointer must already be tokenized.
 The length encodes the size of the original text
 corresponding to the repeat phrase. The more repetitive the input text is, the bigger the length
 values in repeat phrases are. This means a single phrase encodes a longer portion of the original
-text, resulting in a better compression. On the other hand, if the length parameter is small enough,
-to save a single repeat phrase we need more space than saving the original text as is. For example,
+text, resulting in better compression. On the other hand, if the length value is small enough,
+a single repeat phrase may need more space than the original text as is. For example,
 if the repeat phrase is encoded using two 4-byte integers and the input symbols are encoded in a
-single byte, the repeat phrase with a length parameter less than 8 would actually increase the
-space requirement of the compression relative to the original text.
+single byte, the repeat phrase with a length of less than 8 would actually
+consume more space than the original text.
+
 
 \begin{example}
   Let us simulate the LZ77 algorithm for a text string $T=$ ``abbabaabbaba''. We denote literal phrases
   with $[\sigma]$, where $\sigma$ is the symbol of the phrase. Repeat phrases are denoted
   with (pos,len). The processing starts
   at the first symbol of $T$. Since the symbol ``a'' is encountered for the first time we create a
-  literal phrase $[$``a''$]$. Same thing happens with the next symbol ``b''. The third symbol ``b'' is
+  literal phrase $[$``a''$]$. The same thing happens with the next symbol ``b''. The third symbol ``b'' is
   encoded with a repeat phrase $(2,1)$ which means that the phrase encodes a string of length 1 starting
   at position 2. The next repeat phase $(1,2)$ encodes the string ``ab''. At this point we have encoded
   the string ``abbab''. The next phrase encodes the following ``a'' with a phrase $(1,1)$. Since
@@ -2089,7 +2091,7 @@ space requirement of the compression relative to the original text.
 \end{example}
 
 % decompression O(n)
-To decompress the LZ77 parse we process the phrases from the beginning to the end. For each
+To decompress the LZ77 parse we process the phrases from the first phrase to the last phrase. For each
 phrase, using the already decompressed data, we augment the dictionary with the text corresponding
 to the phrase. After the decompression, the generated dictionary is the same as the dictionary used
 with the compression. In other words, the resulting decompression dictionary is the same sequence
@@ -2104,9 +2106,9 @@ research has shown that RLZ scales well with any repetitive data, providing
 one of the best (de)compression time and compression ratios \citep{Gagie16}.
 
 To compress a collection of genomes of the same species, RLZ works as follows. One genome is selected
-to a base sequence. This genome acts as a static dictionary. Further, LZ77 parse of every other sequence
+as a base (or reference) sequence. This genome acts as a static dictionary. Further, an LZ77-like parse of every other sequence
 is generated relative to the base. The LZ77 parses of the other sequences are restricted to have
-references only to the base sequence acting as a dictionary. As opposed to the adaptive dictionary
+references only to the base sequence. As opposed to the adaptive dictionary
 of the LZ77 algorithm, where the dictionary is constructed during the (de)compression, RLZ uses
 a static dictionary, providing random access for any phrase whether or not the decompression
 of the previous part of the data are already performed. Definition \ref{def-rlz} formalizes the
@@ -2124,15 +2126,12 @@ Relative Lempel-Ziv parsing (or factorization).
 %random access tulee siitä että toisin kuin muissa lz varianteissa dictionary on staattinen ja
 %kokoajan saatavilla. ei ole tarvetta purkaa koko tiedostoa että pääsee haluttuun kohtaan.
 
-%% todo: kysy puglisilta mikä on w_0 idea?
-todo: what is the point of $w_0$? 
 \begin{definition}~\label{def-rlz}
   Let $T$ and $R$ be strings. Relative Lempel-Ziv factorization of $T$ relative to $R$, denoted by
-  RLZ$(T|R)$ is a factoriszation $T=w_0w_1w_2\cdots w_n$. The first factor $w_0$ is an empty string
-  $\varepsilon$ and for each $1\leq i \leq n$, $w_i$ is either
+  RLZ$(T|R)$ is a factoriszation $T=w_1w_2\cdots w_n$, where for each $1\leq i \leq n$, $w_i$ is either
   \begin{enumerate}
   \item a symbol $\sigma$ that does not occur in $R$, or
-  \item the longest prefix of $T[j...|T|]$, where $j = |w_0\cdots w_{i-1}|$ that is a substring of $R$.
+  \item the longest prefix of $T[j...|T|]$, where $j = |w_1\cdots w_{i-1}|$ that is a substring of $R$.
   \end{enumerate}
   Each factor $w_i$ is encoded as a pair $(p_i,l_i)$ where $p_i$ is the index of $R$ where $w_i$
   starts from and $l_i$ is the length of $w_i$.
@@ -2148,21 +2147,21 @@ todo: what is the point of $w_0$?
   \end{tabular}
   \end{center}
   Let $T=$ ``abbababaaaaabbabaa'' and $R=$``abbabaa'' be strings. The RLZ factorization of $T$
-  relative to $R$ is RLZ$(T|R)=\varepsilon(1,6)(5,3)(6,2)(1,7)$.
+  relative to $R$ is RLZ$(T|R)=(1,6)(5,3)(6,2)(1,7)$.
 \end{example}
 
-As discussed before, RLZ can be used as a general purpose compressor. With a collection of
+As discussed above, RLZ can be used as a general purpose compressor. With a collection of
 genomes of the same species, one genome is a natural choice for a dictionary that other genomes are
-factorized against to. Choosing the dictionary for arbitrary data (not necessarily a collection of the
+factorized against. Choosing the dictionary for arbitrary data (not necessarily a collection of the
 same kind) is however more difficult since there is no natural reference. As the number of factors
-highly depends on the dictionary, this decision is however essential. Fortunately, it has been shown
+highly depends on the contents of the dictionary, this decision is however essential. Fortunately, it has been shown
 that even with a lack of a natural reference, an effective artificial one can be easily constructed.
 \citep{Hoobin11} has shown that by taking random samples of the data and concatenating them togeter,
 an efficient  artificial reference can be constructed. The achieved compression ratios are surprisingly
 good with dictionaries as small as 0.1\% of the original input size. Further \citep{Gagie16} have
 given the theoretical analysis of why this method works so well.
 
-Our hypothesis is that the RLZ compression with general data can be further improved using the
+Our hypothesis is that RLZ compression with general data can be further improved using the
 sampling method described in \citep{Hoobin11}. The idea is to eliminate redundancy in the
 artificially constructed dictionary. One simple way of achieving this is to use a shortest common
 superstring approximation to compress the dictionary. In principle, depending on the repetitiveness
@@ -2170,12 +2169,12 @@ of the data, this method should decrease the dictionary size while keeping the n
 roughly the same, thus improving the compression. Another possibility is to use a compressed
 dictionary that is the same size as the conventionally constructed dictionary. Theoretically, the
 RLZ factorization against this kind of dictionary should result in a decreased number of factors,
-hence improving the compression.
+hence improving compression.
 
 This hypothesis has been tested and verified in this thesis. The results presented in Section
 \ref{sec-results} show that the number of factors is drastically decreased when the dictionary
 for several highly repetitive corpuses are constructed using the common superstring approach.
-Also, runtimes for the dictionary construction remain low when a linear time approximation
+Also, runtimes for dictionary construction remain low when a linear time approximation
 algorithm for the SCS problem is used.
 
 
@@ -2226,7 +2225,7 @@ aspects of the implementation and usage of the code. We also describe the data t
 benchmark the efficiency of the implementation as well as the experiments related to
 relative Lempel-Ziv compression using the SCS of the sampled original data as the reference string.
 
-Finally, we show multiple tables of data that compare the implementation with
+Finally, we present experimental results that compare the implementation with
 another implementation of the same heuristic. We also show how the number of factors in the
 RLZ compression is reduced when the SCS approach is used.
 
@@ -2239,7 +2238,7 @@ RLZ compression is reduced when the SCS approach is used.
 %for this thesis.
 The implementation is written in the C programming language without any external
 libraries. Only the C standard library and POSIX libraries were used.
-Although algorithms presented in Chapter
+Although the algorithms presented in Chapter
 \ref{chp-ukkonen} are relatively short, the actual implementation also contains other code
 that binds Algorithms \ref{ac-goto}, \ref{ac-fail}, \ref{ukk-pre} and \ref{ukk-h} together. 
 Various data structures were also implemented for the algorithm. In total, the implementation consists
@@ -2251,17 +2250,18 @@ As discussed earlier, the goto function of the AC-machine can be implemented in 
 ways. In our implementation the underlying data structure for the goto function is defined at compile
 time to be either a two dimensional array or a red-black tree \citep{Cormen09}. Hence, by Theorem \ref{thm-overall-time}
 the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or
-$O(n\cdot log(|\Sigma|))$, respectively.
+$O(n\cdot\log(|\Sigma|))$, respectively.
 
 % Explain string quicksort
 Since the definition of the input of the algorithm is a set of keywords, we have to guard against that
 constraint too. In practice, that means we need to examine the input keywords and remove any possible
 duplicate values. The duplicate removal is implemented by sorting the input keywords and removing any
 consecutive duplicate strings. The keywords are sorted using string quicksort \citep{Bentley97}.
-Therefore the overall time complexity of our software is $O(n\cdot log(n))$. At the time of writing, the
+Therefore the overall time complexity of our software is $O(n\cdot\log(n))$. At the time of writing, the
 duplicates are forced to be searched. There is no command line parameter that would omit the 
-$O(n\cdot log(n))$ time string sorting. However, as we see later even with the $O(n)$ implementation
-of Ukkonen's algorithm the $O(n\cdot log(n))$ time preprocessing is insignificant even with relatively
+$O(n\cdot\log(n))$ time string sorting if it were already known that no duplicates were present.
+However, as we see later even with the $O(n)$ implementation
+of Ukkonen's algorithm the $O(n\cdot\log(n))$ time preprocessing is insignificant even with relatively
 large inputs.
 
 % Explanation of the limitations: char
@@ -2283,8 +2283,8 @@ To optimize the memory consumption and the execution time depending on the input
 various alternative approaches were implemented.
 The purpose was to include various compile or runtime flags that would change the behaviour
 of the application. All of those modifications except one were discarded. The current version includes
-a compile-time macro OPTIMIZE\_LINKS that changes the data structure that is used to the the children of each
-state. Later on we refer to this parameter as links optimization. The optimization works as follows.
+a compile-time macro OPTIMIZE\_LINKS that changes the data structure that is used to the children of each
+state. Later on we refer to this parameter as the {\em links optimization}. The optimization works as follows.
 Each state must be able to refer to all of its children in time linear with respect to the number
 of children.
 Each child of a state is saved in a list. When links optimization is turned on, this list is
@@ -2314,7 +2314,7 @@ to 2048 symbols but can be modified in compile time by setting the desired value
 \texttt{MAX\_LINE}.
 Note that the \texttt{MAX\_LINE} macro defines the size of the buffer, not the size of a maximum
 keyword, and
-that the keywords are read to the buffer with the newline character (that is not part of the keyword)
+that the keywords are read to the buffer with the newline character (that is considered not part of the keyword)
 and that the char arrays must be terminated with the \texttt{NULL} character, the actual maximum
 keyword size is \texttt{MAX\_LINE} -2.
 
@@ -2325,8 +2325,7 @@ up to 255-length keywords are supported.
 When a keyword longer than 255 is used, the data type for the codomain of the depth function
 must be larger. By defining the compile-time macro \texttt{LONG\_KEYS} the depth function
 uses a 16-bit datatype instead. This allows the maximum keyword length to be $2^{16}-1$ which
-should be enough for the RLZ dictionary construction. \ref{joku}
-todo: Reference for that?
+should be enough for the RLZ dictionary construction.
 
 The underlying data type that encodes the numbers of states defaults to a 4-byte unsigned integer. That
 means the maximum number of states that the AC-machine can encode is $2^{32}$ which is approximately
@@ -2339,7 +2338,7 @@ unsigned integers. Note that it is not necessary to set the \texttt{MAX\_STATES}
 even if the input size were less than $2^{16}$ bytes. This only affects the memory consumption of
 the program which is anyway quite small with input sizes less than 16KiB.
 
-There are also two compile-time options that affects the execution. If the macro \texttt{SCS}
+There are also two compile-time options that affect the execution. If the macro \texttt{SCS}
 is not defined,
 the program only executes Algorithms \ref{ac-goto} and \ref{ac-fail} creating a plain AC-machine
 for the input keywords. This option was added in order to compare to the construction of the
@@ -2347,10 +2346,10 @@ AC-machine with another similar implementation \citep{Salmela06}. When using the
 shortest common superstring calculation, the \texttt{SCS} macro must always be defined. The last
 compile-time option is the INFO macro. When \texttt{INFO} is defined, additional information
 of the calculation
-is printed along with the approximate shortest common supertsing. The additional information contains
-some used data types, number of removed duplicates in the input keywords, number of different symbols
+is printed along with the approximate shortest common superstring. The additional information contains
+some used data types, the number of removed duplicates in the input keywords, the number of different symbols
 in the input (real alphabet size), the number of states and a table that lists the most important
-phases of the execution and their time usages. Without the INFO macro the program only outputs
+phases of the execution and their time usages. Without the INFO macro the program outputs only
 the approximate SCS for the input.
 
 The following table summarizes the available compile-time options.\\
@@ -2421,8 +2420,8 @@ also generated.
 
 \paragraph{Usage:}
 When the binary is ready to use there are two methods for executing it. The simplest method is to
-execute the binary with a single input file. The file should contain single byte encoded text with
-line feed (keycode 10) delimited keywords. The file should end with a line feed. Note that the input
+execute the binary with a single input file. The file should contain a single byte encoded text with
+line feed (ASCII 10) delimited keywords. The file should end with a line feed. Note that the input
 can be any single byte encoded text with the following constraints:
 
 \begin{enumerate}
@@ -2482,8 +2481,6 @@ user@host:.../ukkonen-90/$ target/scs -b -f input -l 128 -c 0.1
 \end{minted}
 
 \paragraph{Tests:}
-TODO: should I just ignore the tests in the thesis?
-
 Our implementation has been tested to be correct with three different sets of tests. The tests are
 located in the same Git repository as the actual implementation. There is also a helper script for
 generating random test instances and scripts that run the actual tests.
@@ -2506,22 +2503,22 @@ that each keyword is present in the output of our implementation.
 
 The same set of tests is also used with the \texttt{test3.sh} file. In this test we compile two version
 of our implementation, one which uses the direct indexing and another that uses the red-black tree
-implementation. The tests instances are then ran with each version of the implementation and for each
-test, the test is passed if the generated superstrings are equal. In othre words the idea of this
+implementation. The tests instances are then run with each version of the implementation and for each
+test, the test is passed if the generated superstrings are equal. In other words, the idea of this
 test is to ensure that the data structure that is used with the goto function does not affect
 the outcome.
 
 The second set of test instances is rather small. There are only few very small instances with binary
 alphabet. The test script \texttt{test2.sh} runs these tests as follows. First each test instance is
 executed with a python script \texttt{scs.py} that uses the \texttt{pysat} python library to calculate
-the length of a longest common superstring of the instance. The same instance is then ran with our
-implementation and the compression values for both are calculated. Finally the compressions is compared
-and the test is considered to be passed if the compression of acquired with our implementation is
+the length of a longest common superstring of the instance. The same instance is then run with our
+implementation and the compression values for both are calculated. Finally the compression is compared
+and the test is considered to be passed if the compression acquired with our implementation is
 at least half of the optimal compression. The idea of this test set is to make sure that the proven
 quality of the compression holds.
 
-Note that in order to run all the tests the python environment with the pysat library must be configured.
-Note also that the make format uses GNU specific features that requires GNU Make or or GNU Make compliant
+Note that in order to run all the tests, the python environment with the pysat library must be configured.
+Note also that the make format uses GNU specific features that requires GNU Make or GNU Make compliant
 makefile software. 
 
 
@@ -2530,13 +2527,13 @@ makefile software.
 \section{Benchmark Data}~\label{data}
 Here we describe the two datasets that are use in Section \ref{sec-results}. We discuss the origin
 of both of those datasets and inspect their basic properties. Since the data is slightly manipulated
-to fit our experiments we also describe the preprocessing that had been done.
+to fit our experiments we also describe this preprocessing.
 
 \paragraph{PizzaChili datasets:}
 PizzaChili \citep{PizzaChili} is a deprecated project of University of Pisa and University of Chile,
 whose purpose is to
 share publicly available corpuses and related full-text indices for others to experiment with.
-The dataset defined here consists of some of the repetitive text collections from PizzaChili project.
+The dataset defined here consists of some of the repetitive text collections from the PizzaChili project.
 We refer to this dataset as the PizzaChili dataset.
 There are seven files of repetitive text from real (as opposed to artificial) origin in the
 PizzaChili dataset. The following listing gives a short description of each of those files. The table
@@ -2586,21 +2583,21 @@ of the size of the original file. The parameters $c$ and $l$ have the following 
 combinations: (15, 128), (15, 254), (25, 254), (50, 254), (50, 512), (75, 512), thus at total six
 sampled files are generated. The sampling is performed by selecting a random position between
 the beginning of the file and the end of the file subtracted by $l$ and copying a string of length
-$l$ from that point to the sample file. This process is then repeated until the wanted file size is
-achieved. The possible duplicate lines are removed and the process is repeated until the wanted
-number of lines is reached. Finally we have a sample file that contains unique keywords of length
+$l$ from that position to the sample file. This process is then repeated until the wanted file size is
+achieved. Any duplicate lines are removed and the process is repeated until the wanted
+number of lines is reached. At the end of this process we have a sample file that contains unique keywords of length
 $l$ such that the size of all keywords combined is $c\%$ of the original size. The files are
 named \texttt{s\_c\_l}. For example the file \texttt{cere\_50\_128} has size 220MB
 (plus the number of newlines) and contains unique keywords of length 128.
 
-\paragraph{The Dna dataset:}
-The second dataset is called the Dna dataset. The origin of this data is the Sequence Read Archive
+\paragraph{The DNA dataset:}
+The second dataset is called the DNA dataset. The origin of this data is the Sequence Read Archive
 of National Library of Medicine. The data consists of 3.8 million reads of escherichia coli,
 100 symbols of each.
  The alphabet $\Sigma=\{A,C,G,T,N\}$ size of the original file is 5.
-The 'N' characters were relatively rare in this file (3506 / 3849544 lines).
+The 'N' characters were relatively rare in this file (3506 out of 3849544 lines contain at leas one 'N').
 Since the PizzaChili dataset does not have a
-file with alphabet size less than 5, the Dna dataset was modified by removing all lines containing
+file with alphabet size less than 5, the DNA dataset was modified by removing all lines containing
 the 'N' character, resulting in a file with alphabet of size 4.
 Further, the duplicates were removed from the data and the data was randomly sampled to 11 different
 files as follows. The first file was from the main file such that the number of lines was 3125, thus
@@ -2608,24 +2605,24 @@ the first has a size of $3125+3125\cdot 100 = 315625$ bytes. The first file was 
 \texttt{1\_dna\_3125.acgt}. The process was repeated for the last ten files such that the number
 of lines for each file was two times the number of lines in the previous file.
 The same naming convention
-was used with the exception that each consecutive set of three zeros was substituted with the letter k.
+was used with the exception that each consecutive set of three zeros was substituted with the letter 'k'.
 The first character in the file name is a hexadecimal digit of the number of the file.
 For example, the third file was named to \texttt{3\_dna\_12500.acgt}, the fourth file was named
-to \texttt{4\_dna\_25k.acgt} and the last file was named to \texttt{B\_dna\_3200k.acgt}
+to \texttt{4\_dna\_25k.acgt} and the last (11th) file was named to \texttt{B\_dna\_3200k.acgt}
 
 \section{Benchmark Setups}~\label{sec-env}
 
 The experiments were done in two different environments. In this section we describe the relevant
-aspects of the used software and hardware for both of them. We also name the environments so they
+aspects of the software and hardware for both of them. We also name the environments so they
 can be referred to in Section \ref{sec-results}. The first environment is called Haapa. It is the more
 powerful of the environments providing, due to its larger amount of memory, a possibility to run
 much bigger problem instances. The second
 environment is referred to as Env2. For running
-our experiments, Haapa is however the slower one of the two environments. Although Haapa has many times
+our experiments, Haapa is however the slower of the two environments. Although Haapa has many times
 more CPUs, the single CPU is significantly slower. Since the code used in the experiments
 are all single-threaded, the performance of a single core is all that matters. The memory
 clock speed in Haapa is also configured to be significantly slower, thus limiting the performance
-of our implementation with huge memory requirements. Less experiments are run with Env2 since the
+of our implementation with huge memory requirements. Less experiments are run on Env2 since the
 memory of the machine provided a limitation to the size of the problem instances.
 Table \ref{tbl-sys} describes the main features of both environments.
 
@@ -2657,12 +2654,12 @@ Table \ref{tbl-sys} describes the main features of both environments.
 \section{Results}~\label{sec-results}
 In this section we examine the performance of our implementation. As a reference we use another
 implementation of the same greedy heuristic for the approximate shortest common superstring problem.
-The reference implementation \citep{Alanko19} performs the computation in a space efficient way using
-only $O(n \cdot log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation
-is also $O(n \cdot log(|\Sigma|))$. In contrast, our implementation of Ukkonen's algorithm
+The {\em reference implementation} \citep{Alanko17} performs the computation in a space efficient way using
+only $O(n \cdot\log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation
+is also $O(n \cdot\log(|\Sigma|))$. In contrast, our implementation of Ukkonen's algorithm
 works in linear time when the code is compiled to use direct indexing for the operations with
-the goto function. Our implementation also has a possibility to use red-black trees for the goto
-operations, thus both of these approaches were tested.
+the goto function. Our implementation is also able to use red-black trees for the goto
+operations. Both of these approaches were tested.
 %This difference in the time complexities can be seen especially with a large input sizes.
 In addition, as discussed in Section
 \ref{sec-our}, our implementation has an additional compile-time parameter that defines the data
@@ -2672,13 +2669,13 @@ our implementation, at total:
 \begin{enumerate}
 \item Direct indexing ($O(n)$) with links optimization enabled.
 \item Dicect indexing ($O(n)$) with links optimization disabled.
-\item Red-black tree ($O(n\cdot log(|\Sigma|))$) with links optimization enabled.
-\item Red-black tree ($O(n\cdot log(|\Sigma|))$) with links optimization disabled.
+\item Red-black tree ($O(n\cdot\log(|\Sigma|))$) with links optimization enabled.
+\item Red-black tree ($O(n\cdot\log(|\Sigma|))$) with links optimization disabled.
 \end{enumerate}
 
 For convinience we refer these versions as DIE, DID, RBE and RBD, respectively. All of the results,
-from our as well as the reference implementation,
-represented in this section are from binaries that have been compiled with the same C
+from our implementations as well as the reference implementation,
+presented in this section are from binaries that have been compiled with the same C
 compiler (gcc) with the same optimization settings. The predefined optimization set \texttt{-O3} have
 been used as well as the linking time optimization \texttt{-flto}. The following process was executed
 with all presented time benchmarks. Each experiment was repeated five times. For
@@ -2687,17 +2684,17 @@ at least 5 percent difference, those values were removed and the new median valu
 If there was an even number of values left, the bigger one of the two middle values were chosen.
 The idea behind this procedure was to eliminate the possible outliers from the results. Most often
 there were no outliers and the presented value was acquired immediately. For the PizzaChili files
-with keyword lengths $\leq 256$ there was $31/700$ discarded values when time usages were
+with keyword lengths $\leq 256$ there were $31/700$ discarded values when time usages were
 measured in Haapa.
 
 \paragraph{Preprocessing time:}
-As discussed in Section \ref{sec-our}, our program uses the $O(n\cdot log(n))$ string quicksort
+As discussed in Section \ref{sec-our}, our program uses the $O(n\cdot\log(n))$ string quicksort
 algorithm to remove the possible duplicate input keywords. By compiling our program with the
 INFO macro defined, we get, among other things, an analysis of the time spent in different phases
 of the program. Referring to Tables \ref{runtimes-15-128}, \ref{runtimes-15-254},
 \ref{runtimes-25-254} and \ref{runtimes-50-254}, the RBD implementation was the fastest one
 to process any sampled \texttt{einstein.en.txt}
-file. Correspondingly the DIE version was the fastest one for any \texttt{cere} file. In Table
+file. Correspondingly, the DIE version was the fastest one for any \texttt{cere} file. In Table
 \ref{table-duplicate-time}
 we show the time portion of our implementations (DIE for \texttt{cere} and RBD for
 \texttt{einstein.en.txt}) that were
@@ -2724,12 +2721,12 @@ for the preprocessing phase.
 Investigating Table \ref{table-duplicate-time}, a few observations can be made.
 
 \begin{enumerate}
-\item With the same line length, increasing the input size increases the time portion required to preprocess the input. This is expected since the preprocessing part of the program works in $O(n\cdot log(n))$ time, which is more than the implementation of the greedy heuristic.
+\item With the same line length, increasing the input size increases the time portion required to preprocess the input. This is expected since the preprocessing part of the program works in $O(n\cdot\log(n))$ time, which is asymptotically more than the implementation of the greedy heuristic.
 \item With the same input size, an increase in the keyword length causes the relative preprocessing time to decrease. 
 \end{enumerate}
 
 As we see, the maximum relative preprocessing time for the cere files is 1.06\% of the total runtime.
-The results were similar for all instances with a small ($<12$) alphabets. Based on this data,
+The results were similar for all instances having small ($<12$) alphabets. Based on this data,
 it is reasonable to say that the preprocessing time of the program is insignificant for instances
 with a small alphabet while the instance sizes are in the ranges of our experiment. For bigger
 alphabets ($|\Sigma|>12$) the relative preprocessing time is greater. However, in our experiments
@@ -2740,9 +2737,9 @@ significantly more than 5\%.
 
 
 \paragraph{Performance comparisons:}
-The performance of our implementation and the reference implementation was compared. The acquired
+The performance of our implementation and the reference implementation were compared. The acquired
 time usages were measured using the GNU time software. For the PizzaChili dataset, all files with line
-lengths of 128, 254 and 512 were investigated. This experiment was run in Haapa. For the Dna dataset,
+lengths of 128, 254 and 512 were investigated. This experiment was run in Haapa. For the DNA dataset,
 the comparisons were run for each file. This experiment was also run in Env2 for all but the
 biggest problem instance, since the memory of Env2 was not sufficient for that.
 
@@ -2752,7 +2749,7 @@ Tables \ref{runtimes-15-128},
 runtimes for the set of each 7 files sampled with the same parameters. The File column is the
 prefix of the used filename. For examples the files in Table \ref{runtimes-15-128} are
 \texttt{cere\_15\_128}, \texttt{coreutils\_15\_128} and so on. The column labeled Reference shows
-the runtimes with the reference implementation. Colums labeled with DIE, DID, RBE and RBD shows the
+the runtimes with the reference implementation. Columns labeled with DIE, DID, RBE and RBD show the
 runtimes of our implementation versions. The best runtimes for each input file are bolded.
 The last two columns are discussed later.
 
@@ -2837,7 +2834,7 @@ The last two columns are discussed later.
 \end{center}
 
 As discussed in Section \ref{sec-our}, the links optimization was designed to improve the performance
-of our implementation with small alphabets. In general, also the direct indexing over two
+of our implementation with small alphabets. In general, the approach of direct indexing over a two
 dimensional array is only reasonable with small alphabets, since it significantly increases
 the memory consumption of the program. Also, in practice, our implementations with red-black trees
 were faster with big alphabets. Investigating the runtimes from Tables \ref{runtimes-15-128},
@@ -2846,31 +2843,34 @@ were faster with big alphabets. Investigating the runtimes from Tables \ref{runt
 \begin{enumerate}
 \item The DIE version was the fastest for all instances with small ($<12$) alphabets.
 \item The RBD version was the fastest for all instances with big ($>12$) alphabets.
-\item The DID version was slightly ($<1\%$) faster than the DIE version of for the files \texttt{influensa\_128\_15} and \texttt{influensa\_128\_25} ($|\Sigma| = 12$).
+\item The DID version was slightly ($<1\%$) faster than the DIE version for the files \texttt{influensa\_128\_15} and \texttt{influensa\_128\_25} ($|\Sigma| = 12$).
 \item The RBE version was the fastest for none of the instances.
 \end{enumerate}
 
 As expected, the DID and RBE versions are generally not competitive with the DIE
-and RBD versions. In practice, we can limit the number of our implementations to two.
+and RBD versions.
+%In practice, we can limit the number of our implementations to two.
 Later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
 or RBD (when alphabet size $>12$) versions of our implementation.
 
 % refinetty tähän asti.
+% TODO: table should be figure
 Let us now examine the runtimes more carefully for the instances with keyword lengths 254.
 Table \ref{tbl-graphs} illustrates the runtimes for each instance in PizzaChili dataset
 with keyword length 254.
 Thus, each plot uses the data from Tables
 \ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254}.
 Note that since the data points are not uniformly distributed in the x axis,
-these graph does not illustrate the time complexities of the programs. 
-The x marked blue lines and cirle marked black lines show the time usages of the reference
+these graphs do not illustrate the time complexities of the programs. 
+The x marked blue lines and circle marked black lines show the time usages of the reference
 implementation and our implementation, respectively. Runtimes in seconds are presented in the
 left vertical axis. As we see, the time usage of the reference implementation grows
 more rapidly in every case. This relative change in runtimes is illustrated with
-the orange triangel marked lines. The presented values are the percentages of the
-time usage of our implementation compared to the time usages with the reference
-implementation. The percentage values are shown in the right vertical axis.
-This data suggest that our implementation outperforms the reference implementation
+the orange triangle marked lines.
+The values are presented as a percentage of the time usage of our implementation
+compared to the time usages of the reference implementation.
+The percentage values are shown on the right vertical axis.
+This data suggests that our implementation outperforms the reference implementation
 with big enough inputs. However, investigating Tables \ref{runtimes-15-128} and
 \ref{runtimes-15-254} we also see
 that increasing the line length while keeping the instance size constant affects
@@ -2878,14 +2878,14 @@ the runtimes contrarily. For every file, the time usage of our implementation
 increases when the line length is increased from 128 to 254 while keeping the
 cut in 15 percent. With the reference implementation, the time usage grows only
 with the einstein files. Moreover, the growth is relatively smaller than the growth with
-our implementation. By this data, we assume that there are instances similarly sampled
+our implementation. By this data, we assume that there are probably instances similarly sampled
 from PizzaChili data for which the reference implementation is faster.
 
 Tables \ref{runtimes-50-512} and \ref{runtimes-75-512} show similar data for the PizzaChili
 dataset with line lengths 512. These results are consistent with the runtimes of the smaller instances.
 That is, our implementation compared to the reference implementation gets faster when the size of
 the instances grows while the keyword length remains constant. Also, the relative speed of our
-versus the reference implementation decreases while the input size remains constant and the
+implementation versus the reference implementation decreases while the input size remains constant and the
 line length increases. 
 
 \vspace{-1cm}
@@ -2909,6 +2909,7 @@ line length increases.
   \end{table}
 \end{center}
 
+% TODO units? caption ? table should be figure. 
 %\afterpage{%
 %\thispagestyle{empty}
 \begin{table}[H]
@@ -3251,11 +3252,11 @@ line length increases.
 \hspace{0.6cm}
 \begin{minipage}{.5\textwidth}
   \caption{Illustration of the runtimes of the PizzaChili files with 254 line length. The blue lines
-    marked with x show the runtimes of the reference implementation. Black lines market with * show the
-    runtimes of our implementation. Runtimes are shown in the left vertical axis. Orange lines marked
-    with triangles show the percentage of the runtime of our implementation compared to the reference
-    implementation. Percentage values are shown in the right vertical axis. The horizontal axis
-    shows the cut parameter of the sampled input file.}
+    marked with x show the runtimes of the reference implementation. Black lines market with circles
+    show the runtimes of our implementation. Runtimes are shown (in seconds) in the left vertical
+    axes. Orange lines marked with triangles show the percentage of the runtime of our implementation
+    compared to the reference implementation. Percentage values are shown in the right vertical axes.
+    The horizontal axes show the cut parameter of the sampled input file.}
   \label{tbl-graphs}    
 \end{minipage}
 
@@ -3289,17 +3290,17 @@ line length increases.
 
 
 % esitellään vastaavat tulokset dna datalle. Todedaan että lineaarisuus on hyvin näkyvissä
-  Let us now examine the runtime benchmarks for the Dna dataset. This experiment was run in both
+  Let us now examine the runtime benchmarks for the DNA dataset. This experiment was run in both
   environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
-  labeled with \# defines the prefix of the filename. E.g. the row starting with 5 corresponds the
+  labeled with \# defines the prefix of the filename. For example, the row starting with 5 corresponds the
   file \texttt{5\_dna\_5k.acgt}, which consists of 5000 lines of DNA sequences, 100 bases in each
   line.
   
   The columns labeled Reference and DIE show the runtimes in seconds.
   Due to the high memory usage of our implementation, the last file could not be run in Env2.
-  For both environment, there is
+  For both environments, there is
   also a Percentage column, which shows the runtimes of our implementation in percentages compared
-  to the runtimes of the reference implementation. The last row contains the compression ratio of the
+  to the runtimes of the reference implementation. The last column contains the compression ratio of the
   generated superstring, that is the size of the superstring divided by the size of the input instance.
   Note that the achieved compression is a result of the greedy heuristic, which is used by both
   of the implementations. Hence, the compression is the same to the number of significant digits
@@ -3307,11 +3308,10 @@ line length increases.
 
   From the data, we can observe that the runtimes are significantly higher in Haapa. This result is
   expected, since Haapa has an older CPU with lower clock speed. The memory speed in Haapa is
-  also lower. With the smaller instances, the reference implementation has a lower runtimes.
+  also lower. With the smaller instances, the reference implementation has lower runtimes.
   In Haapa, the reference implementation is faster with instance sizes $\leq$ 200,000 lines.
   In Env2 this treshold is 100,000 lines. The corresponding instance sizes in mebibytes are
-  20 and 10, respectively. After that, the performance of our implementation
-  overcomes the performance of the reference implementation.
+  20 and 10, respectively. After that, our implementation dominates.
 
 \begin{center}
   \begin{table}
@@ -3335,16 +3335,16 @@ line length increases.
 \hline
 
   \end{tabular}
-  \caption{Runtimes in seconds for the Dna dataset, the runtime of our implementation compared to the reference implementation (in percentages) in both environments, compression. The fastest runtimes for each environment are bolded.}
+  \caption{Runtimes in seconds for the DNA dataset, the runtime of our implementation compared to the reference implementation (in percentages) in both environments, compression (the size of the common superstring divided to the size of the input). The fastest runtimes for each environment are bolded.}
   \label{runtimes-dna}
   \end{table}
 \end{center}
 
-To illustrate the runtimes of our and the reference implementations we also sampled a set of
-instances with linearly increasing size from 100,000 lines to 2,000,000 lines with 100,000 line
-interval. This set was then run in Env2. Every instance was run only once and no precise values
-are shown. The results are shown in Figure \ref{fig-dna}. The image description is same
-with the images in Table \ref{tbl-graphs}. Since this image has a linear scale, the time complexities
+To further illustrate runtimes, we also sampled a set of
+instances with linearly increasing size from 100,000 lines to 2,000,000 lines in 100,000-line
+steps. This set was then run in Env2. Every instance was run only once and no precise values
+are shown. The results are shown in Figure \ref{fig-dna} (the image description is same
+with the images in Table \ref{tbl-graphs}). Since this image has a linear scale, the time complexities
 of the implementations can be seen. 
 
 \begin{figure}[h!]
@@ -3437,11 +3437,17 @@ of the implementations can be seen.
           };
         \end{axis}
 \end{tikzpicture}
-  \caption{Comparison of the runtimes between our and reference implementation with DNA data consisting of keywords of length 100. The x axis specifies the size of the instance in thousands of lines. }
+\caption{Comparison of the runtimes between our and reference implementation with DNA data consisting
+  of keywords of length 100. The blue line marked with x shows the runtimes of the reference
+  implementation. Black line market with circles shows the runtimes of our implementation. Runtimes are
+  shown (in seconds) in the left vertical axis. Orange line marked with triangles shows the percentage
+  of the runtime of our implementation compared to the reference implementation. Percentage values
+  are shown in the right vertical axis. The x axis specifies the size of the instance in thousands
+  of lines. }
   \label{fig-dna}
 \end{figure}
 
-  By the comparison of the runtimes with the PizzaChili and the Dna datasets we can conclude that
+  Comparing the runtimes on the PizzaChili and the DNA datasets we can conclude that
   our solution implements the greedy heuristic faster:
 
   \begin{enumerate}
@@ -3451,44 +3457,44 @@ of the implementations can be seen.
   \end{enumerate}
 
 % Tästä tekstistä menee ehkä osa discussioniin ? 
-\paragraph{RLZ factorization}
+\paragraph{RLZ factorization.}
 As discussed in Chapter \ref{chp-rlz} the size of the RLZ compressed file is the size of the reference
 string used as a dictionary plus the size of the factors referencing to this dictionary. Let us now
-discuss the compression of the RLZ algorithm with two different methods for generating the dictionary.
-The first method that we use for the dictionay construction is a well known method of
-sampling substrings from a
-random position of the file that is to be compressed. The samples are then concatenated and the
-LZ factorization is run against that dictionary. The second approach has not been studied before. The
-idea is to sample a number of substrings, similarly with the first approach but instead of
-concatenation, the SCS approximation algorithm is run and the result is used as a reference
+discuss the compression obtained by the RLZ algorithm with two different methods for generating the dictionary.
+The first method that we use for the dictionary construction simply samples substrings of
+fixed length from random positions of the file that is to be compressed.
+The samples are then concatenated and the
+factorization is run against that dictionary. The second approach has not been studied before. The
+idea is to randomly sample a number of substrings, as before but instead of
+concatenation, the SCS approximation algorithm is run and the result is used as the reference
 dictionary.
 
 The PizzaChili dataset sampled with line lengths from 128 to 512 and cut parameters from 15\% to
 75\% were used. The Compression column in Tables \ref{runtimes-15-128}, \ref{runtimes-15-254},
 \ref{runtimes-25-254}, \ref{runtimes-50-254}, \ref{runtimes-50-512} and \ref{runtimes-75-512} show the
 size of the generated superstring relative to the instance size. This compression value depends
-on the size of the instance (The cut parameter). The Rsize value is calculated from the superstring
+on the size of the instance (the cut parameter). The Rsize value is calculated from the superstring
 compression value to get the size of the superstring relative to the original file. In other words,
-when the common superstring is used as a dictionary in the RLZ compression the Rsize value multiplied
-with the size of the original file, that is to be compressed, is the size of the dictionary. As we
-see, the compressions are better with bigger instances. However, increasing the keyword length while
-keeping the instance size constant, the compression ratio gets worse. 
+when the common superstring is used as an RLZ dictionary the Rsize value
+multiplied with the size of the original file to be compressed, is the size of the dictionary.
+As we see, the compressions are better with bigger instances. However, increasing the keyword length
+while keeping the instance size constant, the compression ratio gets worse. 
 
 We ran the RLZ factorization for every PizzaChili file using the common superstrings from the instances
 sampled with various parameters as a dictionary. The upper part of Table \ref{tbl-factors} shows the
-number of factors needed to compress the original files using the approximate SCS as a dictionary.
+number of RLZ factors generated using the approximate SCS as a dictionary.
 For reference, the lower part of the table shows the number of factors when the dictionary
-is sampled by concatenating the samples so that the lengths of the dictionaries are the same. We see
-that the SCS method for the dictionary construction results significantly smaller number of factors.
-The number of factors with the SCS method ranges from 63.5\% (\texttt{influenza\_25\_254}) to
-4.1\% (\texttt{kernel\_75\_512}) compared to the numbers with conventional RLZ compression.
+is generated by simply concatenating the samples so that the lengths of the dictionaries are the same. We see
+that the SCS method for the dictionary construction results in a significantly smaller number of factors.
+The number of factors with the SCS method ranges from 63.5\% (\texttt{influenza\_25\_254})to 4.1\%
+(\texttt{kernel\_75\_512}) of the number of factors generated when using a concatenated dictionary.
 
 This suggests that the acquired RLZ compression is significantly better when the SCS approach is
 used. However, the number of factors is only a part of the compression. The final compression ratio
-also depens on the size of the dictionaries, which are same in both cases. Let us assume that each
+also depends on the size of the dictionaries, which are the same in both cases. Let us assume that each
 factor in the compressed file consists of two 4-byte integers. Note that in practice, the factors
-could be saved with less space. For example, in many cases the generated superstring is shorter than
-24Mi symbols. Therefore 3 byte encodings could be used for factor length and position index.
+could be stored with less space. For example, in many cases the generated superstring is shorter than
+24Mi symbols, making 3 bytes sufficient for factor length and position index.
 For simplicity, we now use 4 byte integers.
 
 \begin{center}
@@ -3531,12 +3537,12 @@ For simplicity, we now use 4 byte integers.
 \end{center}
 
 Table \ref{tbl-total-sizes} shows
-the final sizes of the RLZ compressions for these two methods. The value in each cell is a sum of
+the final sizes of the RLZ compression for these two methods. The value in each cell is a sum of
 the corresponding dictionary and the number of factors presented in Table \ref{tbl-factors} multiplied
 with 8 bytes. The dictionary size can be calculated by multiplying the corresponding Rsize value with
 the size of the original file.
 
-For example, Let us consider the RLZ compression of the file \texttt{para} with dictionary
+For example, let us consider the RLZ compression of the file \texttt{para} with dictionary
 generated with sample
 parameters cut $= 0.50$ and line length $= 254$.
 By Table \ref{runtimes-50-254} the compression ratio of the
@@ -3553,7 +3559,7 @@ With conventionally generated dictionary of the same size, the number of factors
 with the size of $5,086,768\cdot 8$ bytes $= 38.8$ mebibytes. The total size of the compressed
 files is therefore $37.80 + 48.79 = 87.59$ MiB.
 
-Table \ref{tbl-total-sizes} shows the total compressed sizes for each PizzaChili files with different
+Table \ref{tbl-total-sizes} shows the total compressed sizes for each PizzaChili file with different
 cut and line length parameters. Note that the values presented in Tables \ref{runtimes-15-128},
 \ref{runtimes-15-254}, \ref{runtimes-25-254}, \ref{runtimes-50-254}, \ref{runtimes-50-512} and
 \ref{runtimes-75-512} are rounded. The values presented in Table \ref{tbl-total-sizes} are
@@ -3561,7 +3567,7 @@ calculated with more precision causing a small difference compared to values cal
 earlier presented data. For the same reason the 75/512 version of the \texttt{einstein.de.tx}
 in the lower section of the table is bolded. The compression with more precise values is better
 in this case. Note that in real applications, the dictionaries could be encoded using a
-$log_2(\Sigma)$ bit encodings. Also, the factors could be encoded in less space. The values
+$\log_2(|\Sigma|)$ bit encodings. Also, the factors could be encoded in less space. The values
 presented in table \ref{tbl-total-sizes} are examples with sizes of 8 byte factors and a single
 byte encoding with the dictionary.
 
@@ -3595,22 +3601,27 @@ byte encoding with the dictionary.
 
   \end{tabular}
   \caption{RLZ Compression sizes in mebibytes of the original PizzaChili files with different dictionaries.
-  The best compressions are bolded.}
+    The best compressions are bolded. The upper numbers result when
+    the RLZ dictionary is a common superstring of the corresponding file. The common superstring
+    is generated from the files randomly sampled with parameters specified in the column title.
+    The lower numbers result
+    when the dictionary is a string obtained by concatenating random samples together such that both
+    dictionaries have the same length.}
   \label{tbl-total-sizes}
   \end{table}
 \end{center}
 
 Comparing the values in Tables \ref{tbl-factors} and \ref{tbl-total-sizes} we see the significance
 of the dictionary size with the compression. The bigger the dictionary is, the less significant the
-number of RLZ factors becomes. We also see that the numbers of factors tends to decrease faster
+number of RLZ factors becomes. We also see that the number of factors tends to decrease faster
 with the conventional dictionary construction when the dictionary size or the line length parameter
 is increased. This may be explained with the fact that the probability to find a long substring from
 the dictionary is lower than to find a short substring. If the sampled substrings are large enough,
 there is no significant benefit from using the SCS approach.
 
 Regardless of the decrease in the number of factors, the resulting compression is not necessarily
-better with larger lesser number of factors. This is because the size of the dictionary tends to grow more
-rapidly than the number of factors decreases. This is especially true with the SCS dictionary
+better with lesser number of factors. This is because the size of the dictionary tends to grow
+more rapidly than the number of factors decreases. This is especially true with the SCS dictionary
 construction, when no compression with the parameters 75\%, 512, resulted the best compression.
 Contrarily, with these parameters the conventional dictionary construction resulted the best
 performance with three files.
@@ -3618,7 +3629,7 @@ performance with three files.
 Investigating Table \ref{tbl-total-sizes} even more, we can observe that for most of the lines
 in both sections of the table, the compressions behaves similarly. That is, the compression
 increases to some point which after it starts to decrease. In other words, it seems like
-there is (a local) minimum for the compressio with different sampling parameters.
+there is (a local) minimum for the compression with different sampling parameters.
 It would be very significant if the optimal parameters could be predicted before the full compression.
 
 
@@ -3628,10 +3639,10 @@ It would be very significant if the optimal parameters could be predicted before
 
 % What have done ?
 In this thesis, we investigated the \textsc{Shortest Common Superstring} problem
-in detail. We focused on the greedy heuristic that provides an computationally
+in detail. We focused on the greedy heuristic that provides a computationally
 easy-to-solve yet practically efficient approximate solution to the problem.
 The greedy heuristic and Ukkonen's algorithm, that solves this heuristic,
-were profoundly discussed. The correctness and time complexity were also proved.
+were discussed in detail. The correctness and time complexity were also proved.
 We provided an implementation of Ukkonen's algorithm with performance
 comparisons to another algorithm for the same heuristic.
 
@@ -3643,20 +3654,20 @@ superstring of the random samples of the input as a dictionary.
 
 % explicitely answer the research questions
 The aim of the comparison of the two implementations of the
-greedy heuristic was to examine the practical performances
+greedy heuristic was to examine the practical performance
 of our implementation and Ukkonen's algorithm in general.
 The results of these comparisons show that our implementation
-of Ukkonen's algorithm is very competitive method to solve
+of Ukkonen's algorithm is a very competitive method to solve
 the greedy heuristic of the shortest common superstring
 problem. Regardless of the alphabet size of the problem instance,
 and therefore the time complexity of our implementation
-(linear for small alphabets, $O(n\cdot log(|\Sigma|)$ for
+(linear for small alphabets, $O(n\cdot\log(|\Sigma|)$ for
 alphabets larger than 12), our implementation was faster with
 sufficiently large inputs. This indicates that the approximate
 SCS problem can be quickly solved even for a large inputs.
 
 The hypothesis of the compression ratios of the RLZ was also
-answered. The results indicates that for highly repetitive
+answered. The results indicate that for highly repetitive
 corpuses, the number of RLZ factors in the compressed data
 is significantly reduced when using the SCS approach to
 construct the dictionaries.
@@ -3667,11 +3678,11 @@ the shortest common superstring can be crafted.
 However the comparisons of the implementations lacked the
 measurement of the used memory. As the memory usage is also
 a significant aspect of the computation, it would be
-interesting to study this matter further. As a future
+interesting to study this matter further. As future
 work, our implementation of Ukkonen's algorithm could
 be further developed. The version used in this thesis
-gave a sufficient insight of the magnitudes of the
-time and memory usages. However, we assume that those
+has given sufficient insight into the magnitudes of
+time and memory usage. However, we assume that those
 values could be improved if our implementation were
 further developed.
 
