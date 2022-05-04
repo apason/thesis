@@ -1,5 +1,5 @@
 all:
-	latex gradu.tex
+	pdflatex -shell-escape gradu.tex
 	biber gradu
-	latex gradu.tex
-	latex gradu.tex
+	pdflatex -shell-escape gradu.tex 
+	pdflatex -shell-escape gradu.tex 
