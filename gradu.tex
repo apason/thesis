@@ -1,10 +1,5 @@
 %% PRELIIN:
 
-%
-% 0.50_512 time, 0.75_512 time,
-% Number of factors ok koska voidaan käyttää omee implee.
-%
-
 %% TODO: todo todo todo
 
 % label sekä tyhjä rivi välissä example, def, lemma .... vaikuttaa rivivaihtoon? konsistenssi?
@@ -19,7 +14,6 @@
 % lähteet
 % proof scetch
 % pseudon paikat
-% lz kompressiosta 5 sivua
 % number in a ball ?
 % sigma ac:n määritelmään
 % reduced aka. factor free.
@@ -220,6 +214,56 @@
 
 %\usepackage{footnote}
 %\makesavenoteenv{algorithm}
+
+
+
+
+
+
+\usepackage[most]{tcolorbox}
+\usepackage{xparse}
+\usepackage{lipsum}
+\newcounter{testexample}
+
+%\let\c@testexample\c@example
+%\makeatother
+
+\def\exampletext{Example} % If English
+
+\NewDocumentEnvironment{testexample}{ O{} }
+{
+\colorlet{colexam}{black!55!black} % Global example color
+\newtcolorbox[use counter=theorem, number within=chapter]{testexamplebox}{%
+    % Example Frame Start
+    empty,% Empty previously set parameters
+    title={\exampletext\ \thetcbcounter: #1},% use \thetcbcounter to access the testexample counter text
+    % Attaching a box requires an overlay
+    attach boxed title to top left,
+       % Ensures proper line breaking in longer titles
+       minipage boxed title,
+    % (boxed title style requires an overlay)
+    boxed title style={empty,size=minimal,toprule=0pt,top=4pt,left=3mm,overlay={}},
+    coltitle=colexam,fonttitle=\bfseries,
+    before=\par\medskip\noindent,parbox=false,boxsep=0pt,left=3mm,right=0mm,top=2pt,breakable,pad at break=0mm,
+       before upper=\csname @totalleftmargin\endcsname0pt, % Use instead of parbox=true. This ensures parskip is inherited by box.
+    % Handles box when it exists on one page only
+    overlay unbroken={\draw[colexam,line width=.5pt] ([xshift=-0pt]title.north west) -- ([xshift=-0pt]frame.south west); },
+    % Handles multipage box: first page
+    overlay first={\draw[colexam,line width=.5pt] ([xshift=-0pt]title.north west) -- ([xshift=-0pt]frame.south west); },
+    % Handles multipage box: middle page
+    overlay middle={\draw[colexam,line width=.5pt] ([xshift=-0pt]frame.north west) -- ([xshift=-0pt]frame.south west); },
+    % Handles multipage box: last page
+    overlay last={\draw[colexam,line width=.5pt] ([xshift=-0pt]frame.north west) -- ([xshift=-0pt]frame.south west); },%
+    }
+\begin{testexamplebox}}
+{\end{testexamplebox}\endlist}
+
+
+\numberwithin{testexample}{chapter}
+
+
+
+
 
 \singlespacing               %line spacing options; normally use single
 
@@ -529,7 +573,7 @@ Finally we give a conclusion of the thesis in Chapter \ref{chp-conc}.
 %Alanko väittää että ukkosen algoritmi poistaa myös
 %duplikaatit. tarkista.
 
-\chapter{Terminology and Problem Definitions}~\label{chp-preli}
+\chapter{Terminology and Definitions}~\label{chp-preli}
 
 Since the \textsc{Shortest Common Superstring} problem is an essential part of this thesis, we
 first define the notations and terminology of strings in order to formally define the problem.
@@ -616,19 +660,19 @@ Trivially a common superstring of a set of strings can be constructed by concate
 the strings of the set together.
 This kind of string has a length that equals the lengths of all the substrings added together.
 
-\begin{example}~\label{exml-cs}\\
+\begin{testexample}~\label{exml-cs}\\
   Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
   The string ``baababaababaab'' is a common superstring of the set $R$.
-\end{example}
+\end{testexample}
 
 In many cases there exists one or more common superstrings that are shorter than the common
 superstring produced by this naive method.
 If a common superstring has the shortest length possible, it is said to be a shortest common superstring (SCS).
 
-\begin{example}~\label{exml-scs}\\
+\begin{testexample}~\label{exml-scs}\\
   Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
   A string ``aababaa'' is a shortest common superstring of the set $R$.
-\end{example}
+\end{testexample}
 
 \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}\\
   Let string $T$ be a common superstring of a set of strings $R$.
@@ -1079,17 +1123,6 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   trie is found the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
   at lines 13-16.
 
-  \begin{example}[]~\label{exmp-goto}
-  Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
-  algorithm starts from line 2 where the root node is created. Figure \ref{fig-ac-step1}
-  presents this state. Since there are four keywords the first for loop is executed four times.
-  In the first round the \textit{insert} function is called for the first keyword ``baa''.
-  In the \textit{insert} function the first while loop is not executed since there are no
-  outgoing edges from the root node yet. The for loop is executed for every symbol and the three
-  nodes (2,3,4) are added to the goto graph with edge labels 'b', 'a', and 'a'.
-  Figure \ref{fig-ac-step2} presents this state of the construction.
-
-
   \begin{figure}[h]
   \centering
   \begin{tikzpicture}
@@ -1119,14 +1152,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
   \end{tikzpicture}
   \caption{first key added.} \label{fig-ac-step2}
-\end{figure}
+  \end{figure}
 
-  With the second round of the for loop we add the keyword ``baba''. In this case the \textit{insert}
-  function executes the while loop two times since the common prefix of ``baa'' and ``baba'' has a length
-  2. At this point the goto graph is branched and the remaining symbols 'b' and 'a' are inserted. The
-  figure \ref{fig-ac-step3} corresponds with this state.
-
-  \begin{figure}[h]
+    \begin{figure}[h]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1140,7 +1168,6 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     \node[gnode, right = 2cm of 3] (5) {$5$};
     \node[gnode, right = 2cm of 5] (6) {$6$};
 
-    %\path[->]
     \draw[-{Stealth[length=1.5mm,width=3mm]}]    
     (1) edge node[above] {b} (2)
     (2) edge node[above] {a} (3)
@@ -1152,6 +1179,26 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \end{tikzpicture}
   \caption{second key added.} \label{fig-ac-step3}
 \end{figure}
+  
+  \begin{testexample}[]~\label{exmp-goto}
+  Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
+  algorithm starts from line 2 where the root node is created. Figure \ref{fig-ac-step1}
+  presents this state. Since there are four keywords the first for loop is executed four times.
+  In the first round the \textit{insert} function is called for the first keyword ``baa''.
+  In the \textit{insert} function the first while loop is not executed since there are no
+  outgoing edges from the root node yet. The for loop is executed for every symbol and the three
+  nodes (2,3,4) are added to the goto graph with edge labels 'b', 'a', and 'a'.
+  Figure \ref{fig-ac-step2} presents this state of the construction.
+
+
+
+
+  With the second round of the for loop we add the keyword ``baba''. In this case the \textit{insert}
+  function executes the while loop two times since the common prefix of ``baa'' and ``baba'' has a length
+  2. At this point the goto graph is branched and the remaining symbols 'b' and 'a' are inserted. The
+  figure \ref{fig-ac-step3} corresponds with this state.
+
+
 
   In the same way, the rest of the keywords are added. For keyword ``baba'' the insertion
   happens in the same way as with the first keyword, that is the while loop in the \textit{insert}
@@ -1166,7 +1213,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   Algorithm \ref{ac-goto}.
   The resulting goto graph is described in Figure \ref{fig-ac-goto}
 
-  \begin{figure}[h]
+  \end{testexample}
+
+    \begin{figure}[h]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1210,8 +1259,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \end{tikzpicture}
   \caption{The complete goto graph.} \label{fig-ac-goto}
 \end{figure}
-  \end{example}
-  
+
   Let us define a depth function for the AC-machine. At this point depth is merely a concept of the
   machine but later on the corresponding data structure is also created in Algorithm \ref{ukk-pre}.
   In an AC-machine the depth of a state $p$, denoted by $d(p)$, is a depth of the node (number of
