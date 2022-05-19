@@ -1757,7 +1757,7 @@ the actual heuristic. The algorithm takes as an input the AC-machine constructed
 Algorithms \ref{ac-goto} and \ref{ac-fail} as well as the set of keywords $R$, which is also
 the same set that the goto and failure functions were constructed for. 
 The listing in Figure \ref{lst-auxiliary-data} consists of the data structures that are calculated
-in algorithm \ref{ukk-pre} and used in algorithm \ref{ukk-h}. It uses $I$ as
+in algorithm \ref{ukk-pre}. Most of them are used in algorithm \ref{ukk-h}. The listing uses $I$ as
 a set of keyword indices in $R$.
 
 \begin{figure}[h!]
@@ -1798,7 +1798,7 @@ by $s_i$ is not processed as if it was a keyword.
     \begin{algorithmic}[1]
       \Function{calculateAuxiliaryFunctions}{$g, f, R$}
         \For {$i = 1,...,m$} \\
-          \hspace*{1.1cm plus \algorithmicindent} let $x_i = a_0,...,a_{k-1}$
+          \hspace*{1.1cm plus \algorithmicindent} let $s_i = a_0,...,a_{k-1}$
           \State $s\gets 1$
           \For {$j = 0,...,k-1$}
             \State $s\gets g(s,a_j)$
@@ -1959,10 +1959,10 @@ the edge in question must be discarded.
 
   \begin{algorithm}[h!]
     \caption{Selection of the edges} \label{ukk-h}
-    \hspace*{\algorithmicindent} \textbf{Input:} The AC-machine including the auxiliary data from Algorithm \ref{ukk-pre} \\
-    \hspace*{\algorithmicindent} \textbf{Output:} The approximate longest Hamiltonian path in the overlap graph.
+    \hspace*{\algorithmicindent} \textbf{Input:} The AC-machine and the output from Algorithm \ref{ukk-pre}, set of keywords $R=\{s_1,...,s_m\}$ \\
+    \hspace*{\algorithmicindent} \textbf{Output:} The approximate longest Hamiltonian path $H$ in the overlap graph.
     \begin{algorithmic}[1]
-      \Function{createPath}{$g,f,F,E,d,L,b,B$}
+      \Function{createPath}{$f,F,L,b,B,R$}
         \For {$j = 1,...,m$}
           \If {$F(j)\neq 1$}
             \State $P(f(F(j)))\gets P(f(F(j)))\cdot {j}$
@@ -1988,7 +1988,7 @@ the edge in question must be discarded.
                   \State $i\gets$ the second element of $P(s)$
                 \EndIf
               \EndIf  
-              \State $H\gets H\cdot \{(x_i,x_j)\}$
+              \State $H\gets H\cdot \{(s_i,s_j)\}$
               \State $forbidden(j)\gets true$
               \State $P(s)\gets P(s) \backslash\{i\}$
               \State $FIRST(LAST(j))\gets FIRST(i)$
@@ -2040,12 +2040,44 @@ $s_{P(s)}$ are examined, the process can move on to the next state in the $b$ li
 Before that, on line 26, the $P(s)$ is concatenated to $P(f(s))$ so the possibly remaining unused
 keyword indices are passed to the shallower states.
 
+Before we go into the time complexity of Algorithm \ref{ukk-h}, let us first discuss the
+total length of supporters sets $|L(s)|$ over all states $s$. Although $L(s_i)$ may contain
+(partly or completely)
+the same states as $L(s_j), i\neq j$, the sum $\sum_s |L(s)|$ is $O(n)$. Specifically,
+$\sum_s |L(s)| = n$ for a reduced set of input keywords and $\sum_s |L(s)| < n$ otherwise,
+when the start state is excluded.
 
+By iterating
+through all supporters of all states we effectively iterate through all symbols
+in the input. This is because, for each state $s$, each supporter $i$ in $L(s)$ corresponds to a
+symbol in the $i$th input string, and every symbol corresponds to exactly one state and supporter.
+
+\begin{lemma}[]~\label{lem-supporters}
+  For a reduced set of keywords, the sum $\sum_s |L(s)|$ over each state $s$, except the start state,
+  is $n$, where $n$ is the
+  total number of symbols in the input keywords.
+\end{lemma}
+\begin{proof}[Proof by induction]
+  Let us have an induction hypothesis that the lemma is true for all AC-machines constructed from 
+  at most $M$ keywords. The hypothesis trivially holds for AC-machine with a single keyword. That is
+  there are $|x|+1$ states, where $x$ is the keyword, and $|L(s)| = 1$ for each $|x|$ states,
+  producing $\sum_s |L(s)| = |x| = n$.
+
+  Let there be an AC-machine $AC$ constructed from a reduced set of keywords of size $M$ and a
+  corresponding supporters set function $L()$. Let $y$ be a keyword not presented in $AC$.
+  When $y$ is added to $AC$ a path from start state to a leaf is branched at depth $d$ such that
+  $y[1...d]$ is the longest prefix of $y$ that has a corresponding state in $AC$. The $L(q)$ for
+  each new state $q$ consists of only the index of the keyword $y$. The sets of supporters $L(r)$,
+  for each existing state $r$ are appended with the index of the keyword $y$.
+
+  In other words, the sets of supporters are increased by one for each $|y|$ states between
+  the start state and the newly created leaf. According to the induction hypothesis
+  $\sum_s |L(s)| = |x| = n$.
+\end{proof}
 
 
 \begin{theorem}[]~\label{thm-time-h}
-  The time complexity of Algorithm \ref{ukk-h} is same as the time complexity of
-  Algorithm \ref{ac-goto}
+  The time complexity of Algorithm \ref{ukk-h} is $O(n)$.
 \end{theorem}
 \begin{proof}[Proof scketch]
 
@@ -2053,14 +2085,18 @@ As with $L$ in Algorithm \ref{ukk-pre}
 we assume that the set returned by function $P$ is implemented using a linked list, allowing constant
 time insertions, deletions, and concatenations. The first for loop starting at line 2 can clearly be
 executed in linear time since all the statements take constant time and $m \leq n $. The while loop
-starting at line 10 iterates once for each state that is $O(n)$ times. However, the for loop starting
-at line 12 is also executed at most $m = O(n)$ times.
+starting at line 10 iterates once for each state that is $O(n)$ times. The for loop starting
+at line 12 dominates the time complexity of Algorithm \ref{ukk-h}. Since the execution of one iteration
+of the for loop is a constant time operation and by Lemma \ref{lem-supporters} $\sum_s |L(s)| = O(n)$,
+which is the total number the for loop is iterated, the total time complexity of Algorithm \ref{ukk-h}
+is $O(n)$.
 
 \end{proof}
 
-Theorems \ref{thm-time-goto}, \ref{thm-time-failure}, \ref{thm-time-pre} and \ref{thm-time-h}
-show that every algorithm presented in this chapter has the same time complexity depending
-on the implementation of the goto function for the AC-machine. As discussed earlier, the goto function
+Theorems \ref{thm-time-goto}, \ref{thm-time-failure}, \ref{thm-time-pre}
+show that Algorithm \ref{ac-goto}, \ref{ac-fail} and \ref{ukk-pre} has the same time complexity depending
+on the implementation of the goto function for the AC-machine. Moreover, Algorithm \ref{ukk-h} runs lin
+linear time. As discussed earlier, the goto function
 can be implemented to allow read and write queries in  $O(1)$ using direct indexing over a
 two-dimensional array. Another feasible possibility, especially for the larger alphabets,
 is to use balanced
