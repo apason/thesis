@@ -1,64 +1,29 @@
-%% PRELIIN:
+% TODO: 2x explanation of algorithm 3 ???
 
 %% TODO: todo todo todo
+
+%% TODO. testexamplen reffit väärillä numeroilla?! figuren ja lemman numerot samat??
+
+%% set of keywords K or R ? be consistent!
+%% strings and states with lower case letters ? 
+
+% textsc for problems.
 
 % label sekä tyhjä rivi välissä example, def, lemma .... vaikuttaa rivivaihtoon? konsistenssi?
 
 % texttt for every "special" word like filenames, types etc
-% Should AC-machine be AC machine without the hyphen?
-% SCS lyhenteen intro
-% FSA lyhenteen intro
 % algon method muotoon note
 % esimerkit example environmenttiin
 % määritelmät environmentiin
-% lähteet
-% proof scetch
-% pseudon paikat
-% number in a ball ?
-% sigma ac:n määritelmään
-% reduced aka. factor free.
 
 % The implementation is n log sigma. We refer n log n everywhere!
 
-% REDUCED SET !?!?!
-
-% TERMIT
 % HamPath: vertex, edge
 % goto graph (illustration): (root)node, edge?
-% ACM (start) state, goto and failure transitions
+% ACM (sart) state, goto and failure transitions
 
 % represented by string... this is shit. Just state somewhere that states and strings
 % are sometimes referred interchangeably: By slight abuse of notation...
-
-% STRUCTURE!
-
-% Formal definition for forbidden, first, last ?
-
-%% Regarding motivation: be sure to cite the paper by Alanko and Norri where they specifically state that it would be great to have an efficient implementation of Ukkonen's algorithm (I think they say this toward the end of the paper).
-%% Regarding RLZ dictionary construction: I have put a couple of papers below (there are more, but these will do to start). Using SSS would be a new approach to that problem.
-%% https://rdcu.be/ctUES
-%% https://dl.acm.org/doi/pdf/10.1145/2872427.2883042
-
-
-%% SALMELAN PAPERI
-%% L. Salmela, J. Tarhio, and J. Kytöjoki: Multi-pattern string matching with
-%% q-grams. ACM Journal of Experimental Algorithmics, Volume 11, 2006.
-
-% PUGLISIN ekoista soposteista.. ? ei varmaan olla tekemässä. 
-%4. No requirements yet - you're in control. ASCII with one string per line sounds fine to me while you're developing the basic approach. Remember we talked about strings on large alphabets at some point? For those each symbol will be a fixed width (16 or 32 bits) and all the same length, so we can define a custom binary file format (something like: 32-bit int telling number of strings, 32-bit int telling length of each string, 32-bit int telling width of each symbol, then the strings themselves ....).
-
-% PUGLISIN sähköpostista:
-%Thanks for the results --- they make some sense to me too (at first glance). The duplicate removal method you suggest (using quicksort) is fine. By the way, it would be interesting to know the number of duplicates for each test case (to determine the amount of compression that comes from duplicates and the amount from the main SSS algorithm).
-
-
-%Regarding RLZ dictionary construction: I have put a couple of papers below (there are more, but these will do to start). Using SSS would be a new approach to that problem.
-%https://rdcu.be/ctUES
-%https://dl.acm.org/doi/pdf/10.1145/2872427.2883042
-
-
-
-% Modifief filename tarkottaa EI rivinvaihtoja!?
-
 
 % miten RLZ tulokset saatu?
 % -Sämplätään alkuperäinen file esim cere parametreilla 15_128
@@ -158,7 +123,8 @@
 
 %\usepackage[utf8]{inputenc} % For UTF8 support, in some systems. Use UTF8 when saving your file.
 
-\usepackage{enumerate}
+%\usepackage{enumerate}
+\usepackage{enumitem}
 \usepackage{lmodern}         % Font package, again in some systems.
 \usepackage{textcomp}        % Package for special symbols
 \usepackage[pdftex]{color, graphicx} % For pdf output and jpg/png graphics
@@ -192,6 +158,8 @@
 \usepackage{makecell}
 
 \usepackage{minted}
+
+\usepackage{floatpag}
 
 %\usepackage{afterpage}
 
@@ -282,8 +250,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set up personal information for the title page and the abstract form.
 %% Replace parameters with your information.
-% TODO: still not happy with the title. Should have "implementation" and "approximation" in it. 
-\title{Efficient Computation of Shortest Superstrings with Application to Relative Lempel-Ziv Dictionary Construction}
+
+\title{Fast Implementation of Shortest Common Superstring approximation with Application to Relative Lempel-Ziv Dictionary Construction}
 
 % TM: Contributors to template editors now listed in the beginning of the file in comments
 \author{Arttu Kilpinen}
@@ -298,7 +266,7 @@
 \examiners{Prof.~Leena Salmela}
 
 
-\keywords{Implementation, Shortest Common Superstring}
+\keywords{Implementation, Shortest Common Superstring, Relative Lempel-Ziv}
 \additionalinformation{\translate{\track}}
 
 %% For seminar reports:
@@ -386,7 +354,18 @@
 
 % Place ToC
 \newpage
+
 \mytableofcontents
+
+%% \let\LaTeXStandardClearpage\clearpage
+%% \let\clearpage\relax  % Do nothing when a \clearpage command appears 
+%% \listof{algorithm}{List of Algorithms}
+%% \let\clearpage\LaTeXStandardClearpage % Return to the old definition
+
+
+%\listofalgorithms
+%\mytableofcontents
+%\listofalgorithms
 \mainmatter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -624,7 +603,7 @@ string. Trivially, any two strings have an empty overlap.
 
 \begin{definition}[\textsc{Overlap and Maximal Overlap}]~\label{def-overlap}\\
   Let $S$ and $T$ be strings. A string $U$ is an overlap between $S$ and $T$
-  if and only if $U$ is a prefix of $S$ and a suffix of $R$.
+  if and only if $U$ is a prefix of $S$ and a suffix of $T$.
   If $U$ is the longest such string, it is said to be maximal overlap.
 \end{definition}
 
@@ -651,9 +630,9 @@ If a string contains (i.e. is a superstring of) each string in a set of strings,
 a common superstring of the set.
 
 \begin{definition}[\textsc{Common superstring}]~\label{def-cs}\\
-  Let $R = \{S_1,...,S_n\}$ be a set of strings and $T$ be a string.
-  $T$ is a common superstring of $R$ if and only if $T$ is a superstring
-  for each $S_i$ such that $i\in 1,...,n$.
+  Let $K = \{s_1,...,s_n\}$ be a set of strings and $T$ be a string.
+  $T$ is a common superstring of $K$ if and only if $T$ is a superstring
+  for each $s_i$ such that $i\in 1,...,n$.
 \end{definition}
 
 Trivially a common superstring of a set of strings can be constructed by concatenating all of
@@ -661,8 +640,8 @@ the strings of the set together.
 This kind of string has a length that equals the lengths of all the substrings added together.
 
 \begin{testexample}~\label{exml-cs}\\
-  Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
-  The string ``baababaababaab'' is a common superstring of the set $R$.
+  Let $K=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
+  The string ``baababaababaab'' is a common superstring of the set $K$.
 \end{testexample}
 
 In many cases there exists one or more common superstrings that are shorter than the common
@@ -670,14 +649,14 @@ superstring produced by this naive method.
 If a common superstring has the shortest length possible, it is said to be a shortest common superstring (SCS).
 
 \begin{testexample}~\label{exml-scs}\\
-  Let $R=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
-  A string ``aababaa'' is a shortest common superstring of the set $R$.
+  Let $K=\{$ ``baa'', ``baba'', ``abab'', ``aab''$\}$ be a set of strings.
+  A string ``aababaa'' is a shortest common superstring of the set $K$.
 \end{testexample}
 
 \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}\\
-  Let string $T$ be a common superstring of a set of strings $R$.
-  The string $T$ is a shortest common superstring of $R$ if and only if there does not exist
-  a common superstring of $R$ which is shorter than $T$.
+  Let string $T$ be a common superstring of a set of strings $K$.
+  The string $T$ is a shortest common superstring of $K$ if and only if there does not exist
+  a common superstring of $K$ which is shorter than $T$.
 \end{definition}
 
 A reduced set of strings is a set of strings such that no string in the set is a substring
@@ -744,7 +723,6 @@ Finally, we define a \textsc{Longest Hamiltonian Path} problem as follows
   be returned.
 \end{definition}
 
-% TODO. Simon's feedback.
 \chapter{Ukkonen's Algorithm}~\label{chp-ukkonen}
 
 In this chapter we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
@@ -790,7 +768,7 @@ Let $R=\{s_1,...,s_m\}$ be a set of $m$ strings. A naive method for constructing
 for $R$ is simply to concatenate all the strings in the set. For the set $R$, the resulting superstring
 would then be $s_1s_2\cdots s_m$.
 The following greedy heuristic can be used to construct an approximation of a shortest
-common superstring.
+common superstring:
 
 \begin{enumerate}
 \item Examine the set and remove two strings $s_i$ and $s_j$ that have a longest overlap among all pairs of strings $(s_i, s_j)$ with $i\neq j$. Note that a longest overlap may be an empty string. If there are multiple pairs of strings with a longest overlap, the decision can be made arbitrarily.
@@ -950,7 +928,7 @@ The compositions of $p(H)$ and a shortest common superstring $z$ for a reduced s
   The projection $p(H)$ for the longest Hamiltonian path in the overlap graph is equivalent to
   a shortest common superstring for a reduced $R$.
 \end{theorem}
-\begin{proof}[Proof scketch]
+\begin{proof}[Proof sketch]
 By Lemma \ref{lem-composition} there exists a decomposition of the SCS $z$ that corresponds to a
 Hamiltonian path in an overlap graph of a reduced set of strings.
 \end{proof}
@@ -967,7 +945,7 @@ To  construct an approximate longest Hamiltonian path select an edge $e$ from th
 \end{enumerate}
 
 The third constraint above indicates the following:
-\begin{enumerate}[i]
+\begin{enumerate}[label=\roman*]
 \item The selection does not form a cycle.
 \item The earlier selected edges can not have the same start node as $e$.
 \item The earlier selected edges can not have the same end node as $e$.
@@ -1024,12 +1002,12 @@ This is needed only when the AC-machine is used for searching strings.} as follo
 
 \begin{definition}
   Aho-Corasick machine is a tuple $(Q, \Sigma, g, f)$, where:
-  \begin{enumerate}
-    \item $Q$ is a set of states, containing at least the start state; \\
-    \item $\Sigma$ is the alphabet;
-    \item $g : Q \times \Sigma \rightarrow Q, g(s_s,c) = s_d$ is a function that defines a state transition from a state $s_s$ to a state $s_d$ for a symbol $c$; \\
-    \item $f : Q \rightarrow Q, f(s_s) = s_d$, is a function that defines a failure transition from state $s_s$ to state $s_d$.
-  \end{enumerate}
+\begin{enumerate}[leftmargin=28pt]
+\item $Q$ is a set of states, containing at least the start state;
+\item $\Sigma$ is the alphabet;
+\item $g : Q \times \Sigma \rightarrow Q, g(s_s,c) = s_d$ is a function that defines a state transition from a state $s_s$ to a state $s_d$ for a symbol $c$;
+\item $f : Q \rightarrow Q, f(s_s) = s_d$, is a function that defines a failure transition from state $s_s$ to state $s_d$.
+\end{enumerate}
 \end{definition}
 
 If there is a goto transition from $s_s$ to $s_d$ in an AC-machine we say that the state $s_s$ is the parent
@@ -1069,7 +1047,7 @@ Figure \ref{fig-ac} illustrates the AC-machine for the set of
 keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$. The solid lines describe the goto function
 and the dashed lines describe the failure function, for example, $g(8, a) = 9$ and $f(4)=11$.
 
-\begin{algorithm}[h!]
+\begin{algorithm}[t]
   
   \caption{Construction of the goto function} \label{ac-goto}
   \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $K = \{s_1,s_2...,s_k\}$.\\
@@ -1079,7 +1057,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   
       \begin{algorithmic}[1]
 
-        \Function{calculateGotoFunction}{$K = \{s_1,s_2...,s_k\}$}
+        \Function{calculateGotoFunction}{$K$}
           \State $newstate\gets 1$
           \For{$i \gets 1$ until $k$}
             \State $INSERT(s_i)$
@@ -1121,18 +1099,18 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   trie is found the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
   at lines 13-16.
 
-  \begin{figure}[h]
-  \centering
-  \begin{tikzpicture}
-%   [scale=.8]
+%%   \begin{figure}[]
+%%   \centering
+%%   \begin{tikzpicture}
+%% %   [scale=.8]
 
-    \node[gnode] (1) at (0,0) {$1$};
+%%     \node[gnode] (1) at (0,0) {$1$};
     
-  \end{tikzpicture}
-  \caption{A root node.} \label{fig-ac-step1}
-  \end{figure}
+%%   \end{tikzpicture}
+%%   \caption{A root node.} \label{fig-ac-step1}
+%%   \end{figure}
 
-  \begin{figure}[h]
+  \begin{figure}[]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1149,10 +1127,10 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (3) edge node[above] {a} (4);
 
   \end{tikzpicture}
-  \caption{first key added.} \label{fig-ac-step2}
+  \caption{First key added.} \label{fig-ac-step2}
   \end{figure}
 
-    \begin{figure}[h]
+    \begin{figure}[]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1175,13 +1153,14 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (5) edge node[above] {a} (6);
 
   \end{tikzpicture}
-  \caption{second key added.} \label{fig-ac-step3}
+  \caption{Second key added.} \label{fig-ac-step3}
 \end{figure}
   
-  \begin{testexample}[]~\label{exmp-goto}
+  \begin{testexample}[]~\label{exmp-goto}\\
   Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
-  The algorithm starts from line 2 where the root node is created. Figure \ref{fig-ac-step1}
-  presents this state. Since there are four keywords the first for loop is executed four times.
+  The algorithm starts from line 2 where the root node is created.
+  %Figure \ref{fig-ac-step1} presents this state.
+  Since there are four keywords the first for loop is executed four times.
   In the first round the \textit{insert} function is called for the first keyword ``baa''.
   In the \textit{insert} function the first while loop is not executed since there are no
   outgoing edges from the root node yet. The for loop is executed for every symbol and the three
@@ -1214,8 +1193,10 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
   \end{testexample}
 
-    \begin{figure}[h]
-  \centering
+
+    \begin{figure}[]
+      \centering
+        \hspace{-2.6cm}
   \begin{tikzpicture}
 %   [scale=.8]
 
@@ -1276,9 +1257,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   Since the failure function is not defined for the start state (depth 0), the calculation starts
   from depth 1. We define $f(s)=1$ for all states $s$ with depth = 1. Assuming the failure function is
   calculated for all states of depth $d-1$, then the failure function of a state $s$ is defined with the
-  following instructions.
+  instructions in Figure \ref{lst-failure-calculation}.
   
-  \begin{figure}[h]
+  \begin{figure}[b]
   \begin{enumerate}
   \item Let $p$ be the parent of the node $s$ such that $g(p,\sigma) = s$.
   \item Set $state = f(p)$.
@@ -1289,13 +1270,24 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
    \caption{Listing of the failure calculation for state s.} \label{lst-failure-calculation}    
   \end{figure}
 
-  \begin{example}[]~\label{exmp-fail}
+
+
+  \begin{testexample}[]~\label{exmp-fail}\\
     Let us continue with the previous example from the goto function construction. By definiton, $f(1)$
     is not defined. For the states of depth 1 ($s\in\{2,7\}$) the failure function is defined as
     $f(s)=1$. Figure \ref{fig-ac-step5} presents this state.
 
-  \begin{figure}[h]
-  \centering
+  Next we calculate the failure function for the states 3, 8 and 11, that is, the states with depth 2.
+  For state 3, we take the parent state 2 and follow the failure function to the root node. Since
+  $g(1,$a$) = 7$ we define $f(3)=7$. For the states 8 and 11 the procedure is similar. We set 
+  $f(8)=2$ and $f(11)=7$. The procedure is iterated until the failure function is defined for every
+  node. Figure \ref{fig-ac} describes the final result. Because the AC-machine only contains these
+  two functions, Figure \ref{fig-ac} also presents the fully constructed AC-machine.
+  \end{testexample}
+
+      \begin{figure}[]
+        \centering
+        \hspace{-2cm}
   \begin{tikzpicture}
 %   [scale=.8]
 
@@ -1344,15 +1336,69 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \end{tikzpicture}
   \caption{The failure function construction when $f(s)$ is defined for all states $s$ with depth $\leq$ 1.} \label{fig-ac-step5}
 \end{figure}
+  
 
-  Next we calculate the failure function for the states 3, 8 and 11, that is, the states with depth 2.
-  For state 3, we take the parent state 2 and follow the failure function to the root node. Since
-  $g(1,$a$) = 7$ we define $f(3)=7$. For the states 8 and 11 the procedure is similar. We set 
-  $f(8)=2$ and $f(11)=7$. The procedure is iterated until the failure function is defined for every
-  node. Figure \ref{fig-ac} describes the final result. Because the AC-machine only contains these
-  two functions, Figure \ref{fig-ac} also presents the fully constructed AC-machine.
+  In Example \ref{exmp-fail} the value for the failure function was always found in a single
+  iteration of the step 3 of the above definition (Figure \ref{lst-failure-calculation}). Next we go through the pseudocode for the failure
+  function calculation in Algorithm \ref{ac-fail}.
 
-    \begin{figure}
+
+  \begin{algorithm}[]
+
+    \caption{Construction of the failure function} \label{ac-fail}
+    \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm \ref{ac-goto}\\
+    \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
+
+    \begin{algorithmic}[1]
+      \Function{calculateFailureFunction}{$g$}
+        \State $queue\gets \textit{empty}$
+        \For {each $a$ s.t. $g(1,a) = s \neq 1$}
+          \State $queue\gets queue \cup \{s\}$
+          \State $f(s)\gets 1$
+        \EndFor
+        \While{$queue \neq empty$}\\
+          \hspace*{1.2cm plus \algorithmicindent}let $r$ be the next state in $queue$
+          \State $queue\gets queue \backslash \{r\}$
+          \For{each $a$ s.t. $g(r,a) = s$ is defined}
+            \State $queue\gets queue \cup \{s\}$
+            \State $state\gets f(r)$
+            \While{$g(state,a)$ is undefined}
+              \State $state\gets f(state)$
+            \EndWhile
+            \State $f(s)\gets g(state,a)$              
+          \EndFor
+        \EndWhile
+          
+      \EndFunction
+
+    \end{algorithmic}
+  \end{algorithm}
+
+
+
+  Since the failure values must be calculated from lowest depth states to the highest depth states
+  we go through the goto path using a breadth-first search (BFS). This is provided by a queue that is
+  appended in every non-leaf state, i.e., the children of the currently processed state are put into the
+  queue and the next state to be processed is popped. The queue is initialized to be empty in the first
+  line of the algorithm. The for loop on lines 3 to 5 adds all the children of the root to the queue.
+  Because the start state is special as it contains goto transitions to itself the additional constraint
+  on line 3 is added to prevent an infinite loop. In the same for loop, we define
+  $f(s)=1$ for all states with depth 1. The while loop from line 6 to 14 implements the instructions
+  in Figure \ref{lst-failure-calculation}. Since the AC-machine does not save parent information
+  this is done slightly differently, although the result is exactly the same as Figure
+  \ref{lst-failure-calculation} describes. On lines 7 and 8 we pop a
+  state from the queue. At this point the failure function for that state is already defined. Then we
+  process each child of the state separately on lines 9 to 14 by 1) adding the child to the
+  queue  on line 10; 2) travelling the failure function of the parent as long as we get a state
+  that have goto   transition with the same symbol that appears between the parent and the currently
+  processed child on lines 12 to 13; and 3) setting the failure function for the child on line 14.
+  The execution of the function halts when the BFS of the  AC-machine is ready and the queue is
+  finally empty.
+
+  For now, as the AC-machine is fully defined we focus on its usage for finding the maximal pairwise
+  overlaps of every input keyword, as Lemma \ref{lem-overlap} suggests.
+
+      \begin{figure}
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1427,66 +1473,6 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \caption{Fully constructed AC-machine for the keywords $R=\{$"baa", "baba", "abab", "aab"$\}$.} \label{fig-ac}
 \end{figure}
 
-  \end{example}
-  
-  In Example \ref{exmp-fail} the value for the failure function was always found in a single
-  iteration of the step 3 of the above definition. Next we go through the pseudocode for the failure
-  function calculation in Algorithm \ref{ac-fail}.
-
-
-  \begin{algorithm}[h!]
-
-    \caption{Construction of the failure function} \label{ac-fail}
-    \hspace*{\algorithmicindent} \textbf{Input:} Goto function $g$ from algorithm \ref{ac-goto}\\
-    \hspace*{\algorithmicindent} \textbf{Output:} Failure function $f$
-
-    \begin{algorithmic}[1]
-      \Function{calculateFailureFunction}{$g$}
-        \State $queue\gets \textit{empty}$
-        \For {each $a$ s.t. $g(1,a) = s \neq 1$}
-          \State $queue\gets queue \cup \{s\}$
-          \State $f(s)\gets 1$
-        \EndFor
-        \While{$queue \neq empty$}\\
-          \hspace*{1.2cm plus \algorithmicindent}let $r$ be the next state in $queue$
-          \State $queue\gets queue \backslash \{r\}$
-          \For{each $a$ s.t. $g(r,a) = s$ is defined}
-            \State $queue\gets queue \cup \{s\}$
-            \State $state\gets f(r)$
-            \While{$g(state,a)$ is undefined}
-              \State $state\gets f(state)$
-            \EndWhile
-            \State $f(s)\gets g(state,a)$              
-          \EndFor
-        \EndWhile
-          
-      \EndFunction
-
-    \end{algorithmic}
-  \end{algorithm}
-
-
-  Since the failure values must be calculated from lowest depth states to the highest depth states
-  we go through the goto path using a breadth-first search (BFS). This is provided by a queue that is
-  appended in every non-leaf state, i.e., the children of the currently processed state are put into the
-  queue and the next state to be processed is popped. The queue is initialized to be empty in the first
-  line of the algorithm. The for loop on lines 3 to 5 adds all the children of the root to the queue.
-  Because the start state is special as it contains goto transitions to itself the additional constraint
-  on line 3 is added to prevent an infinite loop. In the same for loop, we define
-  $f(s)=1$ for all states with depth 1. The while loop from line 6 to 14 implements the instructions
-  in Figure \ref{lst-failure-calculation}. Since the AC-machine does not save parent information
-  this is done slightly differently, although the result is exactly the same as Figure
-  \ref{lst-failure-calculation} describes. On lines 7 and 8 we pop a
-  state from the queue. At this point the failure function for that state is already defined. Then we
-  process each child of the state separately on lines 9 to 14 by 1) adding the child to the
-  queue  on line 10; 2) travelling the failure function of the parent as long as we get a state
-  that have goto   transition with the same symbol that appears between the parent and the currently
-  processed child on lines 12 to 13; and 3) setting the failure function for the child on line 14.
-  The execution of the function halts when the BFS of the  AC-machine is ready and the queue is
-  finally empty.
-
-  For now, as the AC-machine is fully defined we focus on its usage for finding the maximal pairwise
-  overlaps of every input keyword, as Lemma \ref{lem-overlap} suggests.
 
 
 \begin{lemma}[]~\label{lem-overlap}
@@ -1494,7 +1480,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   $s$ and $t$, respectively. The failure value $f(p) = q$ if and only if $t$ is the longest proper suffix
   of $s$ that is also a prefix of some keyword.
 \end{lemma}
-\begin{proof}[Proof by induction]
+\begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all states whose depth is smaller
   than some depth $d > 1$. The hypothesis trivially holds for the base case when the
   depth of the state is 1. That is when $f(p) = q$ is the start state, represented by the empty
@@ -1504,7 +1490,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   $s=x_1x_2\cdots x_d$. Let $r$ be the parent state of $p$. Therefore $r$ is represented by a
   string $x_1x_2\cdots x_{d-1}$. Let $r_1,\cdots ,r_n$ be a sequence of states such that:
 
-  \begin{enumerate}
+  \begin{enumerate}[leftmargin=28pt]
   \item $r_1 = f(r)$,
   \item $r_i = f(r_{i-1})$ for all $ 1 \leq i < n$,
   \item $g(r_i, x_d)$ is undefined for all $i < n$,
@@ -1650,7 +1636,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
   There is an overlap of length $d(q)$ between $s$ and a keyword $t_i\in R$ if and only if
   for some $k \geq 0$ state $q=f^k(p)$ is such that $i\in L(q)$.
 \end{lemma}
-\begin{proof}[Proof by induction]
+\begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all states whose depth is
   smaller than some depth $d'\geq 1$. For the base case of the induction we use the start state
   with depth 0. The hypothesis holds
@@ -1662,7 +1648,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
   Assume also that there is an overlap $u$ of length $d(q)$ between $s$ and some keyword $t_i$. The
   overlap $u$ represents a state $q$.
   There are three possibilities:
-  \begin{enumerate}
+  \begin{enumerate}[leftmargin=28pt]
   \item The overlap $u$ is the string $s$ itself. In this case clearly $i\in L(p)$. Since
     $p=f^0(p)$, that is $p=q$ and $d(q) = d(p) = |s|$, the lemma is true. 
   \item The overlap $u$ is the longest proper suffix of $s$ that is also a prefix of $t_i$.
@@ -1718,7 +1704,7 @@ edge, nor does its end node already have an incoming edge. By processing all the
 fashion we end up with the set of edges that forms a Hamiltonian path in the
 overlap graph. 
 
-\begin{example}
+\begin{testexample}
 Let us apply this method to the AC-machine described in Figure \ref{fig-ac}. The processing starts
 with depth 4 from state 6 or state 10. While processing those states we save the information of
 the incoming failure path for state 9 and 5 respectively. Depending on the order in which we process
@@ -1748,9 +1734,8 @@ the first time
 we made a selection between two allowed edges, if we selected differently the heuristics would
 have produced either ``aababaa'', ``baababa'' or ``ababaab''. These all are the actual shortest common
 superstrings with length 7 and compression 7.
-\end{example}
+\end{testexample}
 
-%Todo: Why define these here. We could use at least $F(index)$ all over the text.
 The actual algorithm is implemented in two parts. Algorithm \ref{ukk-pre} defines the first part
 which is used to calculate a set of auxiliary data structures that are needed in order to implement
 the actual heuristic. The algorithm takes as an input the AC-machine constructed with
@@ -1760,7 +1745,7 @@ The listing in Figure \ref{lst-auxiliary-data} consists of the data structures t
 in algorithm \ref{ukk-pre}. Most of them are used in algorithm \ref{ukk-h}. The listing uses $I$ as
 a set of keyword indices in $R$.
 
-\begin{figure}[h!]
+\begin{figure}[hb]
 \begin{enumerate}
   \item $F : I \rightarrow Q, F(i)=q$ Maps the index of the keyword to the corresponding state. I.e a state $q=F(i)$ is represented by the keyword $s_i$.
   \item $E : Q \rightarrow I, E(q)=i$ Inverse function of $F$. If the state $q$ is a leaf represented by $s_i$ then $E(q)=i$. For every non-leaf states $q'$ we define $E(q')=0$.
@@ -1788,7 +1773,7 @@ $s_i$ is a substring of another keyword, we set $F(i)=1$ to indicate that the st
 by $s_i$ is not processed as if it was a keyword.
 
 % Näihin voi myös raittaa labelit per rivi ja viitata siten.
-  \begin{algorithm}[h!]
+  \begin{algorithm}[!ht]
 
     \caption{Preprocessing algorithm for the greedy heuristic} \label{ukk-pre}
     \hspace*{\algorithmicindent} \textbf{Input:} AC-machine constructed with algorithms \ref{ac-goto} and \ref{ac-fail} and the associated set of keywords $R=\{s_1,...,s_m\}$ \\
@@ -1957,7 +1942,7 @@ selection does form a cycle by checking that $FIRST(i) \neq j$. Note that this i
 as checking that $LAST(j) \neq i$. Only one of those checks is necessary. If the check fails,
 the edge in question must be discarded. 
 
-  \begin{algorithm}[h!]
+  \begin{algorithm}[!ht]
     \caption{Selection of the edges} \label{ukk-h}
     \hspace*{\algorithmicindent} \textbf{Input:} The AC-machine and the output from Algorithm \ref{ukk-pre}, set of keywords $R=\{s_1,...,s_m\}$ \\
     \hspace*{\algorithmicindent} \textbf{Output:} The approximate longest Hamiltonian path $H$ in the overlap graph.
@@ -2057,7 +2042,7 @@ symbol in the $i$th input string, and every symbol corresponds to exactly one st
   is $n$, where $n$ is the
   total number of symbols in the input keywords.
 \end{lemma}
-\begin{proof}[Proof by induction]
+\begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all AC-machines constructed from 
   at most $M$ keywords. The hypothesis trivially holds for AC-machine with a single keyword. That is
   there are $|x|+1$ states, where $x$ is the keyword, and $|L(s)| = 1$ for each $|x|$ states,
@@ -2079,7 +2064,7 @@ symbol in the $i$th input string, and every symbol corresponds to exactly one st
 \begin{theorem}[]~\label{thm-time-h}
   The time complexity of Algorithm \ref{ukk-h} is $O(n)$.
 \end{theorem}
-\begin{proof}[Proof scketch]
+\begin{proof}[Proof sketch]
 
 As with $L$ in Algorithm \ref{ukk-pre}
 we assume that the set returned by function $P$ is implemented using a linked list, allowing constant
@@ -2160,7 +2145,7 @@ single byte, the repeat phrase with a length of less than 8 would actually
 consume more space than the original text.
 
 
-\begin{example}
+\begin{testexample}\\
   Let us simulate the LZ77 algorithm for a text string $T=$ ``abbabaabbaba''. We denote literal phrases
   with $[\sigma]$, where $\sigma$ is the symbol of the phrase. Repeat phrases are denoted
   with (pos,len). The processing starts
@@ -2172,7 +2157,7 @@ consume more space than the original text.
   the text string encoded to this point contains a string ``abbab'' the last phrase is a pointer
   to the start of this string with a length of 6. The final LZ77 factorization is therefore
   \hbox{$[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.}
-\end{example}
+\end{testexample}
 
 % decompression O(n)
 To decompress the LZ77 parse we process the phrases from the first phrase to the last phrase. For each
@@ -2213,7 +2198,7 @@ Relative Lempel-Ziv parsing (or factorization).
 \begin{definition}~\label{def-rlz}
   Let $T$ and $R$ be strings. Relative Lempel-Ziv factorization of $T$ relative to $R$, denoted by
   RLZ$(T|R)$ is a factoriszation $T=w_1w_2\cdots w_n$, where for each $1\leq i \leq n$, $w_i$ is either
-  \begin{enumerate}
+  \begin{enumerate}[leftmargin=28pt]
   \item a symbol $\sigma$ that does not occur in $R$, or
   \item the longest prefix of $T[j...|T|]$, where $j = |w_1\cdots w_{i-1}|$ that is a substring of $R$.
   \end{enumerate}
@@ -2221,7 +2206,7 @@ Relative Lempel-Ziv parsing (or factorization).
   starts from and $l_i$ is the length of $w_i$.
 \end{definition}
 
-\begin{example}
+\begin{testexample}
   ~\\
   \vspace{-1cm}
   \begin{center}
@@ -2232,7 +2217,7 @@ Relative Lempel-Ziv parsing (or factorization).
   \end{center}
   Let $T=$ ``abbababaaaaabbabaa'' and $R=$``abbabaa'' be strings. The RLZ factorization of $T$
   relative to $R$ is RLZ$(T|R)=(1,6)(5,3)(6,2)(1,7)$.
-\end{example}
+\end{testexample}
 
 As discussed above, RLZ can be used as a general purpose compressor. With a collection of
 genomes of the same species, one genome is a natural choice for a dictionary that other genomes are
@@ -2438,18 +2423,18 @@ the approximate SCS for the input.
 The following table summarizes the available compile-time options.\\
 
 %\begin{center}
-\hspace{-1.7cm}
+\hspace{-0.9cm}
   \begin{tabular}{ |l|c|c|l| }
     \hline
-    \textbf{Macro name} & \textbf{Possible values} & \textbf{Default value} & \textbf{Notes} \\
+    \textbf{Macro name} & \textbf{Possible values} & \textbf{Default} & \textbf{Notes} \\
  \hline
  ARRAY\_GOTO & defined / undefined & N/A & Either one but not both of this macro \\
  RB\_TREE\_GOTO & defined / undefined & N/A & or this macro must be defined. ~~~ \\
  OPTIMIZE\_LINKS & defined / undefined  & undefined & Enables the links optimization.\\
  MAX\_LINE & Any positive integer & 2048 & The size of the keyword buffer. \\
  LONG\_KEYS & defined / undefined & undefined & Sets max depth to 65536. \\
- MAX\_STATES & Any positive integer & 4294967296 & Should be as small as possible. \\
- SCS & defined / undefined & undefined & Enables a common superstring calculation. \\
+ MAX\_STATES & Any positive integer & $2^{32}$ & Should be as small as possible. \\
+ SCS & defined / undefined & undefined & Enables an approx. SCS calculation. \\
  INFO & defined / undefined & undefined & Prints additional information if defined.\\
  \hline
   \end{tabular}
@@ -2463,7 +2448,7 @@ The following table summarizes the available compile-time options.\\
 The compilation and the usage of our implementation requires a C compiler and the GNU Make software.
 Since the program uses \texttt{<sys/resource.h>} and \texttt{<sys/time.h>} POSIX header files,
 the program can only
-be used in a POSIX compliant (e.g. Linux, BSD, MacOs) operating system providing these libraries.
+be used in a POSIX compliant (e.g. Linux, BSD, macOS) operating system providing these libraries.
 There are no other
 requirements for building and running the binary. The default C compiler is GCC and it is defined in the
 file \texttt{common.mk}.
@@ -2920,6 +2905,7 @@ The last two columns are discussed later.
   \end{table}
 \end{center}
 
+\vspace{-4cm}
 As discussed in Section \ref{sec-our}, the links optimization was designed to improve the performance
 of our implementation with small alphabets. In general, the approach of direct indexing over a two
 dimensional array is only reasonable with small alphabets, since it significantly increases
@@ -2940,8 +2926,6 @@ and RBD versions.
 Later on, we only present the results for either DIE (when alphabet size $\leq$ 12)
 or RBD (when alphabet size $>12$) versions of our implementation.
 
-% refinetty tähän asti.
-% TODO: table should be figure
 Let us now examine the runtimes more carefully for the instances with keyword lengths 254.
 Table \ref{tbl-graphs} illustrates the runtimes for each instance in PizzaChili dataset
 with keyword length 254.
@@ -2975,9 +2959,8 @@ the instances grows while the keyword length remains constant. Also, the relativ
 implementation versus the reference implementation decreases while the input size remains constant and the
 line length increases. 
 
-\vspace{-1cm}
 \begin{center}
-  \begin{table}[h!]
+  \begin{table}[]
   \begin{tabular} {| l |r r|l l|}
     \hline
     \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
@@ -2996,10 +2979,32 @@ line length increases.
   \end{table}
 \end{center}
 
+
+
+\begin{center}
+  \begin{table}
+  \begin{tabular} {| l |r r|l l|}
+    \hline
+    \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
+    \hline
+    cere            & 1162.88 & \textbf{665.73} & 0.237  & 0.178 \\
+    coreutils       & 637.61  & \textbf{335.40} & 0.256  & 0.192 \\
+    einstein.de.txt & 303.83  & \textbf{126.08} & 0.0277 & 0.021 \\
+    einstein.en.txt & 1744.57 & \textbf{560.52} & 0.0146 & 0.011 \\
+    influenza       & 324.12  & \textbf{221.69} & 0.399  & 0.299 \\
+    kernel          & 946.69  & \textbf{432.82} & 0.0881 & 0.066 \\
+    para            & 1033.05 & \textbf{634.22} & 0.237  & 0.178 \\
+    \hline
+  \end{tabular}
+  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.75 and keyword length 512, compression, relative size of the dictionary. The fastest runtimes are bolded.}
+  \label{runtimes-75-512}
+  \end{table}
+\end{center}
+
 % TODO units? caption ? table should be figure. 
 %\afterpage{%
-%\thispagestyle{empty}
-\begin{table}[H]
+
+\begin{table}[]
   \vspace{-1.1cm}
 \hskip-1.2cm\resizebox{1.1\columnwidth}{!}{%
   \begin{tabular}{c@{\hskip 0.5in}c}
@@ -3008,7 +3013,8 @@ line length increases.
     \vspace{0.5cm}
     
     \begin{minipage}{.5\textwidth}
-\begin{tikzpicture}
+      \begin{tikzpicture}
+        \thisfloatpagestyle{empty}
 	\begin{axis}[
 		ylabel=\texttt{a) cere},
 		xlabel=,
@@ -3355,50 +3361,30 @@ line length increases.
 %}
 
 
-\begin{center}
-  \begin{table}
-  \begin{tabular} {| l |r r|l l|}
-    \hline
-    \textbf{File} & \textbf{Reference}~ & ~~\textbf{Our impl.} & \textbf{Compression}~~~ & \textbf{Rsize}~~~ \\
-    \hline
-    cere            & 1162.88 & \textbf{665.73} & 0.237  & 0.178 \\
-    coreutils       & 637.61  & \textbf{335.40} & 0.256  & 0.192 \\
-    einstein.de.txt & 303.83  & \textbf{126.08} & 0.0277 & 0.021 \\
-    einstein.en.txt & 1744.57 & \textbf{560.52} & 0.0146 & 0.011 \\
-    influenza       & 324.12  & \textbf{221.69} & 0.399  & 0.299 \\
-    kernel          & 946.69  & \textbf{432.82} & 0.0881 & 0.066 \\
-    para            & 1033.05 & \textbf{634.22} & 0.237  & 0.178 \\
-    \hline
-  \end{tabular}
-  \caption{Runtimes in seconds for PizzaChili dataset with cut 0.75 and keyword length 512, compression, relative size of the dictionary. The fastest runtimes are bolded.}
-  \label{runtimes-75-512}
-  \end{table}
-\end{center}
-
-
 % esitellään vastaavat tulokset dna datalle. Todedaan että lineaarisuus on hyvin näkyvissä
-  Let us now examine the runtime benchmarks for the DNA dataset. This experiment was run in both
-  environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
-  labeled with \# defines the prefix of the filename. For example, the row starting with 5 corresponds the
-  file \texttt{5\_dna\_5k.acgt}, which consists of 5000 lines of DNA sequences, 100 bases in each
-  line.
+\vspace{-2.5cm}
+Let us now examine the runtime benchmarks for the DNA dataset. This experiment was run in both
+environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
+labeled with \# defines the prefix of the filename. For example, the row starting with 5 corresponds the
+file \texttt{5\_dna\_5k.acgt}, which consists of 5000 lines of DNA sequences, 100 bases in each
+line.
   
-  The columns labeled Reference and DIE show the runtimes in seconds.
-  Due to the high memory usage of our implementation, the last file could not be run in Env2.
-  For both environments, there is
-  also a Percentage column, which shows the runtimes of our implementation in percentages compared
-  to the runtimes of the reference implementation. The last column contains the compression ratio of the
-  generated superstring, that is the size of the superstring divided by the size of the input instance.
-  Note that the achieved compression is a result of the greedy heuristic, which is used by both
-  of the implementations. Hence, the compression is the same to the number of significant digits
-  represented in the table.
+The columns labeled Reference and DIE show the runtimes in seconds.
+Due to the high memory usage of our implementation, the last file could not be run in Env2.
+For both environments, there is
+also a Percentage column, which shows the runtimes of our implementation in percentages compared
+to the runtimes of the reference implementation. The last column contains the compression ratio of the
+generated superstring, that is the size of the superstring divided by the size of the input instance.
+Note that the achieved compression is a result of the greedy heuristic, which is used by both
+of the implementations. Hence, the compression is the same to the number of significant digits
+represented in the table.
 
-  From the data, we can observe that the runtimes are significantly higher in Haapa. This result is
-  expected, since Haapa has an older CPU with lower clock speed. The memory speed in Haapa is
-  also lower. With the smaller instances, the reference implementation has lower runtimes.
-  In Haapa, the reference implementation is faster with instance sizes $\leq$ 200,000 lines.
-  In Env2 this treshold is 100,000 lines. The corresponding instance sizes in mebibytes are
-  20 and 10, respectively. After that, our implementation dominates.
+From the data, we can observe that the runtimes are significantly higher in Haapa. This result is
+expected, since Haapa has an older CPU with lower clock speed. The memory speed in Haapa is
+also lower. With the smaller instances, the reference implementation has lower runtimes.
+In Haapa, the reference implementation is faster with instance sizes $\leq$ 200,000 lines.
+In Env2 this treshold is 100,000 lines. The corresponding instance sizes in mebibytes are
+20 and 10, respectively. After that, our implementation dominates.
 
 \begin{center}
   \begin{table}
@@ -3427,6 +3413,7 @@ line length increases.
   \end{table}
 \end{center}
 
+\vspace{-1.5cm}
 To further illustrate runtimes, we also sampled a set of
 instances with linearly increasing size from 100,000 lines to 2,000,000 lines in 100,000-line
 steps. This set was then run in Env2. Every instance was run only once and no precise values
@@ -3667,7 +3654,7 @@ byte encoding with the dictionary.
      \hline
 
      cere            & \textbf{41.86} & 43.31          & 46.78          & 56.26          & 72.01          & 83.45 \\
-     coreutils       & 39.16          & 38.80          & 33.66          & \textbf{33.22} & 0.00           & 39.84 \\
+     coreutils       & 39.16          & 38.80          & 33.66          & \textbf{33.22} & 36.44           & 39.84 \\
      einstein.de.txt & 2.91           & \textbf{2.16}  & 2.23           & 2.31           & 2.35           & 2.50  \\
      einstein.en.txt & 13.59          & 7.75           & 8.28           & 9.95           & \textbf{7.23}  & 7.96  \\
      influenza       & \textbf{18.51} & 19.21          & 22.53          & 30.41          & 38.25          & 47.86 \\
@@ -3677,7 +3664,7 @@ byte encoding with the dictionary.
      \hline
 
      cere            & 104.84 & 79.67          & \textbf{74.94} & 76.84 & 82.17          & 92.74          \\
-     coreutils       & 63.90  & 58.08          & \textbf{55.39} & 55.40 & 0.00           & 55.85          \\
+     coreutils       & 63.90  & 58.08          & 55.39          & 55.40 & \textbf{54.00} & 55.85          \\
      einstein.de.txt & 11.73  & 6.98           & 6.61           & 6.35  & 4.61           & \textbf{4.61}  \\
      einstein.en.txt & 41.40  & 28.06          & 24.84          & 23.29 & 15.92          & \textbf{15.91} \\
      influenza       & 25.43  & \textbf{23.27} & 26.77          & 34.74 & 41.01          & 50.73          \\
