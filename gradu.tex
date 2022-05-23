@@ -1511,7 +1511,7 @@ The first loop calls a procedure once for each keyword of the input. The functio
 executed in a constant time, so the time complexity of the first for loop is linear with respect
 to the number of input keywords. The second for loop starting on line 5 is used to search all
 children of the start state. Since the start state has only $|\Sigma|$ goto transitions, the loop
-is executed at most $|\Sigma|$ times. In the worst case, every symbol
+is executed at most $|\Sigma|$ times. In the worst-case, every symbol
 in every input keyword is different. In that case $|\Sigma| = n$, where $n$ is the sum of the input
 symbols. Therefore, the second for loop is executed at most $n$ times, resulting in the time complexity of
 the main function being linear with respect to the size of the input.
@@ -2084,7 +2084,7 @@ binary trees with $O(\log(|\Sigma|))$ time complexity. This conclusion leads us 
 
 Dictionary compression algorithms \citep{Storer82} process the input as a sequence of symbols.
 Using the structure and repetitiveness of the input, longer input sequences are encoded as shorter
-tokens. This reduces the space needed to store the original input data. In this approach a so-called
+tokens. This reduces the space needed to store the original input data. In this approach, a so-called
 dictionary is maintained. The dictionary may be static or it can be updated during the (de)compression process.
 The tokens (also called phrases) contain pointers to the dictionary such that each token
 unambigiously corresponds to a sequence of symbols \citep{Pu05}.
@@ -2113,7 +2113,7 @@ Each phrase in LZ77 is either
 \end{enumerate}
 
 Literal phrases are used when the current symbol in the input file has not been seen before in the file.
-phrases consist of a pointer and a length, where the pointer defines the point in the already
+Phrases consist of a pointer and a length, where the pointer defines the point in the already
 processed text where the repeating sequence of symbols starts. To use a repeat phrase, the text up
 to the pointer must already be tokenized.
 The length encodes the size of the original text
@@ -2129,17 +2129,17 @@ consume more space than the original text.
   Let us simulate the LZ77 algorithm for a text string $T=$ ``abbabaabbaba''. We denote literal phrases
   with $[\sigma]$, where $\sigma$ is the symbol of the phrase. Repeat phrases are denoted
   with (position, length). The processing starts
-  at the first symbol of $T$. Since the symbol ``a'' is encountered for the first time we create a
+  at the first symbol of $T$. Since the symbol ``a'' is encountered for the first time, we create a
   literal phrase $[$``a''$]$. The same thing happens with the next symbol ``b''. The third symbol ``b'' is
   encoded with a repeat phrase $(2,1)$ which means that the phrase encodes a string of length 1 starting
-  at position 2. The next repeat phase $(1,2)$ encodes the string ``ab''. At this point we have encoded
+  at position 2. The next repeat phase $(1,2)$ encodes the string ``ab''. At this point, we have encoded
   the string ``abbab''. The next phrase encodes the following ``a'' with a phrase $(1,1)$. Since
   the text string encoded to this point contains a string ``abbab'' the last phrase is a pointer
   to the start of this string with a length of 6. The final LZ77 factorization is therefore
   \hbox{$[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.}
 \end{testexample}
 
-To decompress the LZ77 parse we process the phrases from the first phrase to the last phrase. For each
+To decompress the LZ77 parse, we process the phrases from the first phrase to the last phrase. For each
 phrase, using the already decompressed data, we augment the dictionary with the text corresponding
 to the phrase. After the decompression, the generated dictionary is the same as the dictionary used
 with the compression. In other words, the resulting decompression dictionary is the same sequence
@@ -2147,7 +2147,7 @@ of symbols as the original uncompressed data.
 
 \section{Relative Lempel-Ziv}
 Relative Lempel-Ziv is a simple and efficient \citep{Deorowicz11} general-purpose \citep{Hoobin11}
-compression method. It combines a static dictionary with an LZ77 parsing providing semi random
+compression method. It combines a static dictionary with an LZ77 parsing, providing semi random
 access to the compressed data. It was developed to compress a set of genomes, however, further
 research has shown that RLZ scales well with any repetitive data, providing
 one of the best (de)compression time and compression ratios \citep{Gagie16}.
@@ -2185,13 +2185,13 @@ Relative Lempel-Ziv parsing (or factorization).
   relative to $R$ is RLZ$(T|R)=(1,6)(5,3)(6,2)(1,7)$.
 \end{testexample}
 
-As discussed above, RLZ can be used as a general purpose compressor. With a collection of
+As discussed above, RLZ can be used as a general-purpose compressor. With a collection of
 genomes of the same species, one genome is a natural choice for a dictionary that other genomes are
 factorized against. Choosing the dictionary for arbitrary data (not necessarily a collection of the
 same kind) is however more difficult since there is no natural reference. As the number of factors
 highly depends on the contents of the dictionary, this decision is however essential. Fortunately, it has been shown
 that even with a lack of a natural reference, an effective artificial one can be easily constructed.
-\citep{Hoobin11} has shown that by taking random samples of the data and concatenating them togeter,
+\citep{Hoobin11} has shown that by taking random samples of the data and concatenating them together,
 an efficient  artificial reference can be constructed. The achieved compression ratios are surprisingly
 good with dictionaries as small as 0.1\% of the original input size. Further \citep{Gagie16} have
 given the theoretical analysis of why this method works so well.
@@ -2213,9 +2213,9 @@ Also, runtimes for dictionary construction remain low when a linear time approxi
 algorithm for the SCS problem is used.
 
 \chapter{Empirical Evaluation}~\label{chp-results}
-In this chapter we introduce and describe an open-source implementation of Ukkonen's shortest
+In this chapter, we introduce and describe an open-source implementation of Ukkonen's shortest
 common superstring
-approximation algorithm discussed in Chapter \ref{chp-ukkonen}. We go through the most significant
+approximation algorithm, discussed in Chapter \ref{chp-ukkonen}. We go through the most significant
 aspects of the implementation and usage of the code. We also describe the data that was used to
 benchmark the efficiency of the implementation as well as the experiments related to
 relative Lempel-Ziv compression using the SCS of the sampled original data as the reference string.
@@ -2239,8 +2239,8 @@ test scripts for building and testing the code.
 
 % Explaion array goto and rb tree goto
 As discussed earlier, the goto function of the AC-machine can be implemented in many different
-ways. In our implementation the underlying data structure for the goto function is defined at compile
-time to be either a two dimensional array or a red-black tree \citep{Cormen09}. Hence, by Theorem \ref{thm-overall-time}
+ways. In our implementation, the underlying data structure for the goto function is defined at compile
+time to be either a two-dimensional array or a red-black tree \citep{Cormen09}. Hence, by Theorem \ref{thm-overall-time}
 the time complexity of our implementation of Ukkonen's algorithm is either $O(n)$ or
 $O(n\cdot\log(|\Sigma|))$, respectively.
 
@@ -2260,7 +2260,7 @@ large inputs.
 Our implementation uses the \texttt{char} datatype of the C programming language as the
 type of the element
 in an integer alphabet that is used in the algorithm. The \texttt{char} datatype is an obvious
-choice since the C starndard defines many string processing functions for \texttt{char} arrays.
+choice, since the C standard defines many string-processing functions for \texttt{char} arrays.
 However, since \texttt{char} is only 8 bits long, this choice limits our implementation for alphabets
 $\Sigma$ with $|\Sigma| \leq 256$. The code is however designed so that the alphabet data type
 is bound to a macro. Thus, the change in the
@@ -2273,10 +2273,10 @@ The git repository of our implementation can be found from GitHub:\\ \url{https:
 \paragraph{Compile-time parameters:}
 To optimize the memory consumption and the execution time depending on the input data,
 various alternative approaches were implemented.
-The purpose was to include various compile or runtime flags that would change the behaviour
+The purpose was to include various compile or runtime flags that would change the behavior
 of the application. All of those modifications except one were discarded. The current version includes
 a compile-time macro \texttt{OPTIMIZE\_LINKS} that changes the data structure that is used to the children of each
-state. Later on we refer to this parameter as the {\em links optimization}. The optimization works as follows.
+state. Later on, we refer to this parameter as the {\em links optimization}. The optimization works as follows.
 Each state must be able to refer to all of its children in time linear with respect to the number
 of children.
 Each child of a state is saved in a list. When links optimization is turned on, this list is
@@ -2287,16 +2287,16 @@ consumption with large alphabets. When links optimization is turned off, the lis
 children of a state is implemented using a linked list. A new node to the list is allocated for each
 child, thus the overhead from the memory management is relatively larger. In practice, the links
 optimization is viable only with small alphabets and can decrease the execution time and the memory
-consumption with larger alphabets. As we will see later, in general the best performance for big
+consumption with larger alphabets. As we will see later, in general, the best performance for big
 alphabets
 is achieved with the combination of red-black trees and disabled links optimization. On the contrary,
-when the alphabet is small enough, direct indexing over two dimensional arrays combined with
+when the alphabet is small enough, direct indexing over two-dimensional arrays combined with
 enabled links
 optimization results in the best execution time.
 
 % Explain other compile time flags: MAX_LINE LONG_KEYS and SCS INFO MAX_STATE 
 The input keywords are given to the program as an input file that contains one keyword per line. The
-line separator is an ASCII line feed character (code 10). This adds an additional limitation to the
+line separator is an ASCII line feed character (code 10). This adds a limitation to the
 alphabet, since in practice the decimal value 10 cannot be a part of any given keyword. In Section
 \ref{usage} we introduce another input system that allows any character code (except 0) to be used. In
 that input method the keywords are merely sampled from the input file and the individual keywords
@@ -2326,9 +2326,9 @@ is at most the number of symbols in the input is useful. As we use a one-byte al
 of the input file should not exceed 4GiB when using the default configuration. The data type
 for the state numbers can be changed as follows. There is a macro \texttt{MAX\_STATE} that automatically
 defines the data type to be as small as possible. Possible data types are 8, 16, 32 and 64-bit
-unsigned integers. Note that it is not necessary to set the \texttt{MAX\_STATES} macro to a smaller value
+unsigned integers. Note that it is not necessary to set the \texttt{MAX\_STATES} macro to a smaller value,
 even if the input size were less than $2^{16}$ bytes. This only affects the memory consumption of
-the program which is anyway quite small with input sizes less than 16KiB.
+the program, which is anyway quite small with input sizes less than 16KiB.
 
 There are also two compile-time options that affect the execution. If the macro \texttt{SCS}
 is not defined,
@@ -2378,14 +2378,14 @@ requirements for building and running the binary. The default C compiler is GCC 
 file \texttt{common.mk}.
 
 There is a top-level Makefile in the root of the repository and other Makefiles in the \texttt{tests/}
-and \texttt{src/} folders. Every action can be executed in the repository root since the top level
+and \texttt{src/} folders. Every action can be executed in the repository root, since the top-level
 Makefile further calls the Makefiles in these subfolders. The default action triggers the project build.
 When the build is done, the \texttt{target/scs} binary is created and ready to be executed. To build
 the binary, either the \texttt{ARRAY\_GOTO} or \texttt{RB\_TREE\_GOTO} macro must be defined.
 There is no default value
 for the goto function's data structure. Other macros can be defined if needed.
 The Makefile in the \texttt{src/} folder, that builds the binary, is configured to append every
-compilation command with an environment variable named \texttt{DEFS}. This is a convinient way of passing
+compilation command with an environment variable named \texttt{DEFS}. This is a convenient way of passing
 macro definitions to the compiler. For example, to compile our implementation to calculate the
 shortest common superstring approximation that uses the red-black trees, one may issue the following
 command.
@@ -2395,7 +2395,7 @@ user@host:.../ukkonen-90/$ make DEFS="-DRB_TREE_GOTO -DSCS"
 \end{minted}
 
 To compile the binary with support of keywords of length 1000 and direct indexing with links
-optimization enabled and additional information printed one may issue the following command.
+optimization enabled and additional information printed, one may issue the following command.
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ make DEFS="-DARRAY_GOTO -DOPTIMIZE_LINKS -DSCS \
@@ -2411,7 +2411,7 @@ folder. After that, the next time the tests are executed the new random test ins
 also generated.
 
 \paragraph{Usage:}
-When the binary is ready to use there are two methods for executing it. The simplest method is to
+When the binary is ready to use, there are two methods for executing it. The simplest method is to
 execute the binary with a single input filename. The file should contain a single byte encoded text with
 line feed (ASCII 10) delimited keywords. The file should also end with a line feed. Note that the input
 can be any single byte encoded text with the following constraints:
@@ -2424,8 +2424,8 @@ can be any single byte encoded text with the following constraints:
 \end{enumerate}
 
 It does not matter whether the text is ASCII, extended ASCII, some single byte ISO- encoding or any
-custom made single byte encoding. The following example demonstrates the usage with single input
-file as a parameter. In the example the binary is compiled with \texttt{SCS} macro enabled and
+custom-made single byte encoding. The following example demonstrates the usage with single input
+file as a parameter. In the example, the binary is compiled with \texttt{SCS} macro enabled and
 \texttt{INFO} macro disabled.
 
 \begin{minted}{Text}
@@ -2462,11 +2462,11 @@ parameter has a value
 of 100 and the cut parameter has a value of 0.50, then the keywords are sampled such that there
 are 50 keywords of length 100 (that is 10KB$\cdot 0.50 = 5$KB). Note that when the
 keywords are sampled from rather than delimited in the input file, they can also contain the line
-feed characters. After the keywords are sampled it is possible (especially with highly repetitive
+feed characters. After the keywords are sampled, it is possible (especially with highly repetitive
 input files and big cuts) that there are multiple identical keywords. Before the SCS algorithm
 is executed, the duplicates are first removed. The following example
 demonstrates the usage with an input file that is sampled to get a set of keywords of lengths 128
-such that the size of the sampled keywods equals 10\% of the size of the given input file.
+such that the size of the sampled keywords equals 10\% of the size of the given input file.
 
 \begin{minted}{Text}
 user@host:.../ukkonen-90/$ target/scs -b -f input -l 128 -c 0.1
@@ -2493,7 +2493,7 @@ to test that the generated common superstring actually contains every keyword in
 test is executed with the \texttt{test1.sh} shell script file. The \texttt{grep} utility is used to ensure
 that each keyword is present in the output of our implementation. 
 
-The same set of tests is also used with the \texttt{test3.sh} file. In this test we compile two version
+The same set of tests is also used with the \texttt{test3.sh} file. In this test we compile two versions
 of our implementation, one which uses the direct indexing and another that uses the red-black tree
 implementation. The tests instances are then run with each version of the implementation and for each
 test, the test is passed if the generated superstrings are equal. In other words, the idea of this
@@ -2501,16 +2501,16 @@ test is to ensure that the data structure that is used with the goto function do
 the outcome.
 
 The second set of test instances is rather small. There are only few very small instances with binary
-alphabet. The test script \texttt{test2.sh} runs these tests as follows. First each test instance is
+alphabet. The test script \texttt{test2.sh} runs these tests as follows. First, each test instance is
 executed with a python script \texttt{scs.py} that uses the \texttt{pysat} python library to calculate
 the length of a longest common superstring of the instance. The same instance is then run with our
-implementation and the compression values for both are calculated. Finally the compression is compared
+implementation and the compression values for both are calculated. Finally, the compression is compared
 and the test is considered to be passed if the compression acquired with our implementation is
 at least half of the optimal compression. The idea of this test set is to make sure that the proven
 quality of the compression holds.
 
 Note that in order to run all the tests, the python environment with the pysat library must be configured.
-Note also that the make format uses GNU specific features that requires GNU Make or GNU Make compliant
+Note also that the make format uses GNU specific features that require GNU Make or GNU Make compliant
 makefile software. 
 
 
@@ -2519,7 +2519,7 @@ makefile software.
 \section{Benchmark Data}~\label{data}
 Here we describe the two datasets that are use in Section \ref{sec-results}. We discuss the origin
 of both of those datasets and inspect their basic properties. Since the data is slightly manipulated
-to fit our experiments we also describe this preprocessing.
+to fit our experiments, we also describe this preprocessing.
 
 \paragraph{PizzaChili datasets:}
 PizzaChili \citep{PizzaChili} is a deprecated project of University of Pisa and University of Chile,
@@ -2568,7 +2568,7 @@ actual alphabet sizes are exactly the same.
 
 \paragraph{Preprocessing of PizzaChili:}
 Each file in the dataset is preprocessed as follows. First, the newline characters are substituted
-with tab characters (ASCII key code 9). After that a number of new files are sampled from the files
+with tab characters (ASCII key code 9). After that, a number of new files are sampled from the files
 such that the new file consists of multiple lines delimited by a newline character. Each line has a
 length $l$ and the total (rounded) number of characters, excluding the newlines, are $0.01c\cdot s$,
 where $s$ is the size of the original file. In other words, the $c$ parameter describes the percentage
@@ -2580,7 +2580,7 @@ $l$ from that position to the sample file. This process is then repeated until t
 achieved. Any duplicate lines are removed and the process is repeated until the wanted
 number of lines is reached. At the end of this process we have a sample file that contains unique keywords of length
 $l$ such that the size of all keywords combined is $c\%$ of the original size. The files are
-named \texttt{s\_c\_l}. For example the file \texttt{cere\_50\_128} has size 220MB
+named \texttt{s\_c\_l}. For example, the file \texttt{cere\_50\_128} has size 220MB
 (plus the number of newlines) and contains unique keywords of length 128.
 
 \paragraph{The DNA dataset:}
@@ -2605,17 +2605,17 @@ to \texttt{4\_dna\_25k.acgt} and the last (11th) file was named to \texttt{B\_dn
 
 \section{Benchmark Setups}~\label{sec-env}
 
-The experiments were done in two different environments. In this section we describe the relevant
+The experiments were done in two different environments. In this section, we describe the relevant
 aspects of the software and hardware for both of them. We also name the environments so they
 can be referred to in Section \ref{sec-results}. The first environment is called Haapa. It is the more
-powerful of the environments providing, due to its larger amount of memory, a possibility to run
+powerful of the environments, providing, due to its larger amount of memory, a possibility to run
 much bigger problem instances. The second
 environment is referred to as Env2. For running
 our experiments, Haapa is however the slower of the two environments. Although Haapa has many times
 more CPUs, the single CPU is significantly slower. Since the code used in the experiments
 are all single-threaded, the performance of a single core is all that matters. The memory
 clock speed in Haapa is also configured to be significantly slower, thus limiting the performance
-of our implementation with huge memory requirements. Less experiments are run on Env2 since the
+of our implementation with huge memory requirements. Fewer experiments are run on Env2 since the
 memory of the machine provided a limitation to the size of the problem instances.
 Table \ref{tbl-sys} describes the main features of both environments.
 
@@ -2646,7 +2646,7 @@ Table \ref{tbl-sys} describes the main features of both environments.
 %sed -i 's/\x01/\x02/g' coreutils-modified_0.15_128
 % sed -i 's/</[/g' data/real_15_128/coreutils-modified_0.15_128
 \section{Results}~\label{sec-results}
-In this section we examine the performance of our implementation. As a reference we use another
+In this section, we examine the performance of our implementation. As a reference, we use another
 implementation of the same greedy heuristic for the approximate shortest common superstring problem.
 The {\em reference implementation} \citep{Alanko17} performs the computation in a space efficient way using
 only $O(n \cdot\log(|\Sigma|))$ bytes of memory. The time complexity of the reference implementation
@@ -2660,7 +2660,7 @@ In addition, as discussed in Section
 structure used for the children list of the states. As it is, there are four different versions of
 our implementation, at total:
 
-\footnotetext{Gentoo Linux is a so called rolling release distribution. That means it does not have any version numbers.}
+\footnotetext{Gentoo Linux is a so-called rolling release distribution. That means it does not have any version numbers.}
 
 
 \begin{enumerate}
@@ -2670,7 +2670,7 @@ our implementation, at total:
 \item Red-black tree ($O(n\cdot\log(|\Sigma|))$) with links optimization disabled.
 \end{enumerate}
 
-For convinience we refer these versions as DIE, DID, RBE and RBD, respectively. All of the results,
+For convenience, we refer to these versions as DIE, DID, RBE and RBD, respectively. All of the results,
 from our implementations as well as the reference implementation,
 presented in this section are from binaries that have been compiled with the same C
 compiler (gcc) with the same optimization settings. The predefined optimization set \texttt{-O3} have
@@ -2697,7 +2697,7 @@ we show the time portion of our implementations (DIE for \texttt{cere} and RBD f
 \texttt{einstein.en.txt}) that were
 used for the duplicate removal as a percentage of the total runtime. Since the used  implementation
 versions are the fastest ones for the particular instances, the time portions for the duplicate
-removals are maximal. Table \ref{table-duplicate-time} shows the worst case time percentages
+removals are maximal. Table \ref{table-duplicate-time} shows the worst-case time percentages
 for the preprocessing phase.
 
 \begin{table}
@@ -2711,7 +2711,7 @@ for the preprocessing phase.
   15\_254 & 0.54\% & 3.25\% \\
   15\_128 & 1.06\% & 4.77\% \\
 \end{tabular}
-  \caption{Worst case time consumptions in percentage for the input preprocessing.}
+  \caption{Worst-case time consumptions in percentage for the input preprocessing.}
   \label{table-duplicate-time}
 \end{centering}
 \end{table}
@@ -2725,9 +2725,9 @@ Investigating Table \ref{table-duplicate-time}, a few observations can be made.
 As we see, the maximum relative preprocessing time for the cere files is 1.06\% of the total runtime.
 The results were similar for all instances having small ($<12$) alphabets. Based on this data,
 it is reasonable to say that the preprocessing time of the program is insignificant for instances
-with a small alphabet while the instance sizes are in the ranges of our experiment. For bigger
-alphabets ($|\Sigma|>12$) the relative preprocessing time is greater. However, in our experiments
-the time required for the preprocessing with large alphabets was at most around 5 per cent. One may
+with a small alphabet, while the instance sizes are in the ranges of our experiment. For bigger
+alphabets ($|\Sigma|>12$) the relative preprocessing time is greater. However, in our experiments,
+the time required for the preprocessing with large alphabets was at most around 5 percent. One may
 interpret this value to be significant, however while comparing our implementation with large
 inputs to the reference implementation, the differences with the relative time usages are usually
 significantly more than 5\%.
@@ -2744,7 +2744,7 @@ The runtimes for the PizzaChili dataset files with line length $\leq$ 254 are sp
 Tables \ref{runtimes-15-128},
 \ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254}. Each table shows the
 runtimes for the set of each 7 files sampled with the same parameters. The File column is the
-prefix of the used filename. For examples the files in Table \ref{runtimes-15-128} are
+prefix of the used filename. For example, the files in Table \ref{runtimes-15-128} are
 \texttt{cere\_15\_128}, \texttt{coreutils\_15\_128} and so on. The column labeled Reference shows
 the runtimes with the reference implementation. Columns labeled with DIE, DID, RBE and RBD show the
 runtimes of our implementation versions. The best runtimes for each input file are bolded.
@@ -2832,8 +2832,7 @@ The last two columns are discussed later.
 
 \vspace{-4cm}
 As discussed in Section \ref{sec-our}, the links optimization was designed to improve the performance
-of our implementation with small alphabets. In general, the approach of direct indexing over a two
-dimensional array is only reasonable with small alphabets, since it significantly increases
+of our implementation with small alphabets. In general, the approach of direct indexing over a two-dimensional array is only reasonable with small alphabets, since it significantly increases
 the memory consumption of the program. Also, in practice, our implementations with red-black trees
 were faster with big alphabets. Investigating the runtimes from Tables \ref{runtimes-15-128},
 \ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254} we make the following observation.
@@ -2856,7 +2855,7 @@ Table \ref{tbl-graphs} illustrates the runtimes for each instance in PizzaChili 
 with keyword length 254.
 Thus, each plot uses the data from Tables
 \ref{runtimes-15-254}, \ref{runtimes-25-254} and \ref{runtimes-50-254}.
-Note that since the data points are not uniformly distributed in the x axis,
+Note that since the data points are not uniformly distributed in the x-axis,
 these graphs do not illustrate the time complexities of the programs. 
 The x marked blue lines and circle marked black lines show the time usages of the reference
 implementation and our implementation, respectively. Runtimes in seconds are presented in the
@@ -3283,7 +3282,7 @@ line length increases.
 \vspace{-2.5cm}
 Let us now examine the runtime benchmarks for the DNA dataset. This experiment was run in both
 environments. The results are shown in Table \ref{runtimes-dna}. The first column of the table,
-labeled with \# defines the prefix of the filename. For example, the row starting with 5 corresponds the
+labeled with \# defines the prefix of the filename. For example, the row starting with 5 corresponds to the
 file \texttt{5\_dna\_5k.acgt}, which consists of 5000 lines of DNA sequences, 100 bases in each
 line.
   
@@ -3292,7 +3291,7 @@ Due to the high memory usage of our implementation, the last file could not be r
 For both environments, there is
 also a Percentage column, which shows the runtimes of our implementation in percentages compared
 to the runtimes of the reference implementation. The last column contains the compression ratio of the
-generated superstring, that is the size of the superstring divided by the size of the input instance.
+generated superstring, that is, the size of the superstring divided by the size of the input instance.
 Note that the achieved compression is a result of the greedy heuristic, which is used by both
 of the implementations. Hence, the compression is the same to the number of significant digits
 represented in the table.
@@ -3301,7 +3300,7 @@ From the data, we can observe that the runtimes are significantly higher in Haap
 expected, since Haapa has an older CPU with lower clock speed. The memory speed in Haapa is
 also lower. With the smaller instances, the reference implementation has lower runtimes.
 In Haapa, the reference implementation is faster with instance sizes $\leq$ 200,000 lines.
-In Env2 this treshold is 100,000 lines. The corresponding instance sizes in mebibytes are
+In Env2 this threshold is 100,000 lines. The corresponding instance sizes in mebibytes are
 20 and 10, respectively. After that, our implementation dominates.
 
 \begin{center}
@@ -3431,10 +3430,10 @@ of the implementations can be seen.
 \end{tikzpicture}
 \caption{Comparison of the runtimes between our and reference implementation with DNA data consisting
   of keywords of length 100. The blue line marked with x shows the runtimes of the reference
-  implementation. Black line marked with circles shows the runtimes of our implementation. Runtimes are
-  shown (in seconds) in the left vertical axis. Orange line marked with triangles shows the percentage
+  implementation. The black line marked with circles shows the runtimes of our implementation. Runtimes are
+  shown (in seconds) in the left vertical axis. The orange line marked with triangles shows the percentage
   of the runtime of our implementation compared to the reference implementation. Percentage values
-  are shown in the right vertical axis. The x axis specifies the size of the instance in thousands
+  are shown in the right vertical axis. The x-axis specifies the size of the instance in thousands
   of lines. }
   \label{fig-dna}
 \end{figure}
@@ -3542,7 +3541,7 @@ parameters cut $= 0.50$ and line length $= 254$.
 By Table \ref{runtimes-50-254} the compression ratio of the
 file \texttt{para\_50\_254} is 0.237. That means the size of the superstring compared to the
 original file is $50\% \cdot 0.237 = 0.119$, which is the corresponding Rsize value.
-Let us also assume that the dictionary is encoded using a naive approach where each symbol is
+Let us also assume that the dictionary is encoded using a naive approach, where each symbol is
 encoded in one byte.
 The absolute
 size of the dictionary is therefore 410Mib $\cdot 0.119 = $ 48.79Mib. The absolute size of the
@@ -3557,11 +3556,11 @@ Table \ref{tbl-total-sizes} shows the total compressed sizes for each PizzaChili
 cut and line length parameters. Note that the values presented in Tables \ref{runtimes-15-128},
 \ref{runtimes-15-254}, \ref{runtimes-25-254}, \ref{runtimes-50-254}, \ref{runtimes-50-512} and
 \ref{runtimes-75-512} are rounded. The values presented in Table \ref{tbl-total-sizes} are
-calculated with more precision causing a small difference compared to values calculated from the
-earlier presented data. For the same reason the 75/512 version of the \texttt{einstein.de.tx}
+calculated with more precision, causing a small difference compared to values calculated from the
+earlier presented data. For the same reason, the 75/512 version of the \texttt{einstein.de.tx}
 in the lower section of the table is bolded. The compression with more precise values is better
 in this case. Note that in real applications, the dictionaries could be encoded using a
-$\log_2(|\Sigma|)$ bit encodings. Also, the factors could be encoded in less space. The values
+$\log_2(|\Sigma|)$-bit encoding. Also, the factors could be encoded in less space. The values
 presented in table \ref{tbl-total-sizes} are examples with sizes of 8 byte factors and a single
 byte encoding with the dictionary.
 
@@ -3659,7 +3658,7 @@ and therefore the time complexity of our implementation
 (linear for small alphabets, $O(n\cdot\log(|\Sigma|)$ for
 alphabets larger than 12), our implementation was faster with
 sufficiently large inputs. This indicates that the approximate
-SCS problem can be quickly solved even for a large inputs.
+SCS problem can be quickly solved even for large inputs.
 
 The hypothesis of the compression ratios of the RLZ was also
 answered. The results indicate that for highly repetitive
@@ -3668,9 +3667,9 @@ is significantly reduced when using the SCS approach to
 construct the dictionaries.
 
 % Limitations
-The results of this thesis implicates that a speedy implementation of the greedy heuristic of
+The results of this thesis implicate that a speedy implementation of the greedy heuristic of
 the shortest common superstring can be crafted.
-However the comparisons of the implementations lacked the
+However, the comparisons of the implementations lacked the
 measurement of the used memory. As the memory usage is also
 a significant aspect of the computation, it would be
 interesting to study this matter further. As future
