@@ -1,3 +1,6 @@
+%% TODO
+% Jos ehtii. muuttujanimet ja todistusten joissa viitataan koodiin yhtenäistäminen. (algo 2)
+
 % miten RLZ tulokset saatu?
 % -Sämplätään alkuperäinen file esim cere parametreilla 15_128
 %     - Tämä on valmiiksi tehty löytyy ukkonen-90/data/ hakemistosta.
@@ -624,9 +627,9 @@ If a common superstring has the shortest length possible, it is said to be a sho
 \end{testexample}
 
 \begin{definition}[\textsc{Shortest Common Superstring}]~\label{def-scs}\\
-  Let string $s_{scs}$ be a common superstring of a set of strings $R$.
-  The string $s_{scs}$ is a shortest common superstring of $R$ if and only if there does not exist
-  a common superstring of $R$ which is shorter than $s_{scs}$.
+  Let string $s$ be a common superstring of a set of strings $R$.
+  The string $s$ is a shortest common superstring of $R$ if and only if there does not exist
+  a common superstring of $R$ which is shorter than $s$.
 \end{definition}
 
 A reduced set of strings is a set of strings such that no string in the set is a substring
@@ -702,7 +705,8 @@ of finding a longest Hamiltonian path in a specific overlap graph that encodes t
 After the problems are proven to be equivalent, we define the same heuristic for the reduced problem.
 The equivalence of the two approaches are necessary since the bounds of the achieved compression
 are proven using the \textsc{Longest Hamiltonian Path} problem. Conceptually, Ukkonen's algorithm 
-solves the SCS problem by constructing the Hamiltonian path.
+solves the approximate SCS problem by constructing the approximate longest Hamiltonian path in a corresponding
+overlap graph.
 
 Further, we define the Aho-Corasick (AC for short) machine, as it is used in the algorithm for finding
 the maximal overlaps between the set of input keywords. The time complexity of the construction of
@@ -764,18 +768,18 @@ More formally,
 % Pitäskö tossa nyt kuitenkin olla: vi = si \in R ????
 $G_R=(V_R,E_R,w)$ with
 \begin{align*}
-  V_R &= \{v_i~|~s_i\in R\} \cup \{v_{start},v_{end}\}, \\
+  V_R &= \{v_i=s_i\in R\} \cup \{v_{start},v_{end}\}, \\
   E_R &= \{(v_{start},v_i), (v_i,v_{end}), (v_i,v_j)~|~i=1,...,m, j=1,...,m, i\neq j\},
 \end{align*}
 %\vspace{-0.5cm}
 and
 %\vspace{-1cm}
 \[   
-w((x,y)) = 
+w((v_s,v_d)) = 
      \begin{cases}
-       \text{length of the longest overlap between } x \text{ and } y &\quad\text{ when } x\in R \text{ and } y\in R,  \\
-       0 &\quad\text{ when } x=v_{start} \text{ and } y\in R, \\
-       0 &\quad\text{ when } x\in R \text{ and } y=v_{end}. \\
+       \text{length of the longest overlap between } v_s \text{ and } v_d &\quad\text{ when } v_s\in R \text{ and } v_d\in R,  \\
+       0 &\quad\text{ when } v_s=v_{start} \text{ and } v_d\in R, \\
+       0 &\quad\text{ when } v_s\in R \text{ and } v_d=v_{end}. \\
      \end{cases}
      \]
 
@@ -895,10 +899,10 @@ The compositions of $p(H)$ and a shortest common superstring $s_{scs}$ for a red
 
 \begin{theorem} [] ~\label{lem-similarity-between-SCS-Hamp}
   The projection $p(H)$ for the longest Hamiltonian path in the overlap graph is equivalent to
-  a shortest common superstring for a reduced $R$.
+  a shortest common superstring for a reduced set of strings.
 \end{theorem}
 \begin{proof}[Proof sketch]
-By Lemma \ref{lem-composition} there exists a decomposition of the SCS $s_{scs}$ that corresponds to a
+By Lemma \ref{lem-composition} there exists a decomposition of the SCS that corresponds to a
 Hamiltonian path in an overlap graph of a reduced set of strings.
 \end{proof}
 
@@ -972,22 +976,22 @@ This is needed only when the AC-machine is used for searching strings.} as follo
 \begin{enumerate}[leftmargin=28pt]
 \item $Q$ is a set of states, containing at least the start state;
 \item $\Sigma$ is the alphabet;
-\item $g : Q \times \Sigma \rightarrow Q, g(s_s,\sigma) = s_d$ is a function that defines a state transition from a state $s_s$ to a state $s_d$ for a symbol $\sigma$;
-\item $f : Q \rightarrow Q, f(s_s) = s_d$, is a function that defines a failure transition from state $s_s$ to state $s_d$.
+\item $g : Q \times \Sigma \rightarrow Q, g(q_s,\sigma) = q_d$ is a function that defines a state transition from a state $q_s$ to a state $q_d$ for a symbol $\sigma$;
+\item $f : Q \rightarrow Q, f(q_s) = q_d$, is a function that defines a failure transition from state $q_s$ to state $q_d$.
 \end{enumerate}
 \end{definition}
 
-If there is a goto transition from $s_s$ to $s_d$ in an AC-machine we say that the state $s_s$ is the parent
-of the state $s_d$ and that the state $s_d$ is a child of the state $s_s$. A depth of a state $q$ is the
+If there is a goto transition from $q_s$ to $q_d$ in an AC-machine we say that the state $q_s$ is the parent
+of the state $q_d$ and that the state $q_d$ is a child of the state $q_s$. A depth of a state $q$ is the
 minimum number of state transitions that is needed to get $q$ from the start state. 
 We use a term failure path for a continuous sequence of failure transitions with decreasing depth.
 
 When the AC-machine is used in a text search program,
-the goto function defines the state transition from start state $s_s$ to the destination state
-$s_d$ with the current input symbol $\sigma\in \Sigma$ of the state automaton. If no such
+the goto function defines the state transition from start state $q_s$ to the destination state
+$q_d$ with the current input symbol $\sigma\in \Sigma$ of the state automaton. If no such
 goto transition exists,
-the failure function $f$ is queried and the failure transition from the start state $s_s$ to
-the destination state $s_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
+the failure function $f$ is queried and the failure transition from the start state $q_s$ to
+the destination state $q_d$ occurs. The alphabet $\Sigma$ contains every symbol in the set of
 keywords (and in case of a string search program, also every string in the processed text string)
 encoded by the AC-machine.
 
@@ -1013,46 +1017,47 @@ such an illustration a goto graph of an AC-machine. In a goto graph the start st
 a root node.
 
 Figure \ref{fig-ac} illustrates the AC-machine for the set of
-keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$. The solid lines describe the goto function
+keywords $R=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$. The solid lines describe the goto function
 and the dashed lines describe the failure function, for example, $g(8, a) = 9$ and $f(4)=11$.
 
 \begin{algorithm}[t]
   
   \caption{Aho-Corasick machine: Construction of the goto function} \label{ac-goto}
-  \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $R = \{s_1,s_2...,s_m\}$\\
+  \hspace*{\algorithmicindent} \textbf{Input:} Set of keywords $R = \{s_1,s_2,...,s_m\}$\\
   \hspace*{\algorithmicindent} \textbf{Output:} Goto function $g$ that is initially undefined for all states\\
-  \hspace*{\algorithmicindent} \textbf{Preconditions:} Initially $g(s,\sigma)$ is undefined for each state and symbol
+  \hspace*{\algorithmicindent} \textbf{Preconditions:} Initially $g(q,\sigma)$ is undefined for each state and symbol
   
       \begin{algorithmic}[1]
 
         \Function{calculateGotoFunction}{$R$}
-          \State $newstate\gets 1$
+          \State $q\gets 1$
           \For{$i \gets 1$ until $m$}
-            \State $INSERT(s_i)$
+            \State $insert(s_i)$
           \EndFor
           \For{$\sigma$ s.t. $g(1,\sigma)$ is not defined }
             \State $g(1,\sigma)\gets 1$
           \EndFor
         \EndFunction
 
-      \item[]
+      %\item[]
 
-        \Function{insert}{$s = \sigma_0,\sigma_1,...,\sigma_{m-1}$}
-          \State $state\gets 1$
+        \Function{insert}{$s = \sigma_0\sigma_1\cdots\sigma_{k-1}$}
+          \State $p\gets 1$
           \State $j\gets 0$
-          \While{$g(state, \sigma_j)$ is defined}
-            \State $state\gets g(state,\sigma_j)$
+          \While{$g(p, \sigma_j)$ is defined}
+            \State $p\gets g(p,\sigma_j)$
             \State $j\gets j+1$
           \EndWhile
-          \For{$p\gets j$ until $m-1$}
-            \State $newstate\gets newstate+1$
-            \State $g(state,\sigma_p)\gets newstate$
-            \State $state\gets newstate$
+          \For{$l\gets j$ until $k-1$}
+            \State $q\gets q+1$
+            \State $g(p,\sigma_l)\gets q$
+            \State $p\gets q$
           \EndFor
         \EndFunction
       \end{algorithmic}
       
-  \end{algorithm}
+\end{algorithm}
+
 
   \paragraph{Explanation of Algorithm \ref{ac-goto}.}
   Algorithm \ref{ac-goto} creates a goto function for a set of strings. It begins by setting the start state on line 2.
@@ -1079,7 +1084,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 %%   \caption{A root node.} \label{fig-ac-step1}
 %%   \end{figure}
 
-  \begin{figure}[]
+  \begin{figure}[b]
   \centering
   \begin{tikzpicture}
 %   [scale=.8]
@@ -1126,7 +1131,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 \end{figure}
   
   \begin{testexample}[]~\label{exmp-goto}\\
-  Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
+  Let us simulate this algorithm with a set of keywords $R=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
   The algorithm starts from line 2 where the start state (root node in the figures that illustrate the AC-machine) is created.
   Since there are four keywords the first for loop is executed four times.
   In the first round the \textit{insert} procedure is called for the first keyword ``baa''.
@@ -1205,7 +1210,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (11) edge node[above] {b} (12);
 
   \end{tikzpicture}
-  \caption{The complete goto graph for the set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.} \label{fig-ac-goto}
+  \caption{The complete goto graph for the set of keywords $R=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.} \label{fig-ac-goto}
 \end{figure}
 
 
@@ -1232,10 +1237,10 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \begin{figure}[b]
   \begin{enumerate}
   \item Let $p$ be the parent of the state $q$ such that $g(p,\sigma) = q$.
-  \item Set $state = f(p)$.
-  \item Set $state = f(state)$ until $g(state,\sigma)$ is defined. Since $g(start,\sigma)$ is defined
+  \item Set $r = f(p)$.
+  \item Set $r = f(r)$ until $g(r,\sigma)$ is defined. Since $g(start,\sigma)$ is defined
     for all symbols, at some point, the condition is met.
-  \item Set $f(q) = state$.
+  \item Set $f(q) = r$.
   \end{enumerate}
    \caption{Listing of the failure calculation for state s.} \label{lst-failure-calculation}    
   \end{figure}
@@ -1330,11 +1335,11 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
           \State $queue\gets queue \backslash \{r\}$
           \For{each $\sigma$ s.t. $g(r,\sigma) = q$ is defined}
             \State $queue\gets queue \cup \{q\}$
-            \State $state\gets f(r)$
-            \While{$g(state,\sigma)$ is undefined}
-              \State $state\gets f(state)$
+            \State $p\gets f(r)$
+            \While{$g(p,\sigma)$ is undefined}
+              \State $p\gets f(p)$
             \EndWhile
-            \State $f(q)\gets g(state,\sigma)$              
+            \State $f(q)\gets g(p,\sigma)$              
           \EndFor
         \EndWhile
           
@@ -1347,10 +1352,10 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
   \paragraph{Explanation of Algorithm \ref{ac-fail}.}
   Since the failure values must be calculated from lowest depth states to the highest depth states
-  we go through the goto path using a breadth-first search (BFS). This is provided by a queue that is
+  we go through the goto transitions using a breadth-first search (BFS). This is provided by a queue that is
   appended in every non-leaf state, i.e., the children of the currently processed state are put into the
   queue and the next state to be processed is popped. The queue is initialized to be empty in the first
-  line of the algorithm. The for loop on lines 3 to 5 adds all the children of the root to the queue.
+  line of the algorithm. The for loop on lines 3 to 5 adds all the children of the start state to the queue.
   Because the start state is special as it contains goto transitions to itself the additional constraint
   on line 3 is added to prevent an infinite loop. In the same for loop, we define
   $f(s)=1$ for all states with depth 1. The while loop from line 6 to 14 implements the instructions
