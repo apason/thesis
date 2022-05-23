@@ -1912,14 +1912,14 @@ function $forbidden(i)$ where $i$ is an index of a keyword.
 
 We encode the constraints that no vertex can have multiple inbound or outbound edges
 with the functions $L, P$ and $forbidden$. The last constraint, which prevents the edge selections
-that form a cycle, is guarded with functions $FIRST$ and $LAST$. Both of these functions are defined
-for all keyword indices. At the beginning of Algorithm \ref{ukk-h}, $FIRST(i) = LAST(i) = i$
+that form a cycle, is guarded with functions $first$ and $last$. Both of these functions are defined
+for all keyword indices. At the beginning of Algorithm \ref{ukk-h}, $first(i) = last(i) = i$
 for every keyword index $i$. The value of these functions is updated such that at any point of execution
 if we have selected a set of edges that forms a path starting from $s_i$ and ending to $s_j$, then
-$FIRST(j)=i$ and $LAST(i)=j$. Note that the values for the vertices in the middle of such paths are
+$first(j)=i$ and $last(i)=j$. Note that the values for the vertices in the middle of such paths are
 not updated nor queried. Now, before the new edge $(s_i,s_j)$ is selected, we check that the
-selection does form a cycle by checking that $FIRST(i) \neq j$. Note that this is the same thing
-as checking that $LAST(j) \neq i$. Only one of those checks is necessary. If the check fails,
+selection does form a cycle by checking that $first(i) \neq j$. Note that this is the same thing
+as checking that $last(j) \neq i$. Only one of those checks is necessary. If the check fails,
 the edge in question must be discarded. 
 
   \begin{algorithm}[!ht]
@@ -1931,8 +1931,8 @@ the edge in question must be discarded.
         \For {$j = 1,...,m$}
           \If {$F(j)\neq 1$}
             \State $P(f(F(j)))\gets P(f(F(j)))\cdot {j}$
-            \State $FIRST(j)\gets j$
-            \State $LAST(j)\gets j$
+            \State $first(j)\gets j$
+            \State $last(j)\gets j$
           \Else
             \State $forbidden(j)\gets true$
           \EndIf
@@ -1946,7 +1946,7 @@ the edge in question must be discarded.
                 \State \textbf{break}
               \EndIf
               \State $i\gets$ the first element of $P(q)$
-              \If {$FIRST(i) = j)$}
+              \If {$first(i) = j)$}
                 \If {$P(q)$ has only one element}
                   \State \textbf{continue}
                 \Else
@@ -1956,8 +1956,8 @@ the edge in question must be discarded.
               \State $H\gets H\cdot \{(s_i,s_j)\}$
               \State $forbidden(j)\gets true$
               \State $P(q)\gets P(q) \backslash\{i\}$
-              \State $FIRST(LAST(j))\gets FIRST(i)$
-              \State $LAST(FIRST(i))\gets LAST(j)$
+              \State $first(last(j))\gets first(i)$
+              \State $last(first(i))\gets last(j)$
             \EndFor
           \State $P(f(q))\gets P(f(q))\cdot P(q)$
           \EndIf
@@ -1970,10 +1970,10 @@ the edge in question must be discarded.
 
 \paragraph{Explanation of Algorithm \ref{ukk-h}.}
 Algorithm \ref{ukk-h} starts by setting the initial values for the dynamic functions
-$P, FIRST, LAST$ and $forbidden$ in the for loop starting at line 2. On lines 4 to 6 the algorithm
+$P, first, last$ and $forbidden$ in the for loop starting at line 2. On lines 4 to 6 the algorithm
 initializes the data that is related to the used keywords, that is the keywords that form a reduced set.
 Line 4 sets the $P$ function for each state that has a direct failure link from some of
-those keywords. For those same indices, the functions $FIRST(i)$ and $LAST(i)$ are initialized
+those keywords. For those same indices, the functions $first(i)$ and $last(i)$ are initialized
 to $i$, indicating there are no edges yet selected. The else clause on lines 7 to 8 is
 to ensure that there will be no incoming edges to the keywords that are substrings of other
 keywords. (Note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
@@ -1998,7 +1998,7 @@ next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle, then no 
 will for any $s'$. Therefore it $P(q)$ only needs to be queried at most twice with each iteration.
 
 On line 21 the edge is selected. Line 22 ensures the definition for the $forbidden$ function
-remains valid and lines 24 and 25 update the $FIRST$ and $LAST$ functions accordingly.\footnotetext[1]{This line is not present in the original algorithm.}
+remains valid and lines 24 and 25 update the $first$ and $last$ functions accordingly.\footnotetext[1]{This line is not present in the original algorithm.}
 On line 23 the selected keyword index is removed from $P(q)$.
 After all possible edges starting from
 $s_i, i\in {P(q)}$ are examined, the process can move on to the next state in the $b$ link chain (line 27).
