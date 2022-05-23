@@ -292,6 +292,7 @@
   \cleardoublepage
  
   \tableofcontents
+  \listofalgorithms
 %TM:  \newpage
   \cleardoublepage
   \pagenumbering{arabic}
@@ -443,6 +444,8 @@
 \usepackage[footnotesize,bf]{caption}  % For more control over figure captions
 \usepackage{blindtext}
 \usepackage{everyshi}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \newtoggle{mainmatter}
 \newtoggle{backmatter}
@@ -681,7 +684,7 @@
 
 
 \onehalfspacing
-
+%\linespread{5}  
 \begin{center}
 \includegraphics[width=5cm]{HY-logo-ml.png}
 
@@ -702,9 +705,8 @@
 
 \vspace{1.7cm}
 
-\begin{LARGE}
-{\bf \@title}
-\end{LARGE} 
+\linespread{0.85}
+{\LARGE\bf\@title\par}
 
 \vspace{2cm}
 
