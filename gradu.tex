@@ -1,8 +1,3 @@
-%% footnotet oikeilla sivuilla
-
-% kolmos chapterin layout
-
-
 % miten RLZ tulokset saatu?
 % -Sämplätään alkuperäinen file esim cere parametreilla 15_128
 %     - Tämä on valmiiksi tehty löytyy ukkonen-90/data/ hakemistosta.
@@ -444,8 +439,7 @@ first replicated. The multiple strands of the same sequence are then split from 
 places, yelding a set of different subsequencences that overlap each other. These shorter nucleotide
 strands are then sequenced and modeled as a set of strings. What remains is to map
 those randomly permutated sequences in order to find their correct natural order.
-This fragment assembly problem can be simplified to the \textsc{Shortest Common Superstring}
-problem \citep{Peltola83}.
+This fragment assembly problem can be simplified to the SCS problem \citep{Peltola83}.
 
 % introduction to heuristics of scs. viitataan aiempiin ongelmiin ja todetaan että ei tarvi parasta
 As the decision version of the SCS problem is \textsc{NP}-complete \citep{Gallant80},
@@ -457,7 +451,7 @@ is shorter than the input keywords combined. For the greedy heuristic,
 which works by repeatedly merging the two strings with a maximal overlap together, first
 described in \citep{Gallant82}, the compression has been shown to be at least half of the optimal
 \citep{Tarhio88}. Another measure for the approximation is the length of the
-obtained superstring. \cite{Blum94} has shown that the approximation ratio is at least 4.
+obtained superstring. \citep{Blum94} has shown that the approximation ratio is at least 4.
 Later on, a tighter upper bound of 3.5, has been proven \citep{Kaplan05}.
 A conjencture \citep{Tarhio88} claiming the approximation ratio to be 2 remains unresolved.
 Despite this,
@@ -720,7 +714,7 @@ For each of those algorithms, we first discuss their principles on a higher leve
 the pseudocode
 is presented and discussed in more detail. Finally, we prove their time complexities.
 The algorithms represented here are slightly changed and contain a few corrections from the form they
-were originally presented. Each such modification is noted to emphasise the differences between
+were originally presented. Each such modification is added to footnotes to emphasise the differences between
 the algorithms presented here versus the original ones.
 
 
@@ -896,6 +890,7 @@ The compositions of $p(H)$ and a shortest common superstring $s_{scs}$ for a red
   of the superstring acquired via the projection from the Hamiltonian path.
 
   Hence, there exists a Hamiltonian path and the corresponding projection for any SCS.
+
 \end{proof}
 
 \begin{theorem} [] ~\label{lem-similarity-between-SCS-Hamp}
@@ -1479,7 +1474,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   a prefix of some keyword and so on. Therefore $u_n$ is a longest proper suffix of $s$ such that
   $u_n\sigma_d$ is also a prefix of some keyword. Since Algorithm \ref{ac-fail} sets $f(p) = q$,
   the lemma is proven.
-  
+
 \end{proof}  
 
 \paragraph{Data structures for the goto and failure functions.}
@@ -1526,6 +1521,7 @@ the input keyword is processed either in one of the two loops but not both. Sinc
 of the loop bodies depend on the implementation of $g$, the the total time complexity of the function
 is $O(n)\cdot O(1) = O(n)$ or $O(n)\cdot O(\log(|\Sigma|)) = O(n\cdot\log(|\Sigma|))$ when the
 goto function can be used in constant or logarithmic time respectively.
+
 \end{proof}
 
 
@@ -1558,6 +1554,7 @@ $r=f(q)$ has depth at most one less than the depth of the state $q$. This means 
 loop is always executed at most $d$ times where $d$ is the depth of the state \textit{state}.
 \citep{Aho75} showed that this while loop is executed $O(n)$ times in total. Since all instructions
 in Algorithm \ref{ac-fail} are executed at most $O(n)$ times, the proof is complete.
+
 \end{proof}
 
 %  note that this works for reduced or nonreduced set.
@@ -1651,7 +1648,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
   path of $p$ $f^k(p)$ and $j\in L(q)$. The length of this maximum overlap is $d(q)$.
 \end{theorem}
 \begin{proof}[Proof sketch]
-  The proof directly follows from Lemmas \ref{lem-overlap} and \ref{lem-overlap-length}
+  The proof directly follows from Lemmas \ref{lem-overlap} and \ref{lem-overlap-length}.
 \end{proof}
 
 \paragraph{Implementation of the heuristic using the AC-machine.}
@@ -1733,6 +1730,7 @@ a set of keyword indices in $R$.
 \caption{Static data structures created in Algorithm \ref{ukk-pre}} \label{lst-auxiliary-data}
 \end{figure}
 
+\vspace{1cm}
 Since by Lemma \ref{lem-reduced} a shortest common superstring for a reduced set of keywords
 is same as the set where it was reduced from, Algorithm \ref{ukk-pre} also performs
 the elimination of those keywords that are substrings of other keywords in the set. There are two
@@ -1819,10 +1817,10 @@ the while loop ends and the function terminates. In the for loop starting at lin
 children of the current state to the queue as the BFS requires. On line 21 we set the depth
 of the current state to be one greater than its parent state. We also update the $B$ variable
 as discussed before. Finally, line 23 sets $F(i) = 1$ for each keyword index $i$ such that
-the state represented by $s_i$ has an incoming failure transition from any other state.
+the state represented by $s_i$ has an incoming failure transition from any other state.\vspace{0.5cm}
   
-  \footnotetext[1]{In the original algorithm this line was $L(q)\gets L(q) \cdot \{j\}$}
-  \footnotetext[2]{To prevent infinite recursion the inequality $q\neq r$ was added}
+  \footnotetext[1]{In the original algorithm this line was $L(q)\gets L(q) \cdot \{j\}$.}
+  \footnotetext[2]{To prevent infinite recursion the inequality $q\neq r$ was added.}
 
 Line 12 together with line 23 ensure that for all keywords $i$ such that $s_i$ is a substring
 of some other keyword, the value of $F(i)=1$, i.e., the set of keywords $\{s_j : F(j) \neq 1\}$ is
@@ -1859,6 +1857,7 @@ reading and writing of $g$ is performed in constant time, thus the time complexi
 On the other hand, if $g$ is implemented using for example balanced binary trees, then the access
 time of $g$ is $O(\log (|\Sigma|))$ and the total time complexity of the algorithm
 is $O(n\cdot\log(|\Sigma|))$.
+
 \end{proof}
 
 \paragraph{Description of Algorithm \ref{ukk-h}.}
@@ -1979,8 +1978,6 @@ iteration of the following while loop since the last state in the BFS ordering c
 incoming failure transitions, hence the first state is set to the second last state in that
 ordering.
 
-\footnotetext[1]{This line is not present in the original algorithm}
-
 The while loop starting at line 10 implements the actual selection of the edges. Since
 deepest states are processed first, and nonemptiness of $P(q)$ and $L(q)$ indicates an existing
 overlap of depth $d(q)$, the maximal overlaps are selected first, if allowed by the constraints.
@@ -1996,8 +1993,9 @@ next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle then no o
 will for any $s'$. Therefore it $P(q)$ only needs to be queried at most twice with each iteration.
 
 On line 21 the edge is selected. Line 22 ensures the definition for the $forbidden$ function
-remains valid and lines 24 and 25 update the $FIRST$ and $LAST$ functions accordingly. On line
-23 the selected keyword index is removed from $P(q)$. After all possible edges starting from
+remains valid and lines 24 and 25 update the $FIRST$ and $LAST$ functions accordingly.\footnotetext[1]{This line is not present in the original algorithm.}
+On line 23 the selected keyword index is removed from $P(q)$.
+After all possible edges starting from
 $s_i, i\in {P(q)}$ are examined, the process can move on to the next state in the $b$ link chain (line 27).
 Before that, on line 26, the $P(q)$ is concatenated to $P(f(q))$ so the possibly remaining unused
 keyword indices are passed to the shallower states.
@@ -2035,6 +2033,7 @@ symbol in the $i$th input string, and every symbol corresponds to exactly one st
   In other words, the sets of supporters are increased by one for each $|t|$ states between
   the start state and the newly created leaf. According to the induction hypothesis
   $\sum_q |L(q)| = |s| = n$.
+
 \end{proof}
 
 
@@ -2121,7 +2120,6 @@ if the repeat phrase is encoded using two 4-byte integers and the input symbols 
 single byte, the repeat phrase with a length of less than 8 would actually
 consume more space than the original text.
 
-
 \begin{testexample}\\
   Let us simulate the LZ77 algorithm for a text string $T=$ ``abbabaabbaba''. We denote literal phrases
   with $[\sigma]$, where $\sigma$ is the symbol of the phrase. Repeat phrases are denoted
@@ -2136,7 +2134,6 @@ consume more space than the original text.
   \hbox{$[$ ``a''$][$ ``b''$](2,1)(1,2)(1,1)(1,6)$.}
 \end{testexample}
 
-% decompression O(n)
 To decompress the LZ77 parse we process the phrases from the first phrase to the last phrase. For each
 phrase, using the already decompressed data, we augment the dictionary with the text corresponding
 to the phrase. After the decompression, the generated dictionary is the same as the dictionary used
@@ -2144,7 +2141,6 @@ with the compression. In other words, the resulting decompression dictionary is 
 of symbols as the original uncompressed data. 
 
 \section{Relative Lempel-Ziv}
-
 Relative Lempel-Ziv is a simple and efficient \citep{Deorowicz11} general-purpose \citep{Hoobin11}
 compression method. It combines a static dictionary with an LZ77 parsing providing semi random
 access to the compressed data. It was developed to compress a set of genomes, however, further
@@ -2159,18 +2155,6 @@ of the LZ77 algorithm, where the dictionary is constructed during the (de)compre
 a static dictionary, providing random access for any phrase whether or not the decompression
 of the previous part of the data is already performed. Definition \ref{def-rlz} formalizes the
 Relative Lempel-Ziv parsing (or factorization).
-
-%alemmat setit orkkis paperista
-%- kehitetty ratkaisemaan ongelman jossa kollektiosta dna sekvenssejä saadaan random accessilla
-%nopeasti dataa purettua.
-
-%- menetelmässä käytetään yhtä sekvenssiä ``base sequence'' staattisena dictionarynä muiden sekvenssien
-%pakkaamiseen.
-%- muut sekvenssit pakataan LZ77 parsena tätä basea vastaan siten että phraset saavat osoittaa vain
-%tähän sekvenssiin.
-
-%random access tulee siitä että toisin kuin muissa lz varianteissa dictionary on staattinen ja
-%kokoajan saatavilla. ei ole tarvetta purkaa koko tiedostoa että pääsee haluttuun kohtaan.
 
 \begin{definition}~\label{def-rlz}
   Let $T$ and $R$ be strings. Relative Lempel-Ziv factorization of $T$ relative to $R$, denoted by
@@ -2223,46 +2207,7 @@ for several highly repetitive corpuses are constructed using the common superstr
 Also, runtimes for dictionary construction remain low when a linear time approximation
 algorithm for the SCS problem is used.
 
-
-% alemmat setit sebastian deorowich
-%- yksittäisen dna sekvenssin uskottu olevan lähes pakkaamaton.
-%- rlz on simple and efficient
-
-% hoobin
-%- jopa 0.1 prosentin dictionary tuottaa hyvän kompression ja purkuajan.
-
-%- myöhemmin sovellettu myös ``general data:n'' pakkaamiseen. täss
-
-%- merkittävä tekijä rlz:ssa on se mitä dictionaryä käyttää. 
-
-%- hoobin et al näyttää että hyvä dictionary voidaan saatuvvaa keinotekoisesti konkatenoimalla random
-%sämplejä datasta.
-
-% gagie
-
-%-rlz on suosittu pakkausmenetelmä
-
-%- voidaan käyttää vaikka ei olisikaan luonnollista referenssiä
-
-%- scales well
-
-%- pidetään yhenä parhaista general purpose pakkauksista.
-
-%- näytetään teoriassa miksi keinotekoinen dictionary toimii
-
-% puglisi and zhukova
-%- voidaan käyttää tehokkaasti suffix arrayn pakkaamiseen
-
-% - pohditaan miten scs voisi parantaa tätä paskaa. ts. sama määrä tokeneita mutta pienemmällä
-% dictionaryllä. 
-
-
-% random access
-% can not be better than LZ77 full window.
-% what does it mean that the original text is GREEDILY factored ? 
-%%
 \chapter{Empirical Evaluation}~\label{chp-results}
-
 In this chapter we introduce and describe an open-source implementation of Ukkonen's shortest
 common superstring
 approximation algorithm discussed in Chapter \ref{chp-ukkonen}. We go through the most significant
@@ -2275,9 +2220,6 @@ another implementation of the same heuristic. We also show how the number of fac
 RLZ compression is reduced when the SCS approach is used.
 
 \section{Implementation}~\label{sec-our}
-% our implementation and reference implementation
-
-% std and LINUX libraries ? time measurements?
 \paragraph{Overview:}
 %Our implementation of Ukkonen's shortest common superstring approximation algorithm were written
 %for this thesis.
@@ -3492,6 +3434,7 @@ of the implementations can be seen.
   \label{fig-dna}
 \end{figure}
 
+\vspace{1cm}
   Comparing the runtimes on the PizzaChili and the DNA datasets we can conclude that
   our solution implements the greedy heuristic faster:
 
