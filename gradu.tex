@@ -372,7 +372,7 @@
 
 % Intron intro
 Textually represented data -- text -- is one of the most common types of preserved information.
-It occrurs in many forms, e.g., source code, markup languages and plain text.
+It occurs in many forms, e.g., source code, markup languages and plain text.
 Also, DNA and amino acid sequences are often modeled as text.
 In stringology, a field of computer science that studies text processing and manipulation,
 this kind of data is modeled as finite sequences of symbols called strings.
@@ -412,7 +412,7 @@ and
 \textsc{Shortest Common Superstring},
 to name a few \citep{Bulteau14}.
 Although there are many tractable special cases of these problems, they are nevertheless
-\textsc{NP}-hard, i.e., there is no efficient algorithms known to solve these
+\textsc{NP}-hard, i.e., there are no efficient algorithms known to solve these
 problems for arbitrary inputs.
 This means that often suboptimal decisions must be settled for.
 For many applications, an optimal solution is however not always required. In many cases it is
@@ -439,7 +439,7 @@ small nucleotide sequences,
 while the process is infeasible for larger units. To sequence a longer strand of DNA,
 a number of its copies are
 first replicated. The multiple strands of the same sequence are then split from several semi-random
-places, yelding a set of different subsequencences that overlap each other. These shorter nucleotide
+places, yielding a set of different subsequencences that overlap each other. These shorter nucleotide
 strands are then sequenced and modeled as a set of strings. What remains is to map
 those randomly permutated sequences in order to find their correct natural order.
 This fragment assembly problem can be simplified to the SCS problem \citep{Peltola83}.
@@ -479,7 +479,7 @@ number of input keywords and $n$ is the total length of the input. This also dom
 complexity of the whole algorithm. To the best of our knowledge, no publicly available
 implementation of this algorithm exists. After the publication of \citep{Tarhio88}, more efficient
 algorithms for APSP problem has been developed \citep{Gusfield92}. Theoretically, these could be
-combined with the book keeping of \citep{Tarhio88} to implement the greedy heuristic in time
+combined with the bookkeeping of \citep{Tarhio88} to implement the greedy heuristic in time
 $O(n+m^2)$.
 
 There are also algorithms that compute the greedy heuristic without calculating the APSP problem.
@@ -514,14 +514,14 @@ preliminaries needed to understand the rest of the thesis. Chapter \ref{chp-ukko
 description of Ukkonen's algorithm for the \textsc{Shortest Common Superstring} problem.
 Besides the pseudocode, which is discussed in four parts, Chapter \ref{chp-ukkonen} includes the
 formal definition of the greedy heuristic as well as discussion of the Aho-Corasick machine,
-which is used to implement the heuristic. In addition we prove the correctness of Ukkonen's algorithm
+which is used to implement the heuristic. In addition, we prove the correctness of Ukkonen's algorithm
 and discuss the time complexities of all of the sections. The concept of dictionary compression is
 introduced in Chapter \ref{chp-rlz}. We discuss the Lempel-Ziv family of compression algorithms. The
-Relative Lempel-Ziv method is also defined. In Chapter \ref{chp-results} we detail our contribution for
+Relative Lempel-Ziv method is also defined. In Chapter \ref{chp-results} we detail our contribution to
 the topic. Section \ref{sec-our} comes as a documentation of our implementation of Ukkonen's
 algorithm. The datasets and experiment environments are described in Sections \ref{data} and
 \ref{sec-env}, respectively. The results are discussed in Section \ref{sec-results}.
-Finally we give a conclusion of the thesis in Chapter \ref{chp-conc}.
+Finally, we give a conclusion of the thesis in Chapter \ref{chp-conc}.
 
 % UNCOMMENT
 %Alanko väittää että ukkosen algoritmi poistaa myös
@@ -531,15 +531,15 @@ Finally we give a conclusion of the thesis in Chapter \ref{chp-conc}.
 
 Since the \textsc{Shortest Common Superstring} problem is an essential part of this thesis, we
 first define the notations and terminology of strings in order to formally define the problem.
-The \textsc{Shortest Common Superstring} problem is solved as a \textsc{Longest Hamiltonian Path}
-problem. Therefore that problem and its related concepts are also recalled.
+The \textsc{Shortest Common Superstring} problem is solved as the \textsc{Longest Hamiltonian Path}
+problem. Therefore, that problem and its related concepts are also recalled.
 To make the contents of this chapter more readable,
 each definition is preceded with a corresponding explanation in natural language.
 
-Regardless of the alphabet a string is simply a finite sequence of symbols.
+Regardless of the alphabet, a string is simply a finite sequence of symbols.
 The length of a string equals the number of symbols it contains. Sequences of symbols
 (as well as other types of elements) are denoted by writing the elements adjacently.
-A dot symbol $\cdot$ is also used to emphasise the concatenation of two symbols or strings.
+A dot symbol $\cdot$ is also used to emphasize the concatenation of two symbols or strings.
 
 \begin{definition}[\textsc{String}]~\label{def-string}\\
   For an alphabet $\Sigma$, a string $s$ is a finite sequence of symbols  ${\sigma_1\cdots \sigma_n}$ where each symbol $\sigma_i \in \Sigma$.
@@ -608,7 +608,7 @@ a common superstring of the set.
   for each $s_i$ such that $i\in 1,...,m$.
 \end{definition}
 
-Trivially a common superstring of a set of strings can be constructed by concatenating all of
+Trivially, a common superstring of a set of strings can be constructed by concatenating all of
 the strings of the set together.
 This kind of string has a length that equals the lengths of all the substrings added together.
 
@@ -617,7 +617,7 @@ This kind of string has a length that equals the lengths of all the substrings a
   The string ``baababaababaab'' is a common superstring of the set $R$.
 \end{testexample}
 
-In many cases there exists one or more common superstrings that are shorter than the common
+In many cases, there exists one or more common superstrings that are shorter than the common
 superstring produced by this naive method.
 If a common superstring has the shortest length possible, it is said to be a shortest common superstring (SCS).
 
@@ -635,7 +635,7 @@ If a common superstring has the shortest length possible, it is said to be a sho
 A reduced set of strings is a set of strings such that no string in the set is a substring
 of another string in that set. This property is important since the later discussion of the
 reduction between the \textsc{Shortest Common Superstring} and \textsc{Longest Hamiltonian Path}
-problems only works for a reduced sets of strings. The SCS of the reduced set of strings
+problems only works for reduced sets of strings. The SCS of the reduced set of strings
 is the same as the SCS of the same set of strings that is not reduced. 
 
 \begin{definition}[\textsc{Reduced Set of Strings}]~\label{def-reduced}\\
@@ -675,12 +675,12 @@ For any given graph, a Hamiltonian path in a graph is a path (sequence of connec
 that contains every vertex in the graph exactly once.
 
 \begin{definition}[\textsc{Hamiltonian Path}]~\label{def-hampath}\\
-  Let $G=(V,E)$ be a graph. A hamiltonian path in $G$ is a $|V|$ sized sequence of vertices
+  Let $G=(V,E)$ be a graph. A Hamiltonian path in $G$ is a $|V|$ sized sequence of vertices
   that contains each vertex in $V$ exactly once and for each consecutive vertices $v_i$ and
   $v_j$ there is an edge $(v_i,v_j)\in E$.
 \end{definition}
 
-For a weighted graph a longest Hamiltonian path is a Hamiltonian path of maximum length.
+For a weighted graph, a longest Hamiltonian path is a Hamiltonian path of maximum length.
 i.e., the sum of the weights of the edges is maximal.
 
 \begin{definition}[\textsc{Longest Hamiltonian Path}]~\label{def-longest-hampath}\\
@@ -698,12 +698,12 @@ Finally, we define the \textsc{Longest Hamiltonian Path} problem as follows.
 
 \chapter{Ukkonen's Algorithm}~\label{chp-ukkonen}
 
-In this chapter we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
-\textsc{Shortest Common Superstring} problem in detail. First we define the heuristic that the
+In this chapter, we describe Ukkonen's linear time approximation algorithm \citep{Ukkonen90} for
+\textsc{Shortest Common Superstring} problem in detail. First, we define the heuristic that the
 algorithm uses in terms of strings. Then we show that the problem can be reduced to the problem
 of finding a longest Hamiltonian path in a specific overlap graph that encodes the same SCS problem.
 After the problems are proven to be equivalent, we define the same heuristic for the reduced problem.
-The equivalence of the two approaches are necessary since the bounds of the achieved compression
+The equivalence of the two approaches are necessary, since the bounds of the achieved compression
 are proven using the \textsc{Longest Hamiltonian Path} problem. Conceptually, Ukkonen's algorithm 
 solves the approximate SCS problem by constructing the approximate longest Hamiltonian path in a corresponding
 overlap graph.
@@ -713,12 +713,12 @@ the maximal overlaps between the set of input keywords. The time complexity of t
 the AC-machine is also discussed. We also prove that the AC-machine can be used to find the maximal
 pairwise overlaps between every input keyword.
 
-This chapter contains four pseudocode blocks which essentially form the algorithm as whole.
+This chapter contains four pseudocode blocks, which essentially form the algorithm as a whole.
 For each of those algorithms, we first discuss their principles on a higher level. After this,
 the pseudocode
 is presented and discussed in more detail. Finally, we prove their time complexities.
 The algorithms represented here are slightly changed and contain a few corrections from the form they
-were originally presented. Each such modification is added to footnotes to emphasise the differences between
+were originally presented. Each such modification is added to footnotes to emphasize the differences between
 the algorithms presented here versus the original ones.
 
 
@@ -874,11 +874,11 @@ Since the maximal overlaps $v_i,i=1,...,m-1$ appear in the projection only once,
 projection is $(|s_1|+...+|s_m|) - (|v_1|+...+|v_{m-1}|)$. The length of the maximal overlaps
 are equivalent to the weights of the overlap graph $G_R$, and so $v_1+\cdots +v_{m-1} = |H|$. As the size
 of $|H|$ grows, the size of the projection gets shorter.
-With this analogy the size of $H$ is the compression of the common superstring,
+With this analogy, the size of $H$ is the compression of the common superstring,
 and the length of $p(H)$ is the length of the common superstring.
 We now know that the Hamiltonian path in the overlap graph can be used to form a common superstring
 of the set of strings. Next, we show that also a shortest common superstring of $R$ has a
-corresponding Hamiltonian path. To prove this we introduce the following lemma.
+corresponding Hamiltonian path. To prove this, we introduce the following lemma.
 
 
 \begin{lemma}[]~\label{lem-composition}
@@ -909,7 +909,7 @@ Hamiltonian path in an overlap graph of a reduced set of strings.
 The following defines a conceptually equivalent greedy heuristic for the SCS problem in the terms of
 a Hamiltonian path in the overlap graph.
 
-To  construct an approximate longest Hamiltonian path select an edge $e$ from the set $E_R$ such that
+To  construct an approximate longest Hamiltonian path, select an edge $e$ from the set $E_R$ such that
 
 \begin{enumerate}
 \item The edge $e$ has the largest weight. If there are multiple such edges, the decision can be made arbitrarily.
@@ -981,7 +981,7 @@ This is needed only when the AC-machine is used for searching strings.} as follo
 \end{enumerate}
 \end{definition}
 
-If there is a goto transition from $q_s$ to $q_d$ in an AC-machine we say that the state $q_s$ is the parent
+If there is a goto transition from $q_s$ to $q_d$ in an AC-machine, we say that the state $q_s$ is the parent
 of the state $q_d$ and that the state $q_d$ is a child of the state $q_s$. A depth of a state $q$ is the
 minimum number of state transitions that is needed to get $q$ from the start state. 
 We use a term failure path for a continuous sequence of failure transitions with decreasing depth.
@@ -995,8 +995,8 @@ the destination state $q_d$ occurs. The alphabet $\Sigma$ contains every symbol 
 keywords (and in case of a string search program, also every string in the processed text string)
 encoded by the AC-machine.
 
-To construct the AC-machine for the set of keywords the \textsc{FSA} like goto function is first
-created. The goto function is then used to construct the failure function which completes the
+To construct the AC-machine for the set of keywords, the \textsc{FSA} like goto function is first
+created. The goto function is then used to construct the failure function, which completes the
 construction of the AC-machine. The goto function is similar to the child function of a trie,
 i.e., it describes a rooted tree that stores a set of keywords such that edges are labeled with the
 symbols of the alphabet and the edge label is different between each sibling node. We say that a node
@@ -1006,14 +1006,14 @@ used interchangeably.
 The failure function describes a chain of state transitions in the case when the goto function is not defined
 for the current input symbol. The failure function is queried as long as the goto function is not defined.
 In the AC-machine the goto function is defined for every symbol in the alphabet in the start state.
-Therefore the failure function is not defined for the start state. Other states, whether the
+Therefore, the failure function is not defined for the start state. Other states, whether the
 goto function is fully defined or not, always have a defined failure function value.
-Algorithms \ref{ac-goto} and \ref{ac-fail} are used as complete definitons of the goto and
+Algorithms \ref{ac-goto} and \ref{ac-fail} are used as complete definitions of the goto and
 failure functions. 
 
 The AC-machine can be illustrated as a graph where each state is represented as a node and each
-goto transition is represented as an labeled edge. Failure transitions can also be drawn. We call
-such an illustration a goto graph of an AC-machine. In a goto graph the start state is represented by
+goto transition is represented as a labeled edge. Failure transitions can also be drawn. We call
+such an illustration a goto graph of an AC-machine. In a goto graph, the start state is represented by
 a root node.
 
 Figure \ref{fig-ac} illustrates the AC-machine for the set of
@@ -1063,14 +1063,14 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   Algorithm \ref{ac-goto} creates a goto function for a set of strings. It begins by setting the start state on line 2.
   The algorithm continues by looping over the set of keywords and inserting them to the
   goto function on lines 3 to 4. At the end of the main function, on lines 5 to 6,
-  the goto function is defined for all $g(1,\sigma)$ that were undefined creating a loop within
+  the goto function is defined for all $g(1,\sigma)$ that were undefined, creating a loop within
   the start state. This ensures that the failure function of the start state is never used when the
   AC-machine is used for searching strings.
 
   The procedure \textit{insert} inserts a single keyword to the goto function. The idea in the lines
   10 to 12 is to skip the prefix of $s$ that already exists in the trie. The variable $j$ initialized
   in line 9 keeps track of this prefix. After the first symbol not already represented in the
-  trie is found the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
+  trie is found, the new branch is created and the remaining suffix of $s$ is inserted symbol by symbol
   at lines 13-16.
 
 %%   \begin{figure}[]
@@ -1133,9 +1133,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   \begin{testexample}[]~\label{exmp-goto}\\
   Let us simulate this algorithm with a set of keywords $R=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
   The algorithm starts from line 2 where the start state (root node in the figures that illustrate the AC-machine) is created.
-  Since there are four keywords the first for loop is executed four times.
-  In the first round the \textit{insert} procedure is called for the first keyword ``baa''.
-  In the \textit{insert} procedure the first while loop is not executed since there are no
+  Since there are four keywords, the first for loop is executed four times.
+  In the first round, the \textit{insert} procedure is called for the first keyword ``baa''.
+  In the \textit{insert} procedure, the first while loop is not executed since there are no
   outgoing edges from the root node yet. The for loop is executed for every symbol and the three
   nodes (2,3,4) are added to the goto graph with edge labels 'b', 'a', and 'a'.
   Figure \ref{fig-ac-step2} presents this state of the construction.
@@ -1143,9 +1143,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
 
 
-  With the second round of the for loop we add the keyword ``baba''. In this case the \textit{insert}
-  procedure executes the while loop two times since the common prefix of ``baa'' and ``baba'' has length
-  2. At this point a branch is added to the goto graph
+  With the second round of the for loop, we add the keyword ``baba''. In this case, the \textit{insert}
+  procedure executes the while loop twice, since the common prefix of ``baa'' and ``baba'' has length
+  2. At this point, a branch is added to the goto graph
   and the remaining symbols 'b' and 'a' are inserted.
   Figure \ref{fig-ac-step3} corresponds with this state.
 
@@ -1154,9 +1154,9 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   In the same way, the rest of the keywords are added. For keyword ``baba'' the insertion
   happens in the same way as with the first keyword, that is, the while loop in the \textit{insert}
   procedure is not executed since there is no goto transition from the root with a symbol 'a'.
-  For the last keyword the branching of the goto graph happens again
-  in a similar way to the second keyword. At this point the goto function is a trie of the
-  input keywords. After the first for loop in the main function is executed
+  For the last keyword, the branching of the goto graph happens again
+  in a similar way to the second keyword. At this point, the goto function is a trie of the
+  input keywords. After the first for loop in the main function is executed,
   the second loop on lines 5 to 6 creates an edge from root to root for every symbol in the
   alphabet such that $g(1,\sigma)$ is not defined. With this example, we already have an edge from the
   root for both of the symbols in the binary alphabet, hence no edges are created in this step.
@@ -1214,16 +1214,16 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 \end{figure}
 
 
-  Let us define a depth function for the AC-machine. At this point depth is merely a concept of the
+  Let us define a depth function for the AC-machine. At this point, depth is merely a concept of the
   machine, but later on it becomes a part of the data structure in Algorithm \ref{ukk-pre}.
   In an AC-machine the depth of a state $q$, denoted by $d(q)$, is the depth of the node (number of
-  edges from root to that node) that corresponds
+  edges from root to that node) that corresponds to
   the state in the goto graph. This is equivalent to the length of the string that represents the
   state, i.e., if a node $q$ in the goto graph is represented by the string $s$, then $d(q) = |s|$.
 
   \paragraph{Description of Algorithm \ref{ac-fail}.}  
-  Next we describe the construction of the failure function in more detail. The failure function
-  for a state is calculated using the failure function of the parent of that state. Thus the computation
+  Next, we describe the construction of the failure function in more detail. The failure function
+  for a state is calculated using the failure function of the parent of that state. Thus, the computation
   starts from the start state, and continues to the states of depth 1, the states of depth 2, and so on.
   %That clearly
   %is equal to index of a symbol in the string that the node spells out. I.e. the depth of
@@ -1351,18 +1351,18 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
 
   \paragraph{Explanation of Algorithm \ref{ac-fail}.}
-  Since the failure values must be calculated from lowest depth states to the highest depth states
+  Since the failure values must be calculated from the lowest depth states to the highest depth states,
   we go through the goto transitions using a breadth-first search (BFS). This is provided by a queue that is
   appended in every non-leaf state, i.e., the children of the currently processed state are put into the
   queue and the next state to be processed is popped. The queue is initialized to be empty in the first
   line of the algorithm. The for loop on lines 3 to 5 adds all the children of the start state to the queue.
-  Because the start state is special as it contains goto transitions to itself the additional constraint
+  Because the start state is special as it contains goto transitions to itself, the additional constraint
   on line 3 is added to prevent an infinite loop. In the same for loop, we define
   $f(s)=1$ for all states with depth 1. The while loop from line 6 to 14 implements the instructions
-  in Figure \ref{lst-failure-calculation}. Since the AC-machine does not save parent information
+  in Figure \ref{lst-failure-calculation}. Since the AC-machine does not save parent information,
   this is done slightly differently, although the result is exactly the same as Figure
   \ref{lst-failure-calculation} describes. On lines 7 and 8 we pop a
-  state from the queue. At this point the failure function for that state is already defined. Then we
+  state from the queue. At this point, the failure function for that state is already defined. Then we
   process each child of the state separately on lines 9 to 14 by 1) adding the child to the
   queue  on line 10; 2) travelling the failure function of the parent as long as we get a state
   that have goto   transition with the same symbol that appears between the parent and the currently
@@ -1458,7 +1458,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 \begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all states whose depth is smaller
   than some depth $d > 1$. The hypothesis trivially holds for the base case when the
-  depth of the state is 1. That is when $f(q) = o$ is the start state, represented by the empty
+  depth of the state is 1. That is, when $f(q) = o$ is the start state, represented by the empty
   string and the string represented by the state $q$ has a length 1.
   
   Let us assume there is a state $q$ of depth $d$ that is represented by a string
@@ -1483,19 +1483,19 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 \end{proof}  
 
 \paragraph{Data structures for the goto and failure functions.}
-Lemma \ref{lem-overlap} is used later on in the description of Ukkonen's algorithm. Next we look
-over the time complexities of Algorithms \ref{ac-goto} and \ref{ac-fail}. First we will investigate
+Lemma \ref{lem-overlap} is used later on in the description of Ukkonen's algorithm. Next, we look
+over the time complexities of Algorithms \ref{ac-goto} and \ref{ac-fail}. First, we will investigate
 the time complexity of the insert and read operations of the functions $g$ and $f$. The failure
 function maps each state (except the start state) to some other state. It is effective and practical
 to implement this as an array which stores the value $f(q)=r$ such that the array index $q$ has
-a value $r$. Therefore both inserting to and reading from the failure function is performed
+a value $r$. Therefore, both inserting to and reading from the failure function is performed
 in constant time. The goto function maps a pair of values to a single value.
-In the same way, if we use a two dimensional array which stores
+In the same way, if we use a two-dimensional array which stores
 a $|\Sigma|$ sized row for each state in the AC-machine, the read and write operations of $g$ would
 execute in constant time. This of course results in very high memory usage since the table would be
 sparsely used, especially with a large alphabet and long keywords. The goto function can
 be implemented in many other ways. One solution, which improves the memory efficiency, is to save
-a balanced binary tree for each state in the AC-machine. With balanced binary trees the insert and read
+a balanced binary tree for each state in the AC-machine. With balanced binary trees, the insert and read
 operations are performed in logarithmic time. Since each such binary tree contains at most $|\Sigma|$
 elements, the time complexity of this approach is $O(\log(|\Sigma|)$.
 
@@ -1508,24 +1508,24 @@ elements, the time complexity of this approach is $O(\log(|\Sigma|)$.
 \begin{proof}[Proof sketch]
 The main function of Algorithm \ref{ac-goto} consists of two for loops.
 The first loop calls a procedure once for each keyword of the input. The function calls are
-executed in a constant time so the time complexity of the first for loop is linear with respect
+executed in a constant time, so the time complexity of the first for loop is linear with respect
 to the number of input keywords. The second for loop starting on line 5 is used to search all
-children of the start state. Since the start state has only $|\Sigma|$ goto transitions the loop
-is executed at most $|\Sigma|$ times. In the worst case every symbol
+children of the start state. Since the start state has only $|\Sigma|$ goto transitions, the loop
+is executed at most $|\Sigma|$ times. In the worst case, every symbol
 in every input keyword is different. In that case $|\Sigma| = n$, where $n$ is the sum of the input
-symbols. Therefore the second for loop is executed at most $n$ times resulting in the time complexity of
+symbols. Therefore, the second for loop is executed at most $n$ times, resulting in the time complexity of
 the main function being linear with respect to the size of the input.
 
 Let us next examine the \textit{insert} procedure. The first two lines 8 and 9 can clearly be executed in
 constant time. The first while loop is used to find the symbol of the string that is not yet defined
-in the goto function. Let $s=uv$ be a string such that $u$ is the part of $s$ that is already represented in the
+in the goto function. Let $s=uv$ be a string, such that $u$ is the part of $s$ that is already represented in the
 goto function. The index variable $j$ is used so it contains the value of the first symbol of $v$ after
 the while loop is executed. The for loop continues from $j$ so the lines 13 to 16 are executed
 only for $v$. In the other words the \textit{insert} procedure behaves such that every symbol of
 the input keyword is processed either in one of the two loops but not both. Since the time complexities
-of the loop bodies depend on the implementation of $g$, the the total time complexity of the function
+of the loop bodies depend on the implementation of $g$, the total time complexity of the function
 is $O(n)\cdot O(1) = O(n)$ or $O(n)\cdot O(\log(|\Sigma|)) = O(n\cdot\log(|\Sigma|))$ when the
-goto function can be used in constant or logarithmic time respectively.
+goto function can be used in constant or logarithmic time, respectively.
 
 \end{proof}
 
@@ -1537,10 +1537,10 @@ goto function can be used in constant or logarithmic time respectively.
 \begin{proof}[Proof sketch]
 In the discussion of Theorem
 \ref{thm-time-goto} we reasoned that finding all children of the state can be done in
-linear time. In the failure calculation we have the same kind of instruction in the for loop
+linear time. In the failure calculation, we have the same kind of instruction in the for loop
 on line 9. Since this loop is executed for every state of the machine, this kind of approach leads
 us to $O(n|\Sigma|)$ time complexity for finding every child of every state. Instead of scanning
-the goto function for each symbol in the alphabet we can use an auxiliary data structure to
+the goto function for each symbol in the alphabet, we can use an auxiliary data structure to
 explicitly save the children of each state. One possibility is to use a linked list ($O(1)$ time
 insertions) and save the information of the children while creating the goto function. This adds
 $O(1)$ instructions to the for loop in the \textit{insert} procedure. The body of this for loop
@@ -1566,9 +1566,9 @@ in Algorithm \ref{ac-fail} are executed at most $O(n)$ times, the proof is compl
 
 \section{The Approximation Algorithm}
 
-In this section we discuss the algorithms that use the AC-machine to find the pairwise overlaps
+In this section, we discuss the algorithms that use the AC-machine to find the pairwise overlaps
 of a set of input keywords to implement the previously defined greedy heuristic. Conceptually,
-we create an overlap graph of the keywords and select the edges according the rules of
+we create an overlap graph of the keywords and select the edges according to the rules of
 Figure \ref{lst-failure-calculation}. In practice, the computation works in two steps. First we
 preprocess the AC-machine and create the needed auxiliary data structures in Algorithm \ref{ukk-pre}
 followed by Algorithm \ref{ukk-h}, which implements the greedy selection of the edges in the
@@ -1591,7 +1591,7 @@ $s_i\in R, i\in L(q)$ are descendants of the state $q$.
 In other words, if a keyword index
 $j$ is in $L(p)$, then the state represented by $s_j$ is a descendant of the state $p$.
 For example, the set $L(3) = \{1,2\}$ for the example AC-machine in Figure \ref{fig-ac}.
-Since the prefix relation is transitive we can iterate over the failure function to find every
+Since the prefix relation is transitive, we can iterate over the failure function to find every
 pairwise overlap between $p$ and the keywords. Algorithm \ref{ukk-h} does exactly this.
 Lemma \ref{lem-overlap-length} formalizes this property.
 
@@ -1616,13 +1616,13 @@ Lemma \ref{lem-overlap-length} formalizes this property.
 \end{lemma}
 \begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all states whose depth is
-  smaller than some depth $d'\geq 1$. For the base case of the induction we use the start state
+  smaller than some depth $d'\geq 1$. For the base case of the induction, we use the start state
   with depth 0. The hypothesis holds
   with $k=0$ since $L(start)$ contains every keyword index from $1$ to $m$ and there also exists an empty
   overlap (length $d(start)=0$) between the empty string that the start state is represented by and all
   the keywords in $R$.
 
-  In the induction step we assume there is a state $p, d(p) = d'$ represented by string $s$.
+  In the induction step, we assume there is a state $p, d(p) = d'$ represented by string $s$.
   Assume also that there is an overlap $u$ of length $d(q)$ between $s$ and some keyword $t_i$. The
   overlap $u$ represents a state $q$.
   There are three possibilities:
@@ -1632,7 +1632,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
   \item The overlap $u$ is the longest proper suffix of $s$ that is also a prefix of $t_i$.
     By Lemma \ref{lem-overlap} this is true if and only if $f(p) = q$. In this case
     $i\in L(q)$ and the lemma is true with $k=1$.
-  \item In this case the overlap between $s$ and $t_i$ is shorter than the longest proper
+  \item In this case, the overlap between $s$ and $t_i$ is shorter than the longest proper
     suffix of $s$ that is a prefix of some keyword $t_j, i\neq j$. Let $u'$ be the maximal
     overlap between $s$ and $t_j$. That is, $u'$ is the longest proper suffix of $s$ that is also
     a prefix of some keyword. Let also $q'$ be represented by the string $u'$. By Lemma
@@ -1649,7 +1649,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
 
 \begin{theorem}[]~\label{thm-maximal-overlaps}
   Let $p$ be a state represented by string $s_i$ and let $s_i,s_j\in R$. The maximum overlap between
-  $s_i$ and $s_j$ is represented by the state $q$ such that $q$ is the first sate in the failure
+  $s_i$ and $s_j$ is represented by the state $q$ such that $q$ is the first state in the failure
   path of $p$ $f^k(p)$ and $j\in L(q)$. The length of this maximum overlap is $d(q)$.
 \end{theorem}
 \begin{proof}[Proof sketch]
@@ -1663,7 +1663,7 @@ maximal overlaps encoded in the AC-machine are equivalent to the weights of the 
 in the overlap graph. We use the property of Theorem \ref{thm-maximal-overlaps} to implement
 the greedy heuristic for the \textsc{Longest Hamiltonian Path} problem in the overlap graph. The
 overlaps encoded by the failure function have length equivalent to the depth of the state that
-have an incoming failure path. Hence the longest possible overlap can be found by searching the state
+have an incoming failure path. Hence, the longest possible overlap can be found by searching the state
 that has some incoming failure path or paths such that the depth of that state is maximized. This suggests
 the following implementation.
 
@@ -1678,12 +1678,12 @@ $q$ is in failure path from $p$. We can now select a corresponding edge in the o
 as it does not violate the constraints of the heuristic, that is, considering earlier selections
 the corresponding edge does not form a cycle, nor does its start vertex already have an outcoming
 edge, nor does its end vertex already have an incoming edge. By processing all the states in this
-fashion we end up with the set of edges that forms a Hamiltonian path in the
+fashion, we end up with the set of edges that forms a Hamiltonian path in the
 overlap graph. 
 
 \begin{testexample}~\label{examplelabeldummy}\\
 Let us apply this method to the AC-machine described in Figure \ref{fig-ac}. The processing starts
-with depth 4 from state 6 or state 10. While processing those states we save the information of
+with depth 4 from state 6 or state 10. While processing those states, we save the information of
 the incoming failure path for state 9 and 5, respectively. Depending on the order in which we process
 the states with depth 3, we end up selecting one of the two possible overlaps. Either state 5
 is processed first and the overlap between $s_3$ and $s_2$ is selected, or state 9 is processed
@@ -1695,17 +1695,17 @@ state 9). This indicates that there exists an overlap between state 6 and every 
 in $L(3)=\{1,2\}$ The self-overlap between $s_2$ and $s_2$ is forbidden since it would
 create a cycle. However, the other overlap between $s_2$ and $s_1$ cannot be selected either because
 the edge from $s_2$ is selected earlier. State 8 also has information of two incoming failure
-paths. Now there already exists an edge with $s_3$ as an end vertex. Thus no edges are selected.
+paths. Now there already exists an edge with $s_3$ as an end vertex. Thus, no edges are selected.
 When processing state 11 the only possible overlap is compatible with the rules and the edge
 from $s_1$ to $s_4$ is selected. For the states of depth 1 it does not matter which one is processed
 first. In any case, while processing state 7 we find only one failure path coming from a leaf state
-corresponding to keyword $s_2$. Since $s_2$ already has an outgoing edge the process continues
+corresponding to keyword $s_2$. Since $s_2$ already has an outgoing edge, the process continues
 without any selection. While processing state 2 we find two possible selections. We can select
-either $(s_3,s_1)$ or $(s_4,s_2)$. Depending on this last selection the common superstring for
+either $(s_3,s_1)$ or $(s_4,s_2)$. Depending on this last selection, the common superstring for
 the projection of the selected Hamiltonian path is either ``baababab'' or ``bababaab'', which
 both have the same length 8 and the same compression $14-8=6$.
 
-When finding two equally long maximal overlaps the heuristic allows arbitrary selections.
+When finding two equally long maximal overlaps, the heuristic allows arbitrary selections.
 Because of this, the outcome of the algorithm may differ between implementations. For example,
 the first time
 we made a selection between two allowed edges, if we selected differently the heuristics would
@@ -1714,7 +1714,7 @@ superstrings with length and compression 7.
 \end{testexample}
 
 \paragraph{Description of Algorithm \ref{ukk-pre}.}
-The actual algorithm is implemented in two parts. Algorithm \ref{ukk-pre} defines the first part
+The actual algorithm is implemented in two parts. Algorithm \ref{ukk-pre} defines the first part,
 which is used to calculate a set of auxiliary data structures that are needed in order to implement
 the actual heuristic. The algorithm takes as an input the AC-machine constructed with
 Algorithms \ref{ac-goto} and \ref{ac-fail} as well as the set of keywords $R$, which is also
@@ -1737,10 +1737,10 @@ a set of keyword indices in $R$.
 
 \vspace{1cm}
 Since by Lemma \ref{lem-reduced} a shortest common superstring for a reduced set of keywords
-is same as the set where it was reduced from, Algorithm \ref{ukk-pre} also performs
+is the same as the set where it was reduced from, Algorithm \ref{ukk-pre} also performs
 the elimination of those keywords that are substrings of other keywords in the set. There are two
 situations when the structure of the AC-machine indicates the occurrence of such a keyword. First,
-if there is a goto transition from a state that is represented by a keyword that keyword
+if there is a goto transition from a state that is represented by a keyword, that keyword
 must be a substring of some other keyword. That is, if $g(F(i),\sigma)$ is defined for any pair
 $(i,\sigma)$ then the keyword $s_i$ must be a prefix (i.e., substring) of some other keyword and can be
 removed. The second indication of such a keyword is when a leaf state has an incoming failure
@@ -1800,13 +1800,13 @@ by $s_i$ is not processed as if it was a keyword.
   % algoritmin läpikäynti rivi kerrallaan.
 \paragraph{Explanation of Algorithm \ref{ukk-pre}.}  
 Algorithm \ref{ukk-pre} proceeds in two independent steps that could be processed in either order.
-In the first part we loop through every keyword (line 2) and every symbol in the keywords (line 5).
+In the first part, we loop through every keyword (line 2) and every symbol in the keywords (line 5).
 Before we enter the for loop on line 5 we set the state $q$ to the start state. In the loop
 we traverse the AC-machine from the start state to the state represented by the current keyword $s_i$.
-On the way we add the index $i$ to every state we pass through (line 7). Processing every keyword in this
+On the way, we add the index $i$ to every state we pass through (line 7). Processing every keyword in this
 way constructs the function $L$ as defined. After processing each keyword (if line 8 evaluates to
 \textit{true}) we set the values for functions $F$ and $E$ as defined (lines 9 and 10).
-Further we set $F(i) = 1$ for those keyword indices that correspond to a keyword that is a prefix
+Further, we set $F(i) = 1$ for those keyword indices that correspond to a keyword that is a prefix
 of some other keyword (lines 11, 12).
 
 The second part of this algorithm calculates the reversed breadth-first ordering $b$ for the
@@ -1817,7 +1817,7 @@ and initialize it with the start state $1$ on line 13 and set the depth of the s
 zero (line 14). The variable $B$, initialized on line 15, contains the value of the latest state
 that is already processed, thus at the end of the algorithm the variable $B$ contains the last state
 in the BFS ordering (which is the first state in the reversed BFS ordering). The actual BFS starts
-on lines 16 to 18 when we start to process the states in the queue. When all states are processed
+on lines 16 to 18 when we start to process the states in the queue. When all states are processed,
 the while loop ends and the function terminates. In the for loop starting at line 19 we add the
 children of the current state to the queue as the BFS requires. On line 21 we set the depth
 of the current state to be one greater than its parent state. We also update the $B$ variable
@@ -1832,17 +1832,17 @@ of some other keyword, the value of $F(i)=1$, i.e., the set of keywords $\{s_j :
 reduced.
 
 \begin{theorem}[]~\label{thm-time-pre}
-  The time complexity of Algorithm \ref{ukk-pre} is the same as time complexity of
+  The time complexity of Algorithm \ref{ukk-pre} is the same as time the complexity of
   Algorithm \ref{ac-goto}.
 \end{theorem}
 \begin{proof}[Proof sketch]
 As with the construction of
-the AC-machine the time complexity of querying the goto function depends on its underlying
-implementation. At first we ignore the queries for the goto function and focus on the rest.
-In the first part of the algorithm we iterate over all keywords at the outer for loop. In the
+the AC-machine, the time complexity of querying the goto function depends on its underlying
+implementation. At first, we ignore the queries for the goto function and focus on the rest.
+In the first part of the algorithm, we iterate over all keywords at the outer for loop. In the
 inner for loop we iterate over each symbol in the keyword so the total number of iterations
 in the inner loop equals the total number of symbols in all the keywords combined. On line 7
-we add an element to a set of items $L(q)$. Since this set does not need to be ordered it can be
+we add an element to a set of items $L(q)$. Since this set does not need to be ordered, it can be
 implemented for example as a linked list so the time complexity for adding an item is $O(1)$.
 Assuming, each state has a flag indicating whether it is a leaf, also the statements on
 lines 8 to 12 can be performed in constant time. This kind of flag can be easily
@@ -1867,7 +1867,7 @@ is $O(n\cdot\log(|\Sigma|))$.
 
 \paragraph{Description of Algorithm \ref{ukk-h}.}
 Let us now discuss the algorithm that implements the greedy selection of the edges in the
-overlap graph to form an approximate longest Hamiltonian path in more detail. Earlier we simulated
+overlap graph to form an approximate longest Hamiltonian path in more detail. Earlier, we simulated
 the greedy heuristic without defining the appropriate data structures. Now, with Algorithm
 \ref{ukk-pre} we have augmented the AC-machine with a set of auxiliary functions and one variable,
 listed in Figure \ref{lst-auxiliary-data}.
@@ -1893,7 +1893,7 @@ through the state $q$, i.e., that state is descendant of $q$. We have already de
 $L$ for this information, hence there is a maximal overlap of length $d$ between every $s_i$
 and every $s_j$, where $i\in P(q)$ and $j\in L(q)$.
 Note that although the dynamic data structure $P$ ensures that every keyword $s_i, i\in P(q)$ can be selected
-for a start vertex of the new edge the $L(q)$ returns static data. If there are already selected
+as a start vertex of the new edge, the $L(q)$ returns static data. If there are already selected
 edges $(s',s_j), j\in L(q)$ for each $j$ and for any $s'$, no more edges can be selected while processing $q$.
 A constraint, that is to prevent a vertex having multiple ingoing edges, is encoded in the
 function $forbidden(i)$ where $i$ is an index of a keyword.
@@ -1973,11 +1973,11 @@ Algorithm \ref{ukk-h} starts by setting the initial values for the dynamic funct
 $P, FIRST, LAST$ and $forbidden$ in the for loop starting at line 2. On lines 4 to 6 the algorithm
 initializes the data that is related to the used keywords, that is the keywords that form a reduced set.
 Line 4 sets the $P$ function for each state that has a direct failure link from some of
-those keywords. For those same indices the functions $FIRST(i)$ and $LAST(i)$ are initialized
+those keywords. For those same indices, the functions $FIRST(i)$ and $LAST(i)$ are initialized
 to $i$, indicating there are no edges yet selected. The else clause on lines 7 to 8 is
 to ensure that there will be no incoming edges to the keywords that are substrings of other
 keywords. (Note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-pre} ensures
-the prevention of outcoming edges from those strings). After the initialization is done the
+the prevention of outcoming edges from those strings). After the initialization is done, the
 first state to be processed is set on line 9. Note that setting $q=B$ would cause one more unnecessary
 iteration of the following while loop since the last state in the BFS ordering can not have
 incoming failure transitions, hence the first state is set to the second last state in that
@@ -1986,15 +1986,15 @@ ordering.
 The while loop starting at line 10 implements the actual selection of the edges. Since
 deepest states are processed first, and nonemptiness of $P(q)$ and $L(q)$ indicates an existing
 overlap of depth $d(q)$, the maximal overlaps are selected first, if allowed by the constraints.
-On line 11 we ensure that $P(q)$ is not empty since otherwise there are no allowed overlaps.
-After that each keyword index in $L(q)$ that is not forbidden is processed (line 12). Each
+On line 11 we ensure that $P(q)$ is not empty, since otherwise there are no allowed overlaps.
+After that, each keyword index in $L(q)$ that is not forbidden is processed (line 12). Each
 iteration (except the last one if no allowed edge is found) of that for loop decreases the
 size of $P(q)$ and $\{i\in L(q) : forbidden(i) = false\}$. On lines 13 to 14 we check 
-the set $P(q)$ to ensure there is at least one possible startpoint to the new edge. After line 15
+the set $P(q)$ to ensure there is at least one possible start point to the new edge. After line 15
 there is a potential new edge that needs to be verified against the cyclicality constraint
 (on line 16). If the edge $(s_i,s_j)$ would create a cycle, we check on line 17 if there exists
 another index in $P(q)$ and, if so, the edge is created. Otherwise the execution jumps to the
-next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle then no other edge $(s',s_j)$
+next iteration. Note that if the edge $(s_i,s_j)$ would create a cycle, then no other edge $(s',s_j)$
 will for any $s'$. Therefore it $P(q)$ only needs to be queried at most twice with each iteration.
 
 On line 21 the edge is selected. Line 22 ensures the definition for the $forbidden$ function
@@ -2013,7 +2013,7 @@ $\sum_q |L(q)| = n$ for a reduced set of input keywords and $\sum_q |L(q)| < n$ 
 when the start state is excluded.
 
 By iterating
-through all supporters of all states we effectively iterate through all symbols
+through all supporters of all states, we effectively iterate through all symbols
 in the input. This is because, for each state $q$, each supporter $i$ in $L(q)$ corresponds to a
 symbol in the $i$th input string, and every symbol corresponds to exactly one state and supporter.
 
@@ -2030,7 +2030,7 @@ symbol in the $i$th input string, and every symbol corresponds to exactly one st
 
   Let there be an AC-machine $AC$ constructed from a reduced set of keywords of size $M$ and a
   corresponding supporters set function $L$. Let $t$ be a keyword not presented in $AC$.
-  When $t$ is added to $AC$ a path from start state to a leaf is branched at depth $d$ such that
+  When $t$ is added to $AC$, a path from start state to a leaf is branched at depth $d$ such that
   $t[1...d]$ is the longest prefix of $t$ that has a corresponding state in $AC$. The $L(r)$ for
   each new state $r$ consists of only the index of the keyword $t$. The sets of supporters $L(q)$,
   for each existing state $q$ are appended with the index of the keyword $t$.
