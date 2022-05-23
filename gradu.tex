@@ -1451,33 +1451,33 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
 
 
 \begin{lemma}[]~\label{lem-overlap}
-  Let there be a state $p$ and state $q, p\neq q$ in an AC-machine that are represented by strings
-  $s$ and $t$, respectively. The failure value $f(p) = q$ if and only if $t$ is the longest proper suffix
+  Let there be a state $q$ and state $o, q\neq o$ in an AC-machine that are represented by strings
+  $s$ and $t$, respectively. The failure value $f(q) = o$ if and only if $t$ is the longest proper suffix
   of $s$ that is also a prefix of some keyword.
 \end{lemma}
 \begin{proof}[Proof (by induction)]
   Let us have an induction hypothesis that the lemma is true for all states whose depth is smaller
   than some depth $d > 1$. The hypothesis trivially holds for the base case when the
-  depth of the state is 1. That is when $f(p) = q$ is the start state, represented by the empty
-  string and the string represented by the state $p$ has a length 1.
+  depth of the state is 1. That is when $f(q) = o$ is the start state, represented by the empty
+  string and the string represented by the state $q$ has a length 1.
   
-  Let us assume there is a state $p$ of depth $d$ that is represented by a string
-  $s=\sigma_1\sigma_2\cdots \sigma_d$. Let $r$ be the parent state of $p$. Therefore $r$ is represented by a
+  Let us assume there is a state $q$ of depth $d$ that is represented by a string
+  $s=\sigma_1\sigma_2\cdots \sigma_d$. Let $r$ be the parent state of $q$. Therefore $r$ is represented by a
   string $\sigma_1\sigma_2\cdots \sigma_{d-1}$. Let $r_1,\cdots ,r_n$ be a sequence of states such that:
 
   \begin{enumerate}[leftmargin=28pt]
   \item $r_1 = f(r)$,
   \item $r_i = f(r_{i-1})$ for all $ 1 \leq i < n$,
   \item $g(r_i, \sigma_d)$ is undefined for all $i < n$,
-  \item $g(r_n, \sigma_d) = q$.
+  \item $g(r_n, \sigma_d) = o$.
   \end{enumerate}
 
-  Since Algorithm \ref{ac-fail} encodes the above rules on lines 12 to 14 the state $q$ is defined
-  for $f(p)$. Let the strings $u_1,...,u_n$ represent the states $r_1,...,r_n$, respectively.
+  Since Algorithm \ref{ac-fail} encodes the above rules on lines 12 to 14 the state $o$ is defined
+  for $f(q)$. Let the strings $u_1,...,u_n$ represent the states $r_1,...,r_n$, respectively.
   According to the induction hypothesis, $u_1$ is the longest (or equal longest) proper suffix of $\sigma_1\sigma_2\cdots \sigma_{d-1}$
   that is also a prefix of some keyword. Also, $u_2$ is a longest proper suffix of $u_1$ that is also
   a prefix of some keyword and so on. Therefore $u_n$ is a longest proper suffix of $s$ such that
-  $u_n\sigma_d$ is also a prefix of some keyword. Since Algorithm \ref{ac-fail} sets $f(p) = q$,
+  $u_n\sigma_d$ is also a prefix of some keyword. Since Algorithm \ref{ac-fail} sets $f(q) = o$,
   the lemma is proven.
 
 \end{proof}  
