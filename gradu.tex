@@ -1,27 +1,6 @@
-% TODO: find and replace. node vertex state ?!?!
-
-%% TODO: todo todo todo
-
 %% footnotet oikeilla sivuilla
 
-%% TODO. testexamplen reffit väärillä numeroilla?! figuren ja lemman numerot samat??
-
-% label sekä tyhjä rivi välissä example, def, lemma .... vaikuttaa rivivaihtoon? konsistenssi?
-
-% texttt for every "special" word like filenames, types etc
-% algon method muotoon note
-% esimerkit example environmenttiin
-% määritelmät environmentiin
-
-% HamPath: vertex, edge
-% goto graph (illustration): (root)node, edge?
-% ACM (sart) state, goto and failure transitions
-
-
-
-
-
-
+% kolmos chapterin layout
 
 
 % miten RLZ tulokset saatu?
@@ -190,7 +169,7 @@
 \usepackage[most]{tcolorbox}
 \usepackage{xparse}
 \usepackage{lipsum}
-\newcounter{testexample}
+%\newcounter{testexample}
 
 %\let\c@testexample\c@example
 %\makeatother
@@ -199,7 +178,7 @@
 
 \NewDocumentEnvironment{testexample}{ O{} }
 {
-\colorlet{colexam}{black!55!black} % Global example color
+  \colorlet{colexam}{black!55!black} % Global example color
 \newtcolorbox[use counter=theorem, number within=chapter]{testexamplebox}{%
     % Example Frame Start
     empty,% Empty previously set parameters
@@ -226,7 +205,7 @@
 {\end{testexamplebox}\endlist}
 
 
-\numberwithin{testexample}{chapter}
+%\numberwithin{testexample}{chapter}
 
 
 
@@ -265,7 +244,7 @@
 \examiners{Prof.~Leena Salmela}
 
 
-\keywords{Implementation, Shortest Common Superstring, Relative Lempel-Ziv}
+\keywords{shortest common superstring, relative lempel-ziv, implementation}
 \additionalinformation{\translate{\track}}
 
 %% For seminar reports:
@@ -767,6 +746,7 @@ would then be $s_1s_2\cdots s_m$.
 The following greedy heuristic can be used to construct an approximation of a shortest
 common superstring:
 
+\vspace{1cm}
 \begin{enumerate}
 \item Examine the set and remove two strings $s_i$ and $s_j$ that have a longest overlap among all pairs of strings $(s_i, s_j)$ with $i\neq j$. Note that a longest overlap may be an empty string. If there are multiple pairs of strings with a longest overlap, the decision can be made arbitrarily.
 \item Merge the strings together such that they are maximally overlapped to form a shortest common superstring of the set $\{s_i, s_j\}$.
@@ -793,7 +773,9 @@ $G_R=(V_R,E_R,w)$ with
   V_R &= \{v_i~|~s_i\in R\} \cup \{v_{start},v_{end}\}, \\
   E_R &= \{(v_{start},v_i), (v_i,v_{end}), (v_i,v_j)~|~i=1,...,m, j=1,...,m, i\neq j\},
 \end{align*}
+%\vspace{-0.5cm}
 and
+%\vspace{-1cm}
 \[   
 w((x,y)) = 
      \begin{cases}
@@ -894,13 +876,8 @@ Since the maximal overlaps $v_i,i=1,...,m-1$ appear in the projection only once,
 projection is $(|s_1|+...+|s_m|) - (|v_1|+...+|v_{m-1}|)$. The length of the maximal overlaps
 are equivalent to the weights of the overlap graph $G_R$, and so $v_1+\cdots +v_{m-1} = |H|$. As the size
 of $|H|$ grows, the size of the projection gets shorter.
-
-%That means the shortest common superstring of $R$ corresponds with the longest Hamiltonian path in $G_R$.
-% ^ This must be proven!
-
 With this analogy the size of $H$ is the compression of the common superstring,
 and the length of $p(H)$ is the length of the common superstring.
-
 We now know that the Hamiltonian path in the overlap graph can be used to form a common superstring
 of the set of strings. Next, we show that also a shortest common superstring of $R$ has a
 corresponding Hamiltonian path. To prove this we introduce the following lemma.
@@ -962,7 +939,6 @@ The third constraint above indicates the following:
   Let $H'$ be the approximate longest Hamiltonian path in the overlap graph created using
   the greedy heuristic and let $H$ be the actual longest Hamiltonian path. Then,
   $|H'|\geq \frac{1}{2}|H|$.
-  
 \end{theorem}
 
 In other words, the compression achieved by the greedy heuristic is at least half of the optimal
@@ -993,7 +969,6 @@ matching algorithm were first described in \citep{Aho75}.
 As the string searching part of \citep{Aho75} is not used in \citep{Ukkonen90} and is not otherwise
 relevant in this thesis, we only discuss the AC-machine as a data structure and omit the string searching
 functionality of the original description.
-
 Formally, the AC-machine is defined\footnote{\citep{Aho75} also defined an output function.
 This is needed only when the AC-machine is used for searching strings.} as follows.
 
@@ -1027,6 +1002,8 @@ construction of the AC-machine. The goto function is similar to the child functi
 i.e., it describes a rooted tree that stores a set of keywords such that edges are labeled with the
 symbols of the alphabet and the edge label is different between each sibling node. We say that a node
 spells out a string that is formed by concatenating the edge labels from root to the node.
+Since there is an unambiguous correspondence between a state and a string, those words are occasionally
+used interchangeably.
 The failure function describes a chain of state transitions in the case when the goto function is not defined
 for the current input symbol. The failure function is queried as long as the goto function is not defined.
 In the AC-machine the goto function is defined for every symbol in the alphabet in the start state.
@@ -1124,7 +1101,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (3) edge node[above] {a} (4);
 
   \end{tikzpicture}
-  \caption{First key added.} \label{fig-ac-step2}
+  \caption{Illustration of the AC-machine after the first key is added in Example 3.5.} \label{fig-ac-step2}
   \end{figure}
 
     \begin{figure}[]
@@ -1150,13 +1127,12 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (5) edge node[above] {a} (6);
 
   \end{tikzpicture}
-  \caption{Second key added.} \label{fig-ac-step3}
+  \caption{Illustration of the AC-machine after the second key is added in Example 3.5.} \label{fig-ac-step3}
 \end{figure}
   
   \begin{testexample}[]~\label{exmp-goto}\\
   Let us simulate this algorithm with a set of keywords $K=\{$``baa'', ``baba'', ``abab'', ``aab''$\}$.
-  The algorithm starts from line 2 where the root node is created.
-  %Figure \ref{fig-ac-step1} presents this state.
+  The algorithm starts from line 2 where the start state (root node in the figures that illustrate the AC-machine) is created.
   Since there are four keywords the first for loop is executed four times.
   In the first round the \textit{insert} procedure is called for the first keyword ``baa''.
   In the \textit{insert} procedure the first while loop is not executed since there are no
@@ -1269,8 +1245,6 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
    \caption{Listing of the failure calculation for state s.} \label{lst-failure-calculation}    
   \end{figure}
 
-
-
   \begin{testexample}[]~\label{exmp-fail}\\
     Let us continue with the previous example from the goto function construction. By definiton, $f(1)$
     is not defined. For the states of depth 1 ($q\in\{2,7\}$) the failure function is defined as
@@ -1280,7 +1254,7 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
   For state 3, we take the parent state 2 and follow the failure path to the start state. Since
   $g(1,$a$) = 7$ we define $f(3)=7$. For the states 8 and 11 the procedure is similar. We set 
   $f(8)=2$ and $f(11)=7$. The procedure is iterated until the failure function is defined for every
-  node. Figure \ref{fig-ac} describes the final result. Because the AC-machine only contains these
+  state. Figure \ref{fig-ac} describes the final result. Because the AC-machine only contains these
   two functions, Figure \ref{fig-ac} also presents the fully constructed AC-machine.
   \end{testexample}
 
@@ -1333,11 +1307,12 @@ and the dashed lines describe the failure function, for example, $g(8, a) = 9$ a
     (7) edge [bend right=15] (1);
     
   \end{tikzpicture}
-  \caption{The failure function construction when $f(q)$ is defined for all states $q$ with depth $\leq$ 1.} \label{fig-ac-step5}
+  \caption{The point of Example 3.6 when $f(q)$ is defined for all states $q$ with depth $\leq$ 1.} \label{fig-ac-step5}
 \end{figure}
   
 
-  In Example \ref{exmp-fail} the value for the failure function was always found in a single
+  %% NOTE. The number of example is hardcoded here! Cannot ref to testexample envs for some reason?
+  In Example 3.6 the value for the failure function was always found in a single
   iteration of the step 3 of the above definition (Figure \ref{lst-failure-calculation}). Next we go through the pseudocode for the failure
   function calculation in Algorithm \ref{ac-fail}.
 
@@ -1631,7 +1606,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
 
 %% L:n ja d:n avulla määritellään seuraava lemma
 
-\begin{lemma}[] ~\label{lem-overlap-length}
+\begin{lemma}[]~\label{lem-overlap-length}
   Let there be an AC-machine for a keyword set $R=\{t_1,...,t_m\}$ and a state $p$ represented
   by string $s$.
   There is an overlap of length $d(q)$ between $s$ and a keyword $t_i\in R$ if and only if
@@ -1670,7 +1645,7 @@ Lemma \ref{lem-overlap-length} formalizes this property.
   \end{enumerate}
 \end{proof}
 
-\begin{theorem}[] ~\label{thm-maximal-overlaps}
+\begin{theorem}[]~\label{thm-maximal-overlaps}
   Let $p$ be a state represented by string $s_i$ and let $s_i,s_j\in R$. The maximum overlap between
   $s_i$ and $s_j$ is represented by the state $q$ such that $q$ is the first sate in the failure
   path of $p$ $f^k(p)$ and $j\in L(q)$. The length of this maximum overlap is $d(q)$.
@@ -1718,7 +1693,7 @@ state 9). This indicates that there exists an overlap between state 6 and every 
 in $L(3)=\{1,2\}$ The self-overlap between $s_2$ and $s_2$ is forbidden since it would
 create a cycle. However, the other overlap between $s_2$ and $s_1$ cannot be selected either because
 the edge from $s_2$ is selected earlier. State 8 also has information of two incoming failure
-paths. Now there already exists an edge with $s_3$ as an end node. Thus no edges are selected.
+paths. Now there already exists an edge with $s_3$ as an end vertex. Thus no edges are selected.
 When processing state 11 the only possible overlap is compatible with the rules and the edge
 from $s_1$ to $s_4$ is selected. For the states of depth 1 it does not matter which one is processed
 first. In any case, while processing state 7 we find only one failure path coming from a leaf state
@@ -1914,9 +1889,9 @@ through the state $q$, i.e., that state is descendant of $q$. We have already de
 $L$ for this information, hence there is a maximal overlap of length $d$ between every $s_i$
 and every $s_j$, where $i\in P(q)$ and $j\in L(q)$.
 Note that although the dynamic data structure $P$ ensures that every keyword $s_i, i\in P(q)$ can be selected
-for a start node of the new edge the $L(q)$ returns static data. If there are already selected
+for a start vertex of the new edge the $L(q)$ returns static data. If there are already selected
 edges $(s',s_j), j\in L(q)$ for each $j$ and for any $s'$, no more edges can be selected while processing $q$.
-A constraint, that is to prevent a node having multiple ingoing edges, is encoded in the
+A constraint, that is to prevent a vertex having multiple ingoing edges, is encoded in the
 function $forbidden(i)$ where $i$ is an index of a keyword.
 
 \begin{definition}~\label{def-forbidden}
@@ -1931,13 +1906,13 @@ function $forbidden(i)$ where $i$ is an index of a keyword.
   \]
 \end{definition}
 
-We encode the constraints that no node can have multiple inbound or outbound edges
+We encode the constraints that no vertex can have multiple inbound or outbound edges
 with the functions $L, P$ and $forbidden$. The last constraint, which prevents the edge selections
 that form a cycle, is guarded with functions $FIRST$ and $LAST$. Both of these functions are defined
 for all keyword indices. At the beginning of Algorithm \ref{ukk-h}, $FIRST(i) = LAST(i) = i$
 for every keyword index $i$. The value of these functions is updated such that at any point of execution
 if we have selected a set of edges that forms a path starting from $s_i$ and ending to $s_j$, then
-$FIRST(j)=i$ and $LAST(i)=j$. Note that the values for the nodes in the middle of such paths are
+$FIRST(j)=i$ and $LAST(i)=j$. Note that the values for the vertices in the middle of such paths are
 not updated nor queried. Now, before the new edge $(s_i,s_j)$ is selected, we check that the
 selection does form a cycle by checking that $FIRST(i) \neq j$. Note that this is the same thing
 as checking that $LAST(j) \neq i$. Only one of those checks is necessary. If the check fails,
@@ -2001,7 +1976,7 @@ keywords. (Note: setting $F(j) = 1$ for the same keywords in algorithm \ref{ukk-
 the prevention of outcoming edges from those strings). After the initialization is done the
 first state to be processed is set on line 9. Note that setting $q=B$ would cause one more unnecessary
 iteration of the following while loop since the last state in the BFS ordering can not have
-incoming failure transitions, hence the first state is set to the second last node in that
+incoming failure transitions, hence the first state is set to the second last state in that
 ordering.
 
 \footnotetext[1]{This line is not present in the original algorithm}
